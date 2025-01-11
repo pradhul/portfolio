@@ -7,14 +7,13 @@
   --background-light: #f5f5f5;
   --foreground-dark: #a0a0a0;
   --background-dark: #0a0a0a;
-  display: flex;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
   --foreground-light: #171717;
-  --background-light: #f5f5f5;
-  --foreground-dark: #a0a0a0;
+  --background-light: #f5eded;
+  --foreground-dark: #f5eded;
   --background-dark: #0a0a0a;
   }
 }
