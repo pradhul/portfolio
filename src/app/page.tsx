@@ -34,7 +34,11 @@ export default function Home() {
             <p>Get in touch with me.</p>
           </a>
 
-          <a href="/resume.pdf" download="PRADHUL_DEV_RESUME.pdf" className={styles.card}>
+          <a
+            href="/PRADHUL_DEV_RESUME.pdf"
+            download="PRADHUL_DEV_RESUME.pdf"
+            className={styles.card}
+          >
             <b>Download Resume &#8595;</b>
           </a>
         </div>
