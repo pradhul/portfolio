@@ -1,10 +1,12 @@
 "use client";
 import styles from "./page.module.css";
 import Head from "next/head";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function Home() {
   return (
     <div className={styles.container}>
+      <Analytics />
       <Head>
         <title>Pradhul Dev Portfolio</title>
         <meta name="description" content="Portfolio of Pradhul Dev" />
