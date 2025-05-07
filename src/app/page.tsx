@@ -16,9 +16,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <span className="text-blue-600">Pradhul.dev</span>
-        </h1>
+        <h1 className={styles.title}>Welcome</h1>
 
         <p className={styles.description}>Web and Mobile Developer | 8+ Years of Experience</p>
 
@@ -38,11 +36,7 @@ export default function Home() {
             <p>Get in touch with me.</p>
           </a>
 
-          <a
-            href="/PRADHUL_DEV_RESUME.pdf"
-            download="PRADHUL_DEV_RESUME.pdf"
-            className={styles.card}
-          >
+          <a href="/PRADHUL_DEV_RESUME.pdf" download="PRADHUL_DEV_RESUME.pdf" className={styles.card}>
             <b>Download Resume &#8595;</b>
           </a>
         </div>
