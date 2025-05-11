@@ -14,7 +14,7 @@ export default function SquashPushPortfolio() {
     <div className="flex flex-col min-h-screen bg-gray-100 text-gray-900">
       {/* Hero Section */}
       <header className="bg-gradient-to-r from-indigo-600 to-purple-600 py-12 px-6 md:px-12 lg:px-24">
-       <SquashPushSummary />
+        <SquashPushSummary />
       </header>
 
       {/* Badges */}
@@ -207,7 +207,8 @@ export default function SquashPushPortfolio() {
                         <li className="text-gray-700">Open a Git repository in VS Code</li>
                         <li className="text-gray-700">Open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P)</li>
                         <li className="text-gray-700">
-                          Type &quot;Squash Local Commits&quot; OR &quot;Squash-Push: Squash Local Commits&quot; and select the command
+                          Type &quot;Squash Local Commits&quot; OR &quot;Squash-Push: Squash Local Commits&quot; and
+                          select the command
                         </li>
                         <li className="text-gray-700">
                           Select the oldest commit you want to keep as the base for squashing
@@ -405,8 +406,8 @@ export default function SquashPushPortfolio() {
                 <div className="mb-8">
                   <h3 className="text-lg font-semibold mb-3">Contributing</h3>
                   <p className="text-gray-700 mb-4">
-                    Contributions to Squash-Push are welcome! I&apos;ve designed the codebase to be easily extendable and
-                    maintainable, making it accessible for other developers to contribute.
+                    Contributions to Squash-Push are welcome! I&apos;ve designed the codebase to be easily extendable
+                    and maintainable, making it accessible for other developers to contribute.
                   </p>
 
                   <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -526,7 +527,7 @@ export default function SquashPushPortfolio() {
             <div className="mb-6 md:mb-0">
               <div className="flex items-center">
                 <div className="bg-white p-1 rounded-md mr-2">
-                  <img src="./squashPush/icon.png" alt="Squash-Push Icon" className="w-8 h-8" />
+                  <img src="/squashPush/icon.png" alt="Squash-Push Icon" className="w-8 h-8" />
                 </div>
                 <span className="text-xl font-semibold text-white">Squash-Push</span>
               </div>
