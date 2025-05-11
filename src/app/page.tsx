@@ -26,9 +26,9 @@ export default function Home() {
             <p>Learn more about me and my journey.</p>
           </a>
 
-          <a className={styles.card}>
+          <a href="/portfolio" className={styles.card}>
             <h2>Portfolio &rarr;</h2>
-            <p>Check out my projects and experience.</p>
+            <p>Check out my projects.</p>
           </a>
 
           <a href="/contact" className={styles.card}>
