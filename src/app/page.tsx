@@ -59,7 +59,7 @@ export default function Home() {
         </motion.div>
 
         <div className={`${styles.grid}`}>
-          <motion.a
+          {/* <motion.a
             href="/about"
             className={`${styles.card} group relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-800 to-indigo-900 p-8 flex flex-col h-64 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20`}
             whileHover={{ y: -5 }}
@@ -71,7 +71,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold mb-2 text-white">About Me</h2>
             <p className="text-gray-300">Learn about my journey and professional background.</p>
             <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-indigo-400 to-purple-500 group-hover:w-full transition-all duration-300" />
-          </motion.a>
+          </motion.a> */}
 
           <motion.a
             href="/portfolio"
@@ -120,7 +120,7 @@ export default function Home() {
             </motion.a>
 
             <motion.a
-              href="https://github.com/yourusername"
+              href="https://github.com/pradhul"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full transition-all duration-300"
@@ -131,7 +131,7 @@ export default function Home() {
             </motion.a>
 
             <motion.a
-              href="https://linkedin.com/in/yourusername"
+              href="https://www.linkedin.com/in/pradhul-dev/"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full transition-all duration-300"
