@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, Github, ExternalLink, Terminal, Code, Package, GitBranch, GitCommit, CheckCircle, RefreshCw, Search, AlertTriangle, BookOpen, Award } from 'lucide-react';
-import SquashPushSummary from './hero';
+import SquashPushSummary from "./SquashPushSummary";
 
 export default function SquashPushPortfolio() {
   const [activeTab, setActiveTab] = useState('overview');
