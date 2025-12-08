@@ -29,7 +29,7 @@ function FloatingParticles({ count = 2000 }) {
     if (!mesh.current) return
     
     particles.forEach((particle, i) => {
-      let { factor, speed, x, y, z } = particle
+      const { factor, speed, x, y, z } = particle
       const t = particle.time + state.clock.elapsedTime * speed
       
       mesh.current!.setMatrixAt(

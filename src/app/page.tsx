@@ -2,14 +2,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { 
   Code, 
-  Mail, 
   FileText, 
   Github, 
   Package,
-  Phone,
   ChevronDown,
   Sparkles,
   User,
@@ -26,8 +25,6 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ container: containerRef })
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
 
   useEffect(() => {
     setIsLoaded(true)
@@ -294,7 +291,7 @@ export default function Home() {
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       className="bg-white p-4 rounded-xl shadow-lg mr-6"
                     >
-                      <img src="/squashPush/icon.png" alt="Squash-Push Icon" className="w-20 h-20" />
+                      <Image src="/squashPush/icon.png" alt="Squash-Push Icon" width={80} height={80} />
                     </motion.div>
                     <div>
                       <div className="text-xs font-semibold text-cyan-400 mb-2 tracking-wider">VS CODE EXTENSION</div>
@@ -346,10 +343,13 @@ export default function Home() {
                       <div className="text-xs font-mono text-gray-400">squash-push demo</div>
                     </div>
                     <div className="p-4">
-                      <img
+                      <Image
                         src="/squashPush/recording.gif"
                         alt="Squash-Push Demo"
+                        width={800}
+                        height={600}
                         className="w-full h-auto rounded-lg shadow-lg"
+                        unoptimized
                       />
                     </div>
                   </motion.div>
@@ -372,7 +372,7 @@ export default function Home() {
                       whileHover={{ scale: 1.1, rotate: -5 }}
                       className="bg-white p-4 rounded-xl shadow-lg mr-6"
                     >
-                      <img src="/vsColorCode/icon.png" alt="vsColorCode Icon" className="w-20 h-20" />
+                      <Image src="/vsColorCode/icon.png" alt="vsColorCode Icon" width={80} height={80} />
                     </motion.div>
                     <div>
                       <div className="text-xs font-semibold text-purple-400 mb-2 tracking-wider">VS CODE EXTENSION</div>
@@ -424,9 +424,11 @@ export default function Home() {
                       <div className="text-xs font-mono text-gray-400">vsColorCode demo</div>
                     </div>
                     <div className="p-4">
-                      <img
+                      <Image
                         src="/vsColorCode/demo.png"
                         alt="vsColorCode Demo"
+                        width={800}
+                        height={600}
                         className="w-full h-auto rounded-lg shadow-lg"
                       />
                     </div>
