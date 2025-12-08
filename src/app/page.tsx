@@ -16,6 +16,7 @@ import {
   MessageCircle
 } from 'lucide-react'
 import ThreeBackground from '@/components/ThreeBackground'
+import InteractiveDots from '@/components/InteractiveDots'
 import { FaLinkedin, FaGithubSquare, FaPhone } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
@@ -68,6 +69,7 @@ export default function Home() {
       <Analytics />
       <SpeedInsights />
       <ThreeBackground />
+      <InteractiveDots />
       
       {/* Navigation */}
       <motion.nav
