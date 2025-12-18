@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import ThreeBackground from '@/components/ThreeBackground'
 import InteractiveDots from '@/components/InteractiveDots'
+import ChatWidget from '@/components/ChatWidget'
 import { FaLinkedin, FaGithubSquare, FaPhone } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
@@ -538,6 +539,9 @@ export default function Home() {
           © {new Date().getFullYear()} Pradhul Dev. All rights reserved.
         </motion.p>
       </footer>
+
+      {/* Chat Widget */}
+      <ChatWidget />
     </div>
   )
 }
