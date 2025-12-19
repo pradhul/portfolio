@@ -13,7 +13,7 @@ interface Dot {
 
 export default function InteractiveDots() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
   const dotsRef = useRef<Dot[]>([])
   const mouseRef = useRef({ x: 0, y: 0, isActive: false })
   const scrollRef = useRef(0)
@@ -39,7 +39,6 @@ export default function InteractiveDots() {
     window.addEventListener('resize', resizeCanvas)
 
     // Create dots
-    const dotCount = Math.floor((window.innerWidth * window.innerHeight) / 15000)
     const dots: Dot[] = []
     const spacing = 60
     const cols = Math.ceil(window.innerWidth / spacing)
