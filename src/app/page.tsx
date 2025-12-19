@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { motion } from 'framer-motion'
@@ -28,6 +29,17 @@ import { SiStackoverflow } from 'react-icons/si'
 const ThreeBackground = lazy(() => import('@/components/ThreeBackground'))
 const InteractiveDots = lazy(() => import('@/components/InteractiveDots'))
 const ChatWidget = lazy(() => import('@/components/ChatWidget'))
+// Disable SSR for GitHubActivity to prevent hydration errors (fetches external API data)
+const GitHubActivity = dynamic(() => import('@/components/GitHubActivity'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full overflow-x-auto">
+      <div className="inline-block min-w-full">
+        <div className="text-gray-400 text-center py-8">Loading activity...</div>
+      </div>
+    </div>
+  ),
+})
 
 function HomeContent() {
   const [activeSection, setActiveSection] = useState('hero')
@@ -343,6 +355,36 @@ function HomeContent() {
               }
               return null
             })()}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="bg-black/30 backdrop-blur-md border border-cyan-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-cyan-500/40 transition-all duration-300 mt-8"
+            style={activeFestival ? {
+              borderColor: `${activeFestival.colors.primary}30`,
+            } : undefined}
+          >
+            <h3 
+              className="text-2xl md:text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500"
+              style={activeFestival ? {
+                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              } : undefined}
+            >
+              {activeFestival ? (
+                <FestivalTextDecoration festival={activeFestival}>
+                  GitHub Activity
+                </FestivalTextDecoration>
+              ) : (
+                'GitHub Activity'
+              )}
+            </h3>
+            <GitHubActivity username="pradhul" />
           </motion.div>
         </div>
       </section>

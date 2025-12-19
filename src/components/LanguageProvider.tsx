@@ -35,7 +35,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (isInitialized) return
 
-    // Check localStorage first
+    // Check localStorage first (user preference takes priority)
     const savedLanguage = localStorage.getItem('preferredLanguage')
     if (savedLanguage && supportedLanguages.includes(savedLanguage)) {
       setLanguageState(savedLanguage)
@@ -43,14 +43,30 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    // Use browser language
-    const browserLang = navigator.language || 'en'
-    const detectedLang = getLanguageFromBrowser(browserLang)
-    setLanguageState(detectedLang)
-    setIsInitialized(true)
+    // Detect language based on country/IP location
+    const detectLanguage = async () => {
+      try {
+        const response = await fetch('/api/detect-country')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.language && supportedLanguages.includes(data.language)) {
+            setLanguageState(data.language)
+            setIsInitialized(true)
+            return
+          }
+        }
+      } catch (error) {
+        console.error('Error detecting country:', error)
+      }
 
-    // Optional: Store detected language in Firebase for analytics
-    // (Can be done via API call if needed)
+      // Fallback to browser language if country detection fails
+      const browserLang = navigator.language || 'en'
+      const detectedLang = getLanguageFromBrowser(browserLang)
+      setLanguageState(detectedLang)
+      setIsInitialized(true)
+    }
+
+    detectLanguage()
   }, [isInitialized])
 
   // Load translations when language changes

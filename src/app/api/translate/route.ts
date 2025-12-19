@@ -3,6 +3,22 @@ import { translate } from 'google-translate-api-x'
 import { getFirestoreInstance } from '@/lib/firebase'
 import crypto from 'crypto'
 
+// Strings that should never be translated (case-insensitive matching)
+const EXCLUDED_FROM_TRANSLATION = [
+  'Pradhul Dev',
+  'Pradhul',
+  'Squash-Push',
+  'vsColorCode',
+]
+
+// Check if a string should be excluded from translation
+function shouldSkipTranslation(text: string): boolean {
+  const lowerText = text.toLowerCase()
+  return EXCLUDED_FROM_TRANSLATION.some(excluded => 
+    lowerText.includes(excluded.toLowerCase())
+  )
+}
+
 // Helper to create hash of text
 function createHash(text: string): string {
   return crypto.createHash('md5').update(text).digest('hex')
@@ -138,6 +154,11 @@ export async function POST(request: NextRequest) {
     // Translate all strings
     const translatedStrings = await Promise.all(
       strings.map(async ({ key, value }) => {
+        // Skip translation if string contains excluded terms (name, extension names, etc.)
+        if (shouldSkipTranslation(value)) {
+          return { key, value }
+        }
+
         // Check individual string cache
         const stringHash = createHash(value)
         

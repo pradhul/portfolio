@@ -48,6 +48,36 @@ body {
   background: linear-gradient(to bottom, #06b6d4, #9333ea);
 }
 
+/* GitHub Calendar Styles */
+.react-github-calendar {
+  color: #ffffff !important;
+}
+
+.react-github-calendar text {
+  fill: #ffffff !important;
+}
+
+.react-github-calendar svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.react-github-calendar .month-label {
+  fill: #ffffff !important;
+  font-size: 14px;
+}
+
+.react-github-calendar .weekday-label {
+  fill: #9ca3af !important;
+  font-size: 12px;
+}
+
+.react-github-calendar .contrib-footer {
+  color: #9ca3af !important;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
 /* Selection */
 ::selection {
   background-color: #00ffff;
