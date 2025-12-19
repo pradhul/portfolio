@@ -20,7 +20,7 @@ export interface FestivalConfig {
   approximateStartDay: number // 1-31
   approximateEndMonth: number // 0-11
   approximateEndDay: number // 1-31
-  textDecoration?: 'snow' | 'confetti' | 'sparkles' | 'lights' | 'none'
+  textDecoration?: 'snow' | 'confetti' | 'sparkles' | 'lights' | 'petals' | 'none'
 }
 
 export const FESTIVAL_CONFIGS: FestivalConfig[] = [
