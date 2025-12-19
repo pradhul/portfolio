@@ -122,28 +122,34 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Christmas Theme Styles - More Red Dominant */
-.christmas-theme ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #b91c1c, #dc2626);
+/* Festival Theme Styles - Dynamic based on active festival */
+.festival-theme ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--festival-primary), var(--festival-secondary));
 }
 
-.christmas-theme ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #dc2626, #ef4444);
+.festival-theme ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--festival-secondary), var(--festival-accent));
 }
 
-.christmas-theme ::selection {
-  background-color: #b91c1c;
+.festival-theme ::selection {
+  background-color: var(--festival-primary);
   color: #ffffff;
 }
 
-.christmas-theme ::-moz-selection {
-  background-color: #b91c1c;
+.festival-theme ::-moz-selection {
+  background-color: var(--festival-primary);
   color: #ffffff;
 }
 
-/* Christmas gradient text - More red */
-.christmas-theme .gradient-text {
-  background: linear-gradient(-45deg, #b91c1c, #dc2626, #991b1b, #b91c1c);
+/* Festival gradient text */
+.festival-theme .gradient-text {
+  background: linear-gradient(
+    -45deg,
+    var(--festival-primary),
+    var(--festival-secondary),
+    var(--festival-accent),
+    var(--festival-primary)
+  );
   background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -151,33 +157,84 @@ body {
   animation: gradient-shift 8s ease infinite;
 }
 
-/* Christmas glow effects - Red tones */
-.christmas-theme .glow-cyan {
-  box-shadow: 0 0 20px rgba(185, 28, 28, 0.5);
+/* Festival glow effects */
+.festival-theme .glow-cyan {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--festival-primary) 50%, transparent);
 }
 
-.christmas-theme .glow-purple {
-  box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+.festival-theme .glow-purple {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--festival-secondary) 50%, transparent);
 }
 
-.christmas-theme .glow-pink {
-  box-shadow: 0 0 20px rgba(153, 27, 27, 0.5);
+.festival-theme .glow-pink {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--festival-accent) 50%, transparent);
 }
 
-/* Snow on text effect */
-.christmas-theme .text-snow {
-  position: relative;
+/* Festival-specific theme overrides */
+.festival-christmas ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #b91c1c, #dc2626);
 }
 
-.christmas-theme .text-snow::before {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: radial-gradient(circle, white 2px, transparent 2px);
-  background-size: 8px 8px;
-  opacity: 0.8;
-  pointer-events: none;
+.festival-christmas ::selection {
+  background-color: #b91c1c;
+}
+
+.festival-chinese-new-year ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #dc2626, #fbbf24);
+}
+
+.festival-chinese-new-year ::selection {
+  background-color: #dc2626;
+}
+
+.festival-valentines ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #dc2626, #ec4899);
+}
+
+.festival-valentines ::selection {
+  background-color: #dc2626;
+}
+
+.festival-mardi-gras ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #9333ea, #16a34a, #fbbf24);
+}
+
+.festival-holi ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #dc2626, #16a34a, #3b82f6, #fbbf24);
+}
+
+.festival-cherry-blossom ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #ec4899, #f9a8d4);
+}
+
+.festival-easter ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #f9a8d4, #fef08a, #86efac);
+}
+
+.festival-ramadan-eid ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #16a34a, #fbbf24);
+}
+
+.festival-oktoberfest ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #1e40af, #ffffff);
+}
+
+.festival-halloween ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #ea580c, #000000);
+}
+
+.festival-diwali ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #fbbf24, #f59e0b, #dc2626);
+}
+
+.festival-day-of-the-dead ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #ec4899, #ea580c, #fbbf24);
+}
+
+.festival-hanukkah ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #1e40af, #ffffff);
+}
+
+.festival-new-year ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #fbbf24, #e5e7eb);
 }

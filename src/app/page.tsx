@@ -15,7 +15,7 @@ import {
   Briefcase,
   MessageCircle
 } from 'lucide-react'
-import { useChristmasTheme, SnowEffect, ChristmasThemeProvider, TextSnowPile } from '@/components/ChristmasTheme'
+import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
 import { FaLinkedin, FaGithubSquare, FaPhone } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
@@ -30,7 +30,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(true) // Start as true for faster initial render
   const [activeSection, setActiveSection] = useState('hero')
   const containerRef = useRef<HTMLDivElement>(null)
-  const isChristmas = useChristmasTheme()
+  const { activeFestival } = useFestivalTheme()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,7 +68,7 @@ export default function Home() {
   ]
 
   return (
-    <ChristmasThemeProvider isChristmas={isChristmas}>
+    <FestivalThemeProvider activeFestival={activeFestival}>
       <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-black text-white scroll-smooth">
         <Analytics />
         <SpeedInsights />
@@ -76,7 +76,6 @@ export default function Home() {
         <Suspense fallback={null}>
           <LazyBackgroundComponents />
         </Suspense>
-        <SnowEffect enabled={isChristmas} />
       
       {/* Navigation */}
       <motion.nav
@@ -88,12 +87,18 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className={`text-2xl font-bold bg-clip-text text-transparent cursor-pointer ${
-              isChristmas
-                ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700'
-                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
+            className={`text-2xl font-bold cursor-pointer ${
+              activeFestival
+                ? `bg-gradient-to-r from-[${activeFestival.colors.primary}] via-[${activeFestival.colors.secondary}] to-[${activeFestival.colors.accent}] bg-clip-text text-transparent`
+                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent'
             }`}
             onClick={() => scrollToSection('hero')}
+            style={activeFestival ? {
+              backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            } : undefined}
           >
             Pradhul Dev
           </motion.div>
@@ -150,23 +155,27 @@ export default function Home() {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className={`absolute inset-0 border-2 rounded-full ${
-                  isChristmas ? 'border-red-500/30' : 'border-cyan-500/30'
-                }`}
+                className="absolute inset-0 border-2 rounded-full border-cyan-500/30"
+                style={activeFestival ? { borderColor: `${activeFestival.colors.primary}30` } : undefined}
               />
               <motion.div
                 animate={{ rotate: -360 }}
                 transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                className={`absolute inset-2 border-2 rounded-full ${
-                  isChristmas ? 'border-red-600/30' : 'border-purple-500/30'
-                }`}
+                className="absolute inset-2 border-2 rounded-full border-purple-500/30"
+                style={activeFestival ? { borderColor: `${activeFestival.colors.secondary}30` } : undefined}
               />
-              <div className={`relative p-8 rounded-full backdrop-blur-sm border ${
-                isChristmas
-                  ? 'bg-gradient-to-br from-red-500/20 via-red-600/20 to-red-700/20 border-red-500/30'
-                  : 'bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20 border-cyan-500/30'
-              }`}>
-                <Code size={64} className={isChristmas ? 'text-red-400' : 'text-cyan-400'} />
+              <div 
+                className="relative p-8 rounded-full backdrop-blur-sm border border-cyan-500/30"
+                style={activeFestival ? {
+                  background: `linear-gradient(to bottom right, ${activeFestival.colors.primary}20, ${activeFestival.colors.secondary}20, ${activeFestival.colors.accent}20)`,
+                  borderColor: `${activeFestival.colors.primary}30`,
+                } : undefined}
+              >
+                <Code 
+                  size={64} 
+                  className="text-cyan-400"
+                  style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+                />
               </div>
             </div>
           </motion.div>
@@ -175,23 +184,18 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className={`text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-tight ${
-              isChristmas
-                ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-clip-text text-transparent'
-                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent'
-            }`}
+            className="text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-tight bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+            style={activeFestival ? {
+              backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            } : undefined}
           >
-            {isChristmas ? (
-              <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-clip-text text-transparent">Pradhul Dev</span>
-                <span className="absolute -top-2 left-0 right-0 h-2 overflow-hidden pointer-events-none z-10">
-                  <span className="absolute left-0 top-0 w-3 h-3 bg-white rounded-full opacity-80" style={{ left: '10%' }} />
-                  <span className="absolute left-0 top-0 w-2 h-2 bg-white rounded-full opacity-70" style={{ left: '30%' }} />
-                  <span className="absolute left-0 top-0 w-2.5 h-2.5 bg-white rounded-full opacity-75" style={{ left: '50%' }} />
-                  <span className="absolute left-0 top-0 w-2 h-2 bg-white rounded-full opacity-70" style={{ left: '70%' }} />
-                  <span className="absolute left-0 top-0 w-3 h-3 bg-white rounded-full opacity-80" style={{ left: '90%' }} />
-                </span>
-              </span>
+            {activeFestival ? (
+              <FestivalTextDecoration festival={activeFestival}>
+                Pradhul Dev
+              </FestivalTextDecoration>
             ) : (
               'Pradhul Dev'
             )}
@@ -227,11 +231,11 @@ export default function Home() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               rel="noopener noreferrer"
-              className={`flex items-center gap-2 text-black font-semibold px-8 py-4 rounded-full transition-all shadow-lg ${
-                isChristmas
-                  ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
-                  : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
-              }`}
+              className="flex items-center gap-2 text-black font-semibold px-8 py-4 rounded-full transition-all shadow-lg bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50"
+              style={activeFestival ? {
+                background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
+              } : undefined}
             >
               <FileText size={20} />
               <span>Download Resume</span>
@@ -241,11 +245,11 @@ export default function Home() {
               onClick={() => scrollToSection('portfolio')}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className={`flex items-center gap-2 bg-transparent border-2 font-semibold px-8 py-4 rounded-full transition-all backdrop-blur-sm ${
-                isChristmas
-                  ? 'border-red-500/50 hover:border-red-400 text-red-400'
-                  : 'border-cyan-500/50 hover:border-cyan-400 text-cyan-400'
-              }`}
+              className="flex items-center gap-2 bg-transparent border-2 font-semibold px-8 py-4 rounded-full transition-all backdrop-blur-sm border-cyan-500/50 hover:border-cyan-400 text-cyan-400"
+              style={activeFestival ? {
+                borderColor: `${activeFestival.colors.primary}50`,
+                color: activeFestival.colors.primary,
+              } : undefined}
             >
               <Sparkles size={20} />
               <span>View Portfolio</span>
@@ -262,11 +266,8 @@ export default function Home() {
               onClick={() => scrollToSection('about')}
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className={`transition-colors ${
-                isChristmas
-                  ? 'text-red-400 hover:text-red-300'
-                  : 'text-cyan-400 hover:text-cyan-300'
-              }`}
+              className="transition-colors text-cyan-400 hover:text-cyan-300"
+              style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
             >
               <ChevronDown size={40} />
             </motion.button>
@@ -284,13 +285,19 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
-              isChristmas
-                ? 'bg-gradient-to-r from-red-600 to-red-500'
-                : 'bg-gradient-to-r from-cyan-400 to-purple-500'
-            }`}>
-              {isChristmas ? (
-                <TextSnowPile>About Me</TextSnowPile>
+            <h2 
+              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500"
+              style={activeFestival ? {
+                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              } : undefined}
+            >
+              {activeFestival ? (
+                <FestivalTextDecoration festival={activeFestival}>
+                  About Me
+                </FestivalTextDecoration>
               ) : (
                 'About Me'
               )}
@@ -331,13 +338,19 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
-              isChristmas
-                ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700'
-                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
-            }`}>
-              {isChristmas ? (
-                <TextSnowPile>Portfolio</TextSnowPile>
+            <h2 
+              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500"
+              style={activeFestival ? {
+                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              } : undefined}
+            >
+              {activeFestival ? (
+                <FestivalTextDecoration festival={activeFestival}>
+                  Portfolio
+                </FestivalTextDecoration>
               ) : (
                 'Portfolio'
               )}
@@ -388,11 +401,11 @@ export default function Home() {
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`flex items-center gap-2 text-black font-semibold py-3 px-6 rounded-lg transition-all shadow-lg ${
-                        isChristmas
-                          ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
-                          : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
-                      }`}
+                      className="flex items-center gap-2 text-black font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50"
+                      style={activeFestival ? {
+                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
+                      } : undefined}
                     >
                       <Package size={18} />
                       <span>VS Code Marketplace</span>
@@ -482,11 +495,11 @@ export default function Home() {
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg ${
-                        isChristmas
-                          ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
-                          : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/50'
-                      }`}
+                      className="flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/50"
+                      style={activeFestival ? {
+                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
+                      } : undefined}
                     >
                       <Package size={18} />
                       <span>VS Code Marketplace</span>
@@ -546,13 +559,19 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
-              isChristmas
-                ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700'
-                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
-            }`}>
-              {isChristmas ? (
-                <TextSnowPile>Get In Touch</TextSnowPile>
+            <h2 
+              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500"
+              style={activeFestival ? {
+                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              } : undefined}
+            >
+              {activeFestival ? (
+                <FestivalTextDecoration festival={activeFestival}>
+                  Get In Touch
+                </FestivalTextDecoration>
               ) : (
                 'Get In Touch'
               )}
@@ -646,7 +665,7 @@ export default function Home() {
         <LazyChatWidget />
       </Suspense>
       </div>
-    </ChristmasThemeProvider>
+    </FestivalThemeProvider>
   )
 }
 
