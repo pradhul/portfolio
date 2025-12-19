@@ -255,8 +255,11 @@ export default function Home() {
             <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
               I specialize in building modern, responsive web applications and mobile apps that deliver exceptional user experiences. My expertise spans across various technologies and frameworks, allowing me to bring creative ideas to life.
             </p>
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
               When I&apos;m not coding, I enjoy creating developer tools and extensions that make the development workflow more efficient. Check out my VS Code extensions below!
+            </p>
+            <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+              Beyond coding and hanging out with friends, I have a passion for beatboxing, exploring music and movies, and gaming on my Nintendo Switch. I also love experimenting with new projects using my Raspberry Pi, constantly tinkering and learning new things.
             </p>
           </motion.div>
         </div>
