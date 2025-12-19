@@ -18,13 +18,13 @@ function extractStrings(obj: Record<string, unknown> | unknown[], prefix = ''): 
     if (typeof value === 'string') {
       strings.push({ key: fullKey, value })
     } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      strings.push(...extractStrings(value, fullKey))
+      strings.push(...extractStrings(value as Record<string, unknown>, fullKey))
     } else if (Array.isArray(value)) {
       value.forEach((item, index) => {
         if (typeof item === 'string') {
           strings.push({ key: `${fullKey}.${index}`, value: item })
         } else if (typeof item === 'object' && item !== null) {
-          strings.push(...extractStrings(item, `${fullKey}.${index}`))
+          strings.push(...extractStrings(item as Record<string, unknown> | unknown[], `${fullKey}.${index}`))
         }
       })
     }
