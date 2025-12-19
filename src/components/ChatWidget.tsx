@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react'
+import { useChristmasTheme } from './ChristmasTheme'
 
 export default function ChatWidget() {
+  const isChristmas = useChristmasTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
@@ -58,7 +60,11 @@ export default function ChatWidget() {
         onClick={() => setIsOpen(true)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white p-4 rounded-full shadow-lg shadow-cyan-500/50 transition-all"
+        className={`fixed bottom-6 right-6 z-50 text-white p-4 rounded-full shadow-lg transition-all ${
+          isChristmas
+            ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400 shadow-red-500/50'
+            : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
+        }`}
         aria-label="Open chat"
       >
         <MessageCircle size={24} />
@@ -145,7 +151,11 @@ export default function ChatWidget() {
                   disabled={!question.trim() || isLoading}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className={`text-white p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
+                    isChristmas
+                      ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400'
+                      : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400'
+                  }`}
                   aria-label="Send message"
                 >
                   {isLoading ? (

@@ -18,6 +18,7 @@ import {
 import ThreeBackground from '@/components/ThreeBackground'
 import InteractiveDots from '@/components/InteractiveDots'
 import ChatWidget from '@/components/ChatWidget'
+import { useChristmasTheme, SnowEffect, ChristmasThemeProvider } from '@/components/ChristmasTheme'
 import { FaLinkedin, FaGithubSquare, FaPhone } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
@@ -27,6 +28,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
   const containerRef = useRef<HTMLDivElement>(null)
+  const isChristmas = useChristmasTheme()
 
   useEffect(() => {
     setIsLoaded(true)
@@ -66,11 +68,13 @@ export default function Home() {
   ]
 
   return (
-    <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-black text-white scroll-smooth">
-      <Analytics />
-      <SpeedInsights />
-      <ThreeBackground />
-      <InteractiveDots />
+    <ChristmasThemeProvider isChristmas={isChristmas}>
+      <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-black text-white scroll-smooth">
+        <Analytics />
+        <SpeedInsights />
+        <ThreeBackground />
+        <InteractiveDots />
+        <SnowEffect enabled={isChristmas} />
       
       {/* Navigation */}
       <motion.nav
@@ -82,7 +86,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer"
+            className={`text-2xl font-bold bg-clip-text text-transparent cursor-pointer ${
+              isChristmas
+                ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
+                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
+            }`}
             onClick={() => scrollToSection('hero')}
           >
             Pradhul Dev
@@ -157,7 +165,11 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 30 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-6xl md:text-8xl lg:text-9xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent leading-tight"
+            className={`text-6xl md:text-8xl lg:text-9xl font-bold mb-6 bg-clip-text text-transparent leading-tight ${
+              isChristmas
+                ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
+                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
+            }`}
           >
             Pradhul Dev
           </motion.h1>
@@ -191,7 +203,11 @@ export default function Home() {
               download="PRADHUL_DEV_RESUME.pdf"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-black font-semibold px-8 py-4 rounded-full transition-all shadow-lg shadow-cyan-500/50"
+              className={`flex items-center gap-2 text-black font-semibold px-8 py-4 rounded-full transition-all shadow-lg ${
+                isChristmas
+                  ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400 shadow-red-500/50'
+                  : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
+              }`}
             >
               <FileText size={20} />
               <span>Download Resume</span>
@@ -236,7 +252,11 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+            <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
+              isChristmas
+                ? 'bg-gradient-to-r from-red-400 to-green-500'
+                : 'bg-gradient-to-r from-cyan-400 to-purple-500'
+            }`}>
               About Me
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
@@ -275,7 +295,11 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
+              isChristmas
+                ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
+                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
+            }`}>
               Portfolio
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto rounded-full" />
@@ -316,7 +340,11 @@ export default function Home() {
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-black font-semibold py-3 px-6 rounded-lg transition-all shadow-lg shadow-cyan-500/50"
+                      className={`flex items-center gap-2 text-black font-semibold py-3 px-6 rounded-lg transition-all shadow-lg ${
+                        isChristmas
+                          ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400 shadow-red-500/50'
+                          : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
+                      }`}
                     >
                       <Package size={18} />
                       <span>VS Code Marketplace</span>
@@ -397,7 +425,11 @@ export default function Home() {
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg shadow-purple-500/50"
+                      className={`flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg ${
+                        isChristmas
+                          ? 'bg-gradient-to-r from-green-500 to-red-500 hover:from-green-400 hover:to-red-400 shadow-green-500/50'
+                          : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/50'
+                      }`}
                     >
                       <Package size={18} />
                       <span>VS Code Marketplace</span>
@@ -456,7 +488,11 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
+              isChristmas
+                ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
+                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
+            }`}>
               Get In Touch
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
@@ -545,6 +581,7 @@ export default function Home() {
 
       {/* Chat Widget */}
       <ChatWidget />
-    </div>
+      </div>
+    </ChristmasThemeProvider>
   )
 }

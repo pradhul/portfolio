@@ -121,3 +121,45 @@ body {
 .pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+/* Christmas Theme Styles */
+.christmas-theme ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #dc2626, #16a34a);
+}
+
+.christmas-theme ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #ef4444, #22c55e);
+}
+
+.christmas-theme ::selection {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+.christmas-theme ::-moz-selection {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+/* Christmas gradient text */
+.christmas-theme .gradient-text {
+  background: linear-gradient(-45deg, #dc2626, #16a34a, #fbbf24, #dc2626);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* Christmas glow effects */
+.christmas-theme .glow-cyan {
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+}
+
+.christmas-theme .glow-purple {
+  box-shadow: 0 0 20px rgba(22, 163, 74, 0.4);
+}
+
+.christmas-theme .glow-pink {
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+}
