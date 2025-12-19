@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       const { getFirebaseAdmin } = await import('@/lib/firebase')
       const { app } = getFirebaseAdmin()
       projectId = app.options.projectId || projectId
-    } catch (error) {
+    } catch {
       // Firebase not initialized yet, use env var
     }
 

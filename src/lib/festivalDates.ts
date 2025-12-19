@@ -16,7 +16,7 @@ export interface FestivalDatesData {
 }
 
 // In-memory cache
-let cachedDates: Map<number, FestivalDatesData> = new Map()
+const cachedDates: Map<number, FestivalDatesData> = new Map()
 let cacheTimestamp: number = 0
 const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 hours
 

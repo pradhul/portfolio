@@ -27,7 +27,6 @@ const InteractiveDots = lazy(() => import('@/components/InteractiveDots'))
 const ChatWidget = lazy(() => import('@/components/ChatWidget'))
 
 export default function Home() {
-  const [isLoaded, setIsLoaded] = useState(true) // Start as true for faster initial render
   const [activeSection, setActiveSection] = useState('hero')
   const containerRef = useRef<HTMLDivElement>(null)
   const { activeFestival } = useFestivalTheme()

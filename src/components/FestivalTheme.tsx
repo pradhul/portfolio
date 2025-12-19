@@ -386,28 +386,6 @@ export function FestivalThemeProvider({
     )
   }
 
-  // Text decoration component based on festival
-  const getTextDecoration = (children: React.ReactNode, className?: string) => {
-    if (!activeFestival || !activeFestival.textDecoration || activeFestival.textDecoration === 'none') {
-      return <>{children}</>
-    }
-
-    switch (activeFestival.textDecoration) {
-      case 'snow':
-        return <TextSnowPile className={className}>{children}</TextSnowPile>
-      case 'sparkles':
-        return <TextSparkles className={className}>{children}</TextSparkles>
-      case 'lights':
-        return <TextLights className={className}>{children}</TextLights>
-      case 'petals':
-        return <TextPetals className={className}>{children}</TextPetals>
-      case 'confetti':
-        return <TextConfetti className={className}>{children}</TextConfetti>
-      default:
-        return <>{children}</>
-    }
-  }
-
   return (
     <>
       {renderEffects()}
