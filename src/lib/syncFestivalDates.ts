@@ -63,6 +63,7 @@ Only return the JSON array, no additional text or explanation.`
   }>
 
   // Map Gemini response to our festival IDs
+  // For festivals with extended periods, use config dates; otherwise use Gemini dates
   const festivals = geminiFestivals
     .map((geminiFestival) => {
       const config = FESTIVAL_CONFIGS.find((f) => {
@@ -80,11 +81,39 @@ Only return the JSON array, no additional text or explanation.`
         return null
       }
 
-      return {
-        id: config.id,
-        name: config.name,
-        startDate: geminiFestival.startDate,
-        endDate: geminiFestival.endDate,
+      // For festivals with extended celebration periods, use config dates
+      // This ensures Christmas (Dec 1 - Jan 2) and similar festivals get proper ranges
+      const hasExtendedPeriod = 
+        (config.approximateEndMonth !== config.approximateStartMonth) ||
+        (config.approximateEndDay - config.approximateStartDay > 3) ||
+        (config.approximateEndMonth === 0 && config.approximateStartMonth === 11) // Year-spanning
+
+      if (hasExtendedPeriod) {
+        // Use config's extended date range
+        const startDate = new Date(
+          year,
+          config.approximateStartMonth,
+          config.approximateStartDay
+        )
+        const endDate = new Date(year, config.approximateEndMonth, config.approximateEndDay)
+        if (endDate < startDate) {
+          endDate.setFullYear(year + 1)
+        }
+
+        return {
+          id: config.id,
+          name: config.name,
+          startDate: startDate.toISOString().split('T')[0],
+          endDate: endDate.toISOString().split('T')[0],
+        }
+      } else {
+        // Use Gemini's dates for single-day or short festivals
+        return {
+          id: config.id,
+          name: config.name,
+          startDate: geminiFestival.startDate,
+          endDate: geminiFestival.endDate,
+        }
       }
     })
     .filter((f) => f !== null) as Array<{

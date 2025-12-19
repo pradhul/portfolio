@@ -150,16 +150,41 @@ export function isDateInFestivalRange(date: Date, festival: FestivalDate): boole
 
 /**
  * Get the active festival for a given date
+ * Returns the most relevant festival if multiple are active
  */
 export async function getActiveFestival(date: Date = new Date()): Promise<FestivalConfig | null> {
   const year = date.getFullYear()
   const dates = await getFestivalDates(year)
 
+  // Festival priority order (higher priority first)
+  // When multiple festivals overlap, the one with higher priority is shown
+  const priorityOrder = [
+    'christmas',        // Highest - most prominent winter holiday
+    'new-year',         // Second - major celebration
+    'diwali',           // Major festival of lights
+    'chinese-new-year', // Major cultural celebration
+    'easter',           // Major Christian holiday
+    'hanukkah',         // Jewish festival
+    'ramadan-eid',      // Major Islamic festival
+    'holi',             // Festival of colors
+    'valentines',       // Single day, but popular
+    'mardi-gras',       // Pre-Lent celebration
+    'cherry-blossom',   // Spring festival
+    'halloween',        // Popular but single day focus
+    'day-of-the-dead',  // Cultural celebration
+    'oktoberfest',      // Beer festival
+  ]
+
+  // Collect all active festivals
+  const activeFestivals: Array<{ id: string; config: FestivalConfig }> = []
+
   // Check current year festivals
   for (const festivalDate of dates.festivals) {
     if (isDateInFestivalRange(date, festivalDate)) {
       const config = FESTIVAL_CONFIGS.find((f) => f.id === festivalDate.id)
-      if (config) return config
+      if (config) {
+        activeFestivals.push({ id: festivalDate.id, config })
+      }
     }
   }
 
@@ -169,9 +194,26 @@ export async function getActiveFestival(date: Date = new Date()): Promise<Festiv
     for (const festivalDate of prevYearDates.festivals) {
       if (isDateInFestivalRange(date, festivalDate)) {
         const config = FESTIVAL_CONFIGS.find((f) => f.id === festivalDate.id)
-        if (config) return config
+        if (config && !activeFestivals.find((af) => af.id === festivalDate.id)) {
+          activeFestivals.push({ id: festivalDate.id, config })
+        }
       }
     }
+  }
+
+  // If multiple festivals are active, return the one with highest priority
+  if (activeFestivals.length > 0) {
+    // Sort by priority
+    activeFestivals.sort((a, b) => {
+      const aPriority = priorityOrder.indexOf(a.id)
+      const bPriority = priorityOrder.indexOf(b.id)
+      // If not in priority list, put at end
+      if (aPriority === -1 && bPriority === -1) return 0
+      if (aPriority === -1) return 1
+      if (bPriority === -1) return -1
+      return aPriority - bPriority
+    })
+    return activeFestivals[0].config
   }
 
   return null
