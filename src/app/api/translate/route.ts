@@ -9,7 +9,7 @@ function createHash(text: string): string {
 }
 
 // Helper to recursively extract all strings from content object
-function extractStrings(obj: any, prefix = ''): Array<{ key: string; value: string }> {
+function extractStrings(obj: Record<string, unknown> | unknown[], prefix = ''): Array<{ key: string; value: string }> {
   const strings: Array<{ key: string; value: string }> = []
   
   for (const [key, value] of Object.entries(obj)) {
@@ -34,7 +34,7 @@ function extractStrings(obj: any, prefix = ''): Array<{ key: string; value: stri
 }
 
 // Helper to set nested value in object
-function setNestedValue(obj: any, path: string, value: string) {
+function setNestedValue(obj: Record<string, unknown> | unknown[], path: string, value: string) {
   const keys = path.split('.')
   let current = obj
   
@@ -69,7 +69,7 @@ function setNestedValue(obj: any, path: string, value: string) {
 }
 
 // Helper to reconstruct object from translated strings
-function reconstructObject(strings: Array<{ key: string; value: string }>, original: any): any {
+function reconstructObject(strings: Array<{ key: string; value: string }>, original: Record<string, unknown>): Record<string, unknown> {
   // Deep clone the original structure
   const result = JSON.parse(JSON.stringify(original))
   
@@ -82,7 +82,7 @@ function reconstructObject(strings: Array<{ key: string; value: string }>, origi
 }
 
 export async function POST(request: NextRequest) {
-  let content: any
+  let content: Record<string, unknown>
   let targetLanguage: string
   
   try {
@@ -104,7 +104,6 @@ export async function POST(request: NextRequest) {
 
     const db = getFirestoreInstance()
     const contentHash = createHash(JSON.stringify(content))
-    const cacheKey = `translatedContent/${contentHash}/${targetLanguage}`
 
     // Check Firebase cache first
     try {
@@ -129,7 +128,6 @@ export async function POST(request: NextRequest) {
       strings.map(async ({ key, value }) => {
         // Check individual string cache
         const stringHash = createHash(value)
-        const stringCacheKey = `translations/${stringHash}/${targetLanguage}`
         
         try {
           const stringCacheDoc = await db.collection('translations').doc(`${stringHash}_${targetLanguage}`).get()
@@ -139,7 +137,7 @@ export async function POST(request: NextRequest) {
               return { key, value: cached.translatedText }
             }
           }
-        } catch (error) {
+        } catch {
           // Continue to translation
         }
 

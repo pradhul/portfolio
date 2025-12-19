@@ -2,14 +2,14 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { content } from '@/lib/content'
-import { getLanguageFromBrowser, supportedLanguages, languageInfo } from '@/lib/countryToLanguage'
+import { getLanguageFromBrowser, supportedLanguages } from '@/lib/countryToLanguage'
 
 type ContentType = typeof content
 
 interface LanguageContextType {
   language: string
   setLanguage: (lang: string) => void
-  t: (key: string) => string
+  t: (key: string) => string | string[] | Record<string, unknown>
   isTranslating: boolean
   translatedContent: ContentType | null
 }
@@ -76,7 +76,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
             setIsTranslating(false)
             return
           }
-        } catch (error) {
+        } catch {
           // Invalid cache, continue to fetch
         }
       }
@@ -130,14 +130,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }
 
   // Translation function - gets value from nested keys like 'hero.title'
-  const t = (key: string): string => {
+  const t = (key: string): string | string[] | Record<string, unknown> => {
     const currentContent = translatedContent || content
     const keys = key.split('.')
-    let value: any = currentContent
+    let value: unknown = currentContent
 
     for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k]
+      if (value && typeof value === 'object' && value !== null && k in value) {
+        value = (value as Record<string, unknown>)[k]
       } else {
         // Key not found, return the key itself as fallback
         console.warn(`Translation key not found: ${key}`)
@@ -146,7 +146,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
 
     // Return the value as-is (could be string, array, or object)
-    return value
+    if (typeof value === 'string') {
+      return value
+    }
+    if (Array.isArray(value)) {
+      return value as string[]
+    }
+    if (typeof value === 'object' && value !== null) {
+      return value as Record<string, unknown>
+    }
+    return String(value)
   }
 
   return (
