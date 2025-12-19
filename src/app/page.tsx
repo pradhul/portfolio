@@ -16,6 +16,9 @@ import {
   MessageCircle
 } from 'lucide-react'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
+import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
+import { LanguageLayout } from '@/components/LanguageLayout'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { FaLinkedin, FaGithubSquare, FaPhone } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
@@ -26,10 +29,11 @@ const ThreeBackground = lazy(() => import('@/components/ThreeBackground'))
 const InteractiveDots = lazy(() => import('@/components/InteractiveDots'))
 const ChatWidget = lazy(() => import('@/components/ChatWidget'))
 
-export default function Home() {
+function HomeContent() {
   const [activeSection, setActiveSection] = useState('hero')
   const containerRef = useRef<HTMLDivElement>(null)
   const { activeFestival } = useFestivalTheme()
+  const { t } = useLanguage()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,10 +64,10 @@ export default function Home() {
   }
 
   const navItems = [
-    { id: 'hero', label: 'Home', icon: Code },
-    { id: 'about', label: 'About', icon: User },
-    { id: 'portfolio', label: 'Portfolio', icon: Briefcase },
-    { id: 'contact', label: 'Contact', icon: MessageCircle },
+    { id: 'hero', label: t('nav.home'), icon: Code },
+    { id: 'about', label: t('nav.about'), icon: User },
+    { id: 'portfolio', label: t('nav.portfolio'), icon: Briefcase },
+    { id: 'contact', label: t('nav.contact'), icon: MessageCircle },
   ]
 
   return (
@@ -99,9 +103,9 @@ export default function Home() {
               backgroundClip: 'text',
             } : undefined}
           >
-            Pradhul Dev
+            {t('brand')}
           </motion.div>
-          <div className="hidden md:flex gap-2">
+          <div className="hidden md:flex gap-2 items-center">
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = activeSection === item.id
@@ -132,6 +136,10 @@ export default function Home() {
                 </motion.button>
               )
             })}
+            <LanguageSwitcher />
+          </div>
+          <div className="md:hidden">
+            <LanguageSwitcher />
           </div>
         </div>
       </motion.nav>
@@ -193,10 +201,10 @@ export default function Home() {
           >
             {activeFestival ? (
               <FestivalTextDecoration festival={activeFestival}>
-                Pradhul Dev
+                {t('hero.title')}
               </FestivalTextDecoration>
             ) : (
-              'Pradhul Dev'
+              t('hero.title')
             )}
           </motion.h1>
 
@@ -206,7 +214,7 @@ export default function Home() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-2xl md:text-3xl text-gray-300 mb-4 font-light"
           >
-            Web & Mobile Developer
+            {t('hero.subtitle')}
           </motion.p>
 
           <motion.p
@@ -215,7 +223,7 @@ export default function Home() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-lg text-gray-400 mb-12"
           >
-            8+ Years of Experience
+            {t('hero.experience')}
           </motion.p>
 
           <motion.div
@@ -237,7 +245,7 @@ export default function Home() {
               } : undefined}
             >
               <FileText size={20} />
-              <span>Download Resume</span>
+              <span>{t('hero.downloadResume')}</span>
             </motion.a>
 
             <motion.button
@@ -251,7 +259,7 @@ export default function Home() {
               } : undefined}
             >
               <Sparkles size={20} />
-              <span>View Portfolio</span>
+              <span>{t('hero.viewPortfolio')}</span>
             </motion.button>
           </motion.div>
 
@@ -295,10 +303,10 @@ export default function Home() {
             >
               {activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
-                  About Me
+                  {t('about.title')}
                 </FestivalTextDecoration>
               ) : (
-                'About Me'
+                t('about.title')
               )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
@@ -311,18 +319,30 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="bg-black/30 backdrop-blur-md border border-cyan-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-cyan-500/40 transition-all duration-300"
           >
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
-              Hi, I&apos;m <span className="text-cyan-400 font-semibold">Pradhul</span>, a passionate Web and Mobile Developer with over 8 years of experience crafting digital solutions.
-            </p>
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
-              I specialize in building modern, responsive web applications and mobile apps that deliver exceptional user experiences. My expertise spans across various technologies and frameworks, allowing me to bring creative ideas to life.
-            </p>
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
-              When I&apos;m not coding, I enjoy creating developer tools and extensions that make the development workflow more efficient. Check out my VS Code extensions below!
-            </p>
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-              Beyond coding and hanging out with friends, I have a passion for beatboxing, exploring music and movies, and gaming on my Nintendo Switch. I also love experimenting with new projects using my Raspberry Pi, constantly tinkering and learning new things.
-            </p>
+            {(() => {
+              const paragraphs = t('about.paragraphs')
+              if (Array.isArray(paragraphs)) {
+                return paragraphs.map((para: string, index: number) => {
+                  // For the first paragraph, highlight "Pradhul" with styled span
+                  if (index === 0 && para.includes('Pradhul')) {
+                    const parts = para.split('Pradhul')
+                    return (
+                      <p key={index} className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6 last:mb-0">
+                        {parts[0]}
+                        <span className="text-cyan-400 font-semibold">Pradhul</span>
+                        {parts[1]}
+                      </p>
+                    )
+                  }
+                  return (
+                    <p key={index} className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6 last:mb-0">
+                      {para}
+                    </p>
+                  )
+                })
+              }
+              return null
+            })()}
           </motion.div>
         </div>
       </section>
@@ -348,10 +368,10 @@ export default function Home() {
             >
               {activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
-                  Portfolio
+                  {t('portfolio.title')}
                 </FestivalTextDecoration>
               ) : (
-                'Portfolio'
+                t('portfolio.title')
               )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto rounded-full" />
@@ -384,13 +404,13 @@ export default function Home() {
                       />
                     </motion.div>
                     <div>
-                      <div className="text-xs font-semibold text-cyan-400 mb-2 tracking-wider">VS CODE EXTENSION</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">Squash-Push</h3>
+                      <div className="text-xs font-semibold text-cyan-400 mb-2 tracking-wider">{t('portfolio.squashPush.category')}</div>
+                      <h3 className="text-4xl md:text-5xl font-bold text-white">{t('portfolio.squashPush.title')}</h3>
                     </div>
                   </div>
 
                   <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    Simplify your Git workflow by squashing multiple commits before pushing to a remote repository. This extension streamlines the development process and keeps your commit history clean.
+                    {t('portfolio.squashPush.description')}
                   </p>
 
                   <div className="flex flex-wrap gap-4">
@@ -407,7 +427,7 @@ export default function Home() {
                       } : undefined}
                     >
                       <Package size={18} />
-                      <span>VS Code Marketplace</span>
+                      <span>{t('portfolio.squashPush.marketplace')}</span>
                     </motion.a>
                     <motion.a
                       href="https://github.com/pradhul/squash-push"
@@ -418,7 +438,7 @@ export default function Home() {
                       className="flex items-center gap-2 bg-transparent border-2 border-cyan-500/50 hover:border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg transition-all"
                     >
                       <Github size={18} />
-                      <span>View on GitHub</span>
+                      <span>{t('portfolio.squashPush.viewGitHub')}</span>
                     </motion.a>
                   </div>
                 </div>
@@ -434,7 +454,7 @@ export default function Home() {
                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                         <div className="w-3 h-3 rounded-full bg-green-500"></div>
                       </div>
-                      <div className="text-xs font-mono text-gray-400">squash-push demo</div>
+                      <div className="text-xs font-mono text-gray-400">{t('portfolio.squashPush.demoLabel')}</div>
                     </div>
                     <div className="p-4">
                       <Image
@@ -478,13 +498,13 @@ export default function Home() {
                       />
                     </motion.div>
                     <div>
-                      <div className="text-xs font-semibold text-purple-400 mb-2 tracking-wider">VS CODE EXTENSION</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">vsColorCode</h3>
+                      <div className="text-xs font-semibold text-purple-400 mb-2 tracking-wider">{t('portfolio.vsColorCode.category')}</div>
+                      <h3 className="text-4xl md:text-5xl font-bold text-white">{t('portfolio.vsColorCode.title')}</h3>
                     </div>
                   </div>
 
                   <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    A simple VS Code extension that randomly applies muted color themes to your workspace&apos;s status bar and title bar. This helps you visually distinguish between different projects or workspaces at a glance.
+                    {t('portfolio.vsColorCode.description')}
                   </p>
 
                   <div className="flex flex-wrap gap-4">
@@ -501,7 +521,7 @@ export default function Home() {
                       } : undefined}
                     >
                       <Package size={18} />
-                      <span>VS Code Marketplace</span>
+                      <span>{t('portfolio.vsColorCode.marketplace')}</span>
                     </motion.a>
                     <motion.a
                       href="https://github.com/pradhul/vscolorcode"
@@ -512,7 +532,7 @@ export default function Home() {
                       className="flex items-center gap-2 bg-transparent border-2 border-purple-500/50 hover:border-purple-400 text-purple-400 font-semibold py-3 px-6 rounded-lg transition-all"
                     >
                       <Github size={18} />
-                      <span>View on GitHub</span>
+                      <span>{t('portfolio.vsColorCode.viewGitHub')}</span>
                     </motion.a>
                   </div>
                 </div>
@@ -528,7 +548,7 @@ export default function Home() {
                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                         <div className="w-3 h-3 rounded-full bg-green-500"></div>
                       </div>
-                      <div className="text-xs font-mono text-gray-400">vsColorCode demo</div>
+                      <div className="text-xs font-mono text-gray-400">{t('portfolio.vsColorCode.demoLabel')}</div>
                     </div>
                     <div className="p-4">
                       <Image
@@ -569,15 +589,15 @@ export default function Home() {
             >
               {activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
-                  Get In Touch
+                  {t('contact.title')}
                 </FestivalTextDecoration>
               ) : (
-                'Get In Touch'
+                t('contact.title')
               )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
             <p className="text-xl text-gray-300">
-              Let&apos;s discuss your next project or just say hello!
+              {t('contact.subtitle')}
             </p>
           </motion.div>
 
@@ -621,7 +641,7 @@ export default function Home() {
             </div>
 
             <div className="border-t border-cyan-500/20 pt-12">
-              <p className="text-center text-gray-400 mb-8 text-lg">Connect with me on</p>
+              <p className="text-center text-gray-400 mb-8 text-lg">{t('contact.connectLabel')}</p>
               <div className="flex justify-center gap-8">
                 {[
                   { icon: FaLinkedin, href: 'https://www.linkedin.com/in/pradhul-dev-30708814b/', color: 'text-blue-400 hover:text-blue-300' },
@@ -655,7 +675,7 @@ export default function Home() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          © {new Date().getFullYear()} Pradhul Dev. All rights reserved.
+          © {new Date().getFullYear()} {t('footer.copyright')}
         </motion.p>
       </footer>
 
@@ -722,4 +742,14 @@ function LazyChatWidget() {
   if (!shouldLoad) return null
 
   return <ChatWidget />
+}
+
+export default function Home() {
+  return (
+    <LanguageProvider>
+      <LanguageLayout>
+        <HomeContent />
+      </LanguageLayout>
+    </LanguageProvider>
+  )
 }
