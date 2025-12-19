@@ -10,6 +10,7 @@ interface LanguageContextType {
   language: string
   setLanguage: (lang: string) => void
   t: (key: string) => string | string[] | Record<string, unknown>
+  tString: (key: string) => string // Helper for string-only translations
   isTranslating: boolean
   translatedContent: ContentType | null
 }
@@ -158,12 +159,25 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return String(value)
   }
 
+  // Helper function that always returns a string (for React components)
+  const tString = (key: string): string => {
+    const result = t(key)
+    if (typeof result === 'string') {
+      return result
+    }
+    if (Array.isArray(result)) {
+      return result.join(' ')
+    }
+    return JSON.stringify(result)
+  }
+
   return (
     <LanguageContext.Provider
       value={{
         language,
         setLanguage,
         t,
+        tString,
         isTranslating,
         translatedContent,
       }}

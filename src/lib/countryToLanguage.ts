@@ -18,11 +18,10 @@ export const countryToLanguage: Record<string, string> = {
   VE: 'es', // Venezuela - Spanish
   FR: 'fr', // France - French
   BE: 'fr', // Belgium - French
-  CH: 'fr', // Switzerland - French
-  CA: 'fr', // Canada - French (Quebec)
   DE: 'de', // Germany - German
   AT: 'de', // Austria - German
-  CH: 'de', // Switzerland - German
+  // Note: CH (Switzerland) and CA (Canada) have multiple languages
+  // Using primary language based on browser detection instead
   IT: 'it', // Italy - Italian
   PT: 'pt', // Portugal - Portuguese
   BR: 'pt', // Brazil - Portuguese

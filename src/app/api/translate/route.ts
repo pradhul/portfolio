@@ -36,35 +36,50 @@ function extractStrings(obj: Record<string, unknown> | unknown[], prefix = ''): 
 // Helper to set nested value in object
 function setNestedValue(obj: Record<string, unknown> | unknown[], path: string, value: string) {
   const keys = path.split('.')
-  let current = obj
+  let current: Record<string, unknown> | unknown[] = obj
   
   for (let i = 0; i < keys.length - 1; i++) {
     const key = keys[i]
     const nextKey = keys[i + 1]
     const isNextArrayIndex = !isNaN(Number(nextKey))
     
-    if (!current[key]) {
-      current[key] = isNextArrayIndex ? [] : {}
+    if (Array.isArray(current)) {
+      const idx = Number(key)
+      if (isNaN(idx)) {
+        throw new Error(`Invalid array index: ${key}`)
+      }
+      if (!current[idx]) {
+        current[idx] = isNextArrayIndex ? [] : {}
+      }
+      current = current[idx] as Record<string, unknown> | unknown[]
+    } else {
+      if (!(key in current)) {
+        current[key] = isNextArrayIndex ? [] : {}
+      }
+      current = current[key] as Record<string, unknown> | unknown[]
     }
-    current = current[key]
   }
   
   const lastKey = keys[keys.length - 1]
   if (!isNaN(Number(lastKey))) {
     if (!Array.isArray(current)) {
       // Convert to array if needed
-      const temp = { ...current }
-      current.length = 0
+      const temp = { ...(current as Record<string, unknown>) }
+      const arr: unknown[] = []
       Object.keys(temp).forEach(k => {
         const idx = Number(k)
         if (!isNaN(idx)) {
-          current[idx] = temp[k]
+          arr[idx] = temp[k]
         }
       })
+      current = arr
     }
-    current[Number(lastKey)] = value
+    (current as unknown[])[Number(lastKey)] = value
   } else {
-    current[lastKey] = value
+    if (Array.isArray(current)) {
+      throw new Error(`Cannot set string key on array: ${lastKey}`)
+    }
+    (current as Record<string, unknown>)[lastKey] = value
   }
 }
 
@@ -82,13 +97,10 @@ function reconstructObject(strings: Array<{ key: string; value: string }>, origi
 }
 
 export async function POST(request: NextRequest) {
-  let content: Record<string, unknown>
-  let targetLanguage: string
-  
   try {
     const body = await request.json()
-    content = body.content
-    targetLanguage = body.targetLanguage
+    const content: Record<string, unknown> = body.content
+    const targetLanguage: string = body.targetLanguage
 
     if (!content || !targetLanguage) {
       return NextResponse.json(
@@ -192,9 +204,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ translatedContent })
   } catch (error) {
     console.error('Error in translate API:', error)
-    // Return original content as fallback if we have it
-    if (content) {
-      return NextResponse.json({ translatedContent: content })
+    // Try to get content from request if possible
+    try {
+      const body = await request.json()
+      if (body?.content) {
+        return NextResponse.json({ translatedContent: body.content })
+      }
+    } catch {
+      // Ignore
     }
     return NextResponse.json(
       { error: 'Translation failed', translatedContent: null },

@@ -33,7 +33,7 @@ function HomeContent() {
   const [activeSection, setActiveSection] = useState('hero')
   const containerRef = useRef<HTMLDivElement>(null)
   const { activeFestival } = useFestivalTheme()
-  const { t } = useLanguage()
+  const { t, tString } = useLanguage()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,10 +64,10 @@ function HomeContent() {
   }
 
   const navItems = [
-    { id: 'hero', label: t('nav.home'), icon: Code },
-    { id: 'about', label: t('nav.about'), icon: User },
-    { id: 'portfolio', label: t('nav.portfolio'), icon: Briefcase },
-    { id: 'contact', label: t('nav.contact'), icon: MessageCircle },
+    { id: 'hero', label: tString('nav.home'), icon: Code },
+    { id: 'about', label: tString('nav.about'), icon: User },
+    { id: 'portfolio', label: tString('nav.portfolio'), icon: Briefcase },
+    { id: 'contact', label: tString('nav.contact'), icon: MessageCircle },
   ]
 
   return (
@@ -103,7 +103,7 @@ function HomeContent() {
               backgroundClip: 'text',
             } : undefined}
           >
-            {t('brand')}
+            {tString('brand')}
           </motion.div>
           <div className="hidden md:flex gap-2 items-center">
             {navItems.map((item) => {
@@ -201,10 +201,10 @@ function HomeContent() {
           >
             {activeFestival ? (
               <FestivalTextDecoration festival={activeFestival}>
-                {t('hero.title')}
+                {tString('hero.title')}
               </FestivalTextDecoration>
             ) : (
-              t('hero.title')
+              tString('hero.title')
             )}
           </motion.h1>
 
@@ -214,7 +214,7 @@ function HomeContent() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-2xl md:text-3xl text-gray-300 mb-4 font-light"
           >
-            {t('hero.subtitle')}
+            {tString('hero.subtitle')}
           </motion.p>
 
           <motion.p
@@ -223,7 +223,7 @@ function HomeContent() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-lg text-gray-400 mb-12"
           >
-            {t('hero.experience')}
+            {tString('hero.experience')}
           </motion.p>
 
           <motion.div
@@ -245,7 +245,7 @@ function HomeContent() {
               } : undefined}
             >
               <FileText size={20} />
-              <span>{t('hero.downloadResume')}</span>
+              <span>{tString('hero.downloadResume')}</span>
             </motion.a>
 
             <motion.button
@@ -259,7 +259,7 @@ function HomeContent() {
               } : undefined}
             >
               <Sparkles size={20} />
-              <span>{t('hero.viewPortfolio')}</span>
+              <span>{tString('hero.viewPortfolio')}</span>
             </motion.button>
           </motion.div>
 
@@ -303,10 +303,10 @@ function HomeContent() {
             >
               {activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
-                  {t('about.title')}
+                  {tString('about.title')}
                 </FestivalTextDecoration>
               ) : (
-                t('about.title')
+                tString('about.title')
               )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
@@ -368,10 +368,10 @@ function HomeContent() {
             >
               {activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
-                  {t('portfolio.title')}
+                  {tString('portfolio.title')}
                 </FestivalTextDecoration>
               ) : (
-                t('portfolio.title')
+                tString('portfolio.title')
               )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto rounded-full" />
@@ -404,13 +404,13 @@ function HomeContent() {
                       />
                     </motion.div>
                     <div>
-                      <div className="text-xs font-semibold text-cyan-400 mb-2 tracking-wider">{t('portfolio.squashPush.category')}</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">{t('portfolio.squashPush.title')}</h3>
+                      <div className="text-xs font-semibold text-cyan-400 mb-2 tracking-wider">{tString('portfolio.squashPush.category')}</div>
+                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.squashPush.title')}</h3>
                     </div>
                   </div>
 
                   <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    {t('portfolio.squashPush.description')}
+                    {tString('portfolio.squashPush.description')}
                   </p>
 
                   <div className="flex flex-wrap gap-4">
@@ -427,7 +427,7 @@ function HomeContent() {
                       } : undefined}
                     >
                       <Package size={18} />
-                      <span>{t('portfolio.squashPush.marketplace')}</span>
+                      <span>{tString('portfolio.squashPush.marketplace')}</span>
                     </motion.a>
                     <motion.a
                       href="https://github.com/pradhul/squash-push"
@@ -438,7 +438,7 @@ function HomeContent() {
                       className="flex items-center gap-2 bg-transparent border-2 border-cyan-500/50 hover:border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg transition-all"
                     >
                       <Github size={18} />
-                      <span>{t('portfolio.squashPush.viewGitHub')}</span>
+                      <span>{tString('portfolio.squashPush.viewGitHub')}</span>
                     </motion.a>
                   </div>
                 </div>
@@ -454,7 +454,7 @@ function HomeContent() {
                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                         <div className="w-3 h-3 rounded-full bg-green-500"></div>
                       </div>
-                      <div className="text-xs font-mono text-gray-400">{t('portfolio.squashPush.demoLabel')}</div>
+                      <div className="text-xs font-mono text-gray-400">{tString('portfolio.squashPush.demoLabel')}</div>
                     </div>
                     <div className="p-4">
                       <Image
@@ -498,13 +498,13 @@ function HomeContent() {
                       />
                     </motion.div>
                     <div>
-                      <div className="text-xs font-semibold text-purple-400 mb-2 tracking-wider">{t('portfolio.vsColorCode.category')}</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">{t('portfolio.vsColorCode.title')}</h3>
+                      <div className="text-xs font-semibold text-purple-400 mb-2 tracking-wider">{tString('portfolio.vsColorCode.category')}</div>
+                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.vsColorCode.title')}</h3>
                     </div>
                   </div>
 
                   <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    {t('portfolio.vsColorCode.description')}
+                    {tString('portfolio.vsColorCode.description')}
                   </p>
 
                   <div className="flex flex-wrap gap-4">
@@ -521,7 +521,7 @@ function HomeContent() {
                       } : undefined}
                     >
                       <Package size={18} />
-                      <span>{t('portfolio.vsColorCode.marketplace')}</span>
+                      <span>{tString('portfolio.vsColorCode.marketplace')}</span>
                     </motion.a>
                     <motion.a
                       href="https://github.com/pradhul/vscolorcode"
@@ -532,7 +532,7 @@ function HomeContent() {
                       className="flex items-center gap-2 bg-transparent border-2 border-purple-500/50 hover:border-purple-400 text-purple-400 font-semibold py-3 px-6 rounded-lg transition-all"
                     >
                       <Github size={18} />
-                      <span>{t('portfolio.vsColorCode.viewGitHub')}</span>
+                      <span>{tString('portfolio.vsColorCode.viewGitHub')}</span>
                     </motion.a>
                   </div>
                 </div>
@@ -548,7 +548,7 @@ function HomeContent() {
                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                         <div className="w-3 h-3 rounded-full bg-green-500"></div>
                       </div>
-                      <div className="text-xs font-mono text-gray-400">{t('portfolio.vsColorCode.demoLabel')}</div>
+                      <div className="text-xs font-mono text-gray-400">{tString('portfolio.vsColorCode.demoLabel')}</div>
                     </div>
                     <div className="p-4">
                       <Image
@@ -589,15 +589,15 @@ function HomeContent() {
             >
               {activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
-                  {t('contact.title')}
+                  {tString('contact.title')}
                 </FestivalTextDecoration>
               ) : (
-                t('contact.title')
+                tString('contact.title')
               )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
             <p className="text-xl text-gray-300">
-              {t('contact.subtitle')}
+              {tString('contact.subtitle')}
             </p>
           </motion.div>
 
@@ -641,7 +641,7 @@ function HomeContent() {
             </div>
 
             <div className="border-t border-cyan-500/20 pt-12">
-              <p className="text-center text-gray-400 mb-8 text-lg">{t('contact.connectLabel')}</p>
+              <p className="text-center text-gray-400 mb-8 text-lg">{tString('contact.connectLabel')}</p>
               <div className="flex justify-center gap-8">
                 {[
                   { icon: FaLinkedin, href: 'https://www.linkedin.com/in/pradhul-dev-30708814b/', color: 'text-blue-400 hover:text-blue-300' },
@@ -675,7 +675,7 @@ function HomeContent() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          © {new Date().getFullYear()} {t('footer.copyright')}
+          © {new Date().getFullYear()} {tString('footer.copyright')}
         </motion.p>
       </footer>
 
