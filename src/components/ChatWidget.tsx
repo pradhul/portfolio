@@ -62,7 +62,7 @@ export default function ChatWidget() {
         whileTap={{ scale: 0.9 }}
         className={`fixed bottom-6 right-6 z-50 text-white p-4 rounded-full shadow-lg transition-all ${
           isChristmas
-            ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400 shadow-red-500/50'
+            ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
             : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
         }`}
         aria-label="Open chat"
@@ -78,12 +78,18 @@ export default function ChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] bg-black/90 backdrop-blur-md border border-cyan-500/30 rounded-2xl shadow-2xl overflow-hidden"
+            className={`fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] bg-black/90 backdrop-blur-md border rounded-2xl shadow-2xl overflow-hidden ${
+              isChristmas ? 'border-red-500/30' : 'border-cyan-500/30'
+            }`}
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-b border-cyan-500/30 p-4 flex items-center justify-between">
+            <div className={`bg-gradient-to-r border-b p-4 flex items-center justify-between ${
+              isChristmas
+                ? 'from-red-600/20 to-red-500/20 border-red-500/30'
+                : 'from-cyan-500/20 to-purple-500/20 border-cyan-500/30'
+            }`}>
               <div className="flex items-center gap-3">
-                <MessageCircle className="text-cyan-400" size={20} />
+                <MessageCircle className={isChristmas ? 'text-red-400' : 'text-cyan-400'} size={20} />
                 <h3 className="text-lg font-semibold text-white">Ask About Me</h3>
               </div>
               <button
@@ -101,7 +107,11 @@ export default function ChatWidget() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mb-4 p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-lg"
+                  className={`mb-4 p-4 border rounded-lg ${
+                    isChristmas
+                      ? 'bg-red-500/10 border-red-500/20'
+                      : 'bg-cyan-500/10 border-cyan-500/20'
+                  }`}
                 >
                   <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
                     {answer}
@@ -121,7 +131,7 @@ export default function ChatWidget() {
 
               {isLoading && (
                 <div className="flex items-center justify-center py-8">
-                  <Loader2 className="text-cyan-400 animate-spin" size={24} />
+                  <Loader2 className={`${isChristmas ? 'text-red-400' : 'text-cyan-400'} animate-spin`} size={24} />
                   <span className="ml-3 text-gray-400 text-sm">Thinking...</span>
                 </div>
               )}
@@ -136,7 +146,9 @@ export default function ChatWidget() {
             </div>
 
             {/* Input Form */}
-            <form onSubmit={handleSubmit} className="p-4 border-t border-cyan-500/20">
+            <form onSubmit={handleSubmit} className={`p-4 border-t ${
+              isChristmas ? 'border-red-500/20' : 'border-cyan-500/20'
+            }`}>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -144,7 +156,11 @@ export default function ChatWidget() {
                   onChange={(e) => setQuestion(e.target.value)}
                   placeholder="Ask anything about me..."
                   disabled={isLoading}
-                  className="flex-1 bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`flex-1 bg-black/50 border rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isChristmas
+                      ? 'border-red-500/30 focus:border-red-400 focus:ring-red-500/50'
+                      : 'border-cyan-500/30 focus:border-cyan-400 focus:ring-cyan-500/50'
+                  }`}
                 />
                 <motion.button
                   type="submit"
@@ -153,7 +169,7 @@ export default function ChatWidget() {
                   whileTap={{ scale: 0.95 }}
                   className={`text-white p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
                     isChristmas
-                      ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400'
+                      ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400'
                       : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400'
                   }`}
                   aria-label="Send message"

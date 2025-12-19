@@ -15,7 +15,7 @@ import {
   Briefcase,
   MessageCircle
 } from 'lucide-react'
-import { useChristmasTheme, SnowEffect, ChristmasThemeProvider } from '@/components/ChristmasTheme'
+import { useChristmasTheme, SnowEffect, ChristmasThemeProvider, TextSnowPile } from '@/components/ChristmasTheme'
 import { FaLinkedin, FaGithubSquare, FaPhone } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
@@ -90,7 +90,7 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
             className={`text-2xl font-bold bg-clip-text text-transparent cursor-pointer ${
               isChristmas
-                ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
+                ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700'
                 : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
             }`}
             onClick={() => scrollToSection('hero')}
@@ -150,15 +150,23 @@ export default function Home() {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 border-2 border-cyan-500/30 rounded-full"
+                className={`absolute inset-0 border-2 rounded-full ${
+                  isChristmas ? 'border-red-500/30' : 'border-cyan-500/30'
+                }`}
               />
               <motion.div
                 animate={{ rotate: -360 }}
                 transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-2 border-2 border-purple-500/30 rounded-full"
+                className={`absolute inset-2 border-2 rounded-full ${
+                  isChristmas ? 'border-red-600/30' : 'border-purple-500/30'
+                }`}
               />
-              <div className="relative p-8 rounded-full bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-cyan-500/30">
-                <Code size={64} className="text-cyan-400" />
+              <div className={`relative p-8 rounded-full backdrop-blur-sm border ${
+                isChristmas
+                  ? 'bg-gradient-to-br from-red-500/20 via-red-600/20 to-red-700/20 border-red-500/30'
+                  : 'bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20 border-cyan-500/30'
+              }`}>
+                <Code size={64} className={isChristmas ? 'text-red-400' : 'text-cyan-400'} />
               </div>
             </div>
           </motion.div>
@@ -167,13 +175,26 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className={`text-6xl md:text-8xl lg:text-9xl font-bold mb-6 bg-clip-text text-transparent leading-tight ${
+            className={`text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-tight ${
               isChristmas
-                ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
-                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
+                ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-clip-text text-transparent'
+                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent'
             }`}
           >
-            Pradhul Dev
+            {isChristmas ? (
+              <span className="relative inline-block">
+                <span className="bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-clip-text text-transparent">Pradhul Dev</span>
+                <span className="absolute -top-2 left-0 right-0 h-2 overflow-hidden pointer-events-none z-10">
+                  <span className="absolute left-0 top-0 w-3 h-3 bg-white rounded-full opacity-80" style={{ left: '10%' }} />
+                  <span className="absolute left-0 top-0 w-2 h-2 bg-white rounded-full opacity-70" style={{ left: '30%' }} />
+                  <span className="absolute left-0 top-0 w-2.5 h-2.5 bg-white rounded-full opacity-75" style={{ left: '50%' }} />
+                  <span className="absolute left-0 top-0 w-2 h-2 bg-white rounded-full opacity-70" style={{ left: '70%' }} />
+                  <span className="absolute left-0 top-0 w-3 h-3 bg-white rounded-full opacity-80" style={{ left: '90%' }} />
+                </span>
+              </span>
+            ) : (
+              'Pradhul Dev'
+            )}
           </motion.h1>
 
           <motion.p
@@ -208,7 +229,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className={`flex items-center gap-2 text-black font-semibold px-8 py-4 rounded-full transition-all shadow-lg ${
                 isChristmas
-                  ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400 shadow-red-500/50'
+                  ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
                   : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
               }`}
             >
@@ -220,7 +241,11 @@ export default function Home() {
               onClick={() => scrollToSection('portfolio')}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 bg-transparent border-2 border-cyan-500/50 hover:border-cyan-400 text-cyan-400 font-semibold px-8 py-4 rounded-full transition-all backdrop-blur-sm"
+              className={`flex items-center gap-2 bg-transparent border-2 font-semibold px-8 py-4 rounded-full transition-all backdrop-blur-sm ${
+                isChristmas
+                  ? 'border-red-500/50 hover:border-red-400 text-red-400'
+                  : 'border-cyan-500/50 hover:border-cyan-400 text-cyan-400'
+              }`}
             >
               <Sparkles size={20} />
               <span>View Portfolio</span>
@@ -237,7 +262,11 @@ export default function Home() {
               onClick={() => scrollToSection('about')}
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="text-cyan-400 hover:text-cyan-300 transition-colors"
+              className={`transition-colors ${
+                isChristmas
+                  ? 'text-red-400 hover:text-red-300'
+                  : 'text-cyan-400 hover:text-cyan-300'
+              }`}
             >
               <ChevronDown size={40} />
             </motion.button>
@@ -257,10 +286,14 @@ export default function Home() {
           >
             <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
               isChristmas
-                ? 'bg-gradient-to-r from-red-400 to-green-500'
+                ? 'bg-gradient-to-r from-red-600 to-red-500'
                 : 'bg-gradient-to-r from-cyan-400 to-purple-500'
             }`}>
-              About Me
+              {isChristmas ? (
+                <TextSnowPile>About Me</TextSnowPile>
+              ) : (
+                'About Me'
+              )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
           </motion.div>
@@ -300,10 +333,14 @@ export default function Home() {
           >
             <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
               isChristmas
-                ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
+                ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700'
                 : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
             }`}>
-              Portfolio
+              {isChristmas ? (
+                <TextSnowPile>Portfolio</TextSnowPile>
+              ) : (
+                'Portfolio'
+              )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto rounded-full" />
           </motion.div>
@@ -353,7 +390,7 @@ export default function Home() {
                       whileTap={{ scale: 0.95 }}
                       className={`flex items-center gap-2 text-black font-semibold py-3 px-6 rounded-lg transition-all shadow-lg ${
                         isChristmas
-                          ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400 shadow-red-500/50'
+                          ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
                           : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
                       }`}
                     >
@@ -447,7 +484,7 @@ export default function Home() {
                       whileTap={{ scale: 0.95 }}
                       className={`flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg ${
                         isChristmas
-                          ? 'bg-gradient-to-r from-green-500 to-red-500 hover:from-green-400 hover:to-red-400 shadow-green-500/50'
+                          ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
                           : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/50'
                       }`}
                     >
@@ -511,10 +548,14 @@ export default function Home() {
           >
             <h2 className={`text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent ${
               isChristmas
-                ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
+                ? 'bg-gradient-to-r from-red-600 via-red-500 to-red-700'
                 : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500'
             }`}>
-              Get In Touch
+              {isChristmas ? (
+                <TextSnowPile>Get In Touch</TextSnowPile>
+              ) : (
+                'Get In Touch'
+              )}
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
             <p className="text-xl text-gray-300">

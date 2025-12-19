@@ -122,28 +122,28 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Christmas Theme Styles */
+/* Christmas Theme Styles - More Red Dominant */
 .christmas-theme ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #dc2626, #16a34a);
+  background: linear-gradient(to bottom, #b91c1c, #dc2626);
 }
 
 .christmas-theme ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #ef4444, #22c55e);
+  background: linear-gradient(to bottom, #dc2626, #ef4444);
 }
 
 .christmas-theme ::selection {
-  background-color: #dc2626;
+  background-color: #b91c1c;
   color: #ffffff;
 }
 
 .christmas-theme ::-moz-selection {
-  background-color: #dc2626;
+  background-color: #b91c1c;
   color: #ffffff;
 }
 
-/* Christmas gradient text */
+/* Christmas gradient text - More red */
 .christmas-theme .gradient-text {
-  background: linear-gradient(-45deg, #dc2626, #16a34a, #fbbf24, #dc2626);
+  background: linear-gradient(-45deg, #b91c1c, #dc2626, #991b1b, #b91c1c);
   background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -151,15 +151,33 @@ body {
   animation: gradient-shift 8s ease infinite;
 }
 
-/* Christmas glow effects */
+/* Christmas glow effects - Red tones */
 .christmas-theme .glow-cyan {
-  box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+  box-shadow: 0 0 20px rgba(185, 28, 28, 0.5);
 }
 
 .christmas-theme .glow-purple {
-  box-shadow: 0 0 20px rgba(22, 163, 74, 0.4);
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
 }
 
 .christmas-theme .glow-pink {
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 20px rgba(153, 27, 27, 0.5);
+}
+
+/* Snow on text effect */
+.christmas-theme .text-snow {
+  position: relative;
+}
+
+.christmas-theme .text-snow::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: radial-gradient(circle, white 2px, transparent 2px);
+  background-size: 8px 8px;
+  opacity: 0.8;
+  pointer-events: none;
 }
