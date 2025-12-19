@@ -142,7 +142,7 @@ export default function ThreeBackground() {
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={0.5} color="#00ffff" />
         <pointLight position={[-10, -10, 10]} intensity={0.5} color="#a855f7" />
-        <FloatingParticles count={1500} />
+        <FloatingParticles count={800} />
         <FloatingOrbs />
       </Canvas>
     </div>

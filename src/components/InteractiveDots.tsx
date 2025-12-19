@@ -38,9 +38,9 @@ export default function InteractiveDots() {
     resizeCanvas()
     window.addEventListener('resize', resizeCanvas)
 
-    // Create dots
+    // Create dots - reduced density for better performance
     const dots: Dot[] = []
-    const spacing = 60
+    const spacing = 80 // Increased spacing to reduce dot count
     const cols = Math.ceil(window.innerWidth / spacing)
     const rows = Math.ceil(window.innerHeight / spacing)
     const offsetX = (window.innerWidth - (cols - 1) * spacing) / 2

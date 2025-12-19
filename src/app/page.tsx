@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { motion } from 'framer-motion'
@@ -15,24 +15,24 @@ import {
   Briefcase,
   MessageCircle
 } from 'lucide-react'
-import ThreeBackground from '@/components/ThreeBackground'
-import InteractiveDots from '@/components/InteractiveDots'
-import ChatWidget from '@/components/ChatWidget'
 import { useChristmasTheme, SnowEffect, ChristmasThemeProvider } from '@/components/ChristmasTheme'
 import { FaLinkedin, FaGithubSquare, FaPhone } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
 import { SiStackoverflow } from 'react-icons/si'
 
+// Lazy load heavy components
+const ThreeBackground = lazy(() => import('@/components/ThreeBackground'))
+const InteractiveDots = lazy(() => import('@/components/InteractiveDots'))
+const ChatWidget = lazy(() => import('@/components/ChatWidget'))
+
 export default function Home() {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(true) // Start as true for faster initial render
   const [activeSection, setActiveSection] = useState('hero')
   const containerRef = useRef<HTMLDivElement>(null)
   const isChristmas = useChristmasTheme()
 
   useEffect(() => {
-    setIsLoaded(true)
-    
     const handleScroll = () => {
       const sections = ['hero', 'about', 'portfolio', 'contact']
       const scrollPosition = window.scrollY + window.innerHeight / 2
@@ -49,7 +49,7 @@ export default function Home() {
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -72,8 +72,10 @@ export default function Home() {
       <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-black text-white scroll-smooth">
         <Analytics />
         <SpeedInsights />
-        <ThreeBackground />
-        <InteractiveDots />
+        {/* Lazy load heavy background components after initial render */}
+        <Suspense fallback={null}>
+          <LazyBackgroundComponents />
+        </Suspense>
         <SnowEffect enabled={isChristmas} />
       
       {/* Navigation */}
@@ -132,18 +134,18 @@ export default function Home() {
 
       {/* Hero Section */}
       <section id="hero" className="relative min-h-screen flex items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isLoaded ? 1 : 0 }}
-          transition={{ duration: 1 }}
-          className="text-center z-10 max-w-5xl mx-auto"
-        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.5, rotate: -180 }}
-            animate={{ opacity: isLoaded ? 1 : 0, scale: isLoaded ? 1 : 0.5, rotate: isLoaded ? 0 : -180 }}
-            transition={{ duration: 1, type: 'spring', stiffness: 200 }}
-            className="inline-block mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-center z-10 max-w-5xl mx-auto"
           >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, type: 'spring', stiffness: 200 }}
+              className="inline-block mb-8"
+            >
             <div className="relative">
               <motion.div
                 animate={{ rotate: 360 }}
@@ -162,9 +164,9 @@ export default function Home() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 30 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
             className={`text-6xl md:text-8xl lg:text-9xl font-bold mb-6 bg-clip-text text-transparent leading-tight ${
               isChristmas
                 ? 'bg-gradient-to-r from-red-400 via-green-500 to-yellow-400'
@@ -175,9 +177,9 @@ export default function Home() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
             className="text-2xl md:text-3xl text-gray-300 mb-4 font-light"
           >
             Web & Mobile Developer
@@ -185,17 +187,17 @@ export default function Home() {
 
           <motion.p
             initial={{ opacity: 0 }}
-            animate={{ opacity: isLoaded ? 1 : 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
             className="text-lg text-gray-400 mb-12"
           >
             8+ Years of Experience
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
             className="flex flex-wrap justify-center gap-4"
           >
             <motion.a
@@ -203,6 +205,7 @@ export default function Home() {
               download="PRADHUL_DEV_RESUME.pdf"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
+              rel="noopener noreferrer"
               className={`flex items-center gap-2 text-black font-semibold px-8 py-4 rounded-full transition-all shadow-lg ${
                 isChristmas
                   ? 'bg-gradient-to-r from-red-500 to-green-500 hover:from-red-400 hover:to-green-400 shadow-red-500/50'
@@ -226,8 +229,8 @@ export default function Home() {
 
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: isLoaded ? 1 : 0 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
             className="mt-20"
           >
             <motion.button
@@ -321,7 +324,15 @@ export default function Home() {
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       className="bg-white p-4 rounded-xl shadow-lg mr-6"
                     >
-                      <Image src="/squashPush/icon.png" alt="Squash-Push Icon" width={80} height={80} />
+                      <Image 
+                        src="/squashPush/icon.png" 
+                        alt="Squash-Push Icon" 
+                        width={80} 
+                        height={80}
+                        loading="lazy"
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                      />
                     </motion.div>
                     <div>
                       <div className="text-xs font-semibold text-cyan-400 mb-2 tracking-wider">VS CODE EXTENSION</div>
@@ -383,6 +394,7 @@ export default function Home() {
                         width={800}
                         height={600}
                         className="w-full h-auto rounded-lg shadow-lg"
+                        loading="lazy"
                         unoptimized
                       />
                     </div>
@@ -406,7 +418,15 @@ export default function Home() {
                       whileHover={{ scale: 1.1, rotate: -5 }}
                       className="bg-white p-4 rounded-xl shadow-lg mr-6"
                     >
-                      <Image src="/vsColorCode/icon.png" alt="vsColorCode Icon" width={80} height={80} />
+                      <Image 
+                        src="/vsColorCode/icon.png" 
+                        alt="vsColorCode Icon" 
+                        width={80} 
+                        height={80}
+                        loading="lazy"
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                      />
                     </motion.div>
                     <div>
                       <div className="text-xs font-semibold text-purple-400 mb-2 tracking-wider">VS CODE EXTENSION</div>
@@ -468,6 +488,7 @@ export default function Home() {
                         width={800}
                         height={600}
                         className="w-full h-auto rounded-lg shadow-lg"
+                        loading="lazy"
                       />
                     </div>
                   </motion.div>
@@ -579,9 +600,67 @@ export default function Home() {
         </motion.p>
       </footer>
 
-      {/* Chat Widget */}
-      <ChatWidget />
+      {/* Chat Widget - Lazy loaded */}
+      <Suspense fallback={null}>
+        <LazyChatWidget />
+      </Suspense>
       </div>
     </ChristmasThemeProvider>
   )
+}
+
+// Component to lazy load background after initial render
+function LazyBackgroundComponents() {
+  const [shouldLoad, setShouldLoad] = useState(false)
+
+  useEffect(() => {
+    // Defer loading until after initial paint
+    const timer = setTimeout(() => {
+      setShouldLoad(true)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (!shouldLoad) return null
+
+  return (
+    <>
+      <ThreeBackground />
+      <InteractiveDots />
+    </>
+  )
+}
+
+// Component to lazy load chat widget on interaction
+function LazyChatWidget() {
+  const [shouldLoad, setShouldLoad] = useState(false)
+
+  useEffect(() => {
+    // Load chat widget after user interaction or 3 seconds
+    const loadOnInteraction = () => {
+      setShouldLoad(true)
+      document.removeEventListener('mousemove', loadOnInteraction)
+      document.removeEventListener('touchstart', loadOnInteraction)
+      document.removeEventListener('scroll', loadOnInteraction)
+    }
+
+    const timer = setTimeout(() => {
+      setShouldLoad(true)
+    }, 3000)
+
+    document.addEventListener('mousemove', loadOnInteraction, { once: true, passive: true })
+    document.addEventListener('touchstart', loadOnInteraction, { once: true, passive: true })
+    document.addEventListener('scroll', loadOnInteraction, { once: true, passive: true })
+
+    return () => {
+      clearTimeout(timer)
+      document.removeEventListener('mousemove', loadOnInteraction)
+      document.removeEventListener('touchstart', loadOnInteraction)
+      document.removeEventListener('scroll', loadOnInteraction)
+    }
+  }, [])
+
+  if (!shouldLoad) return null
+
+  return <ChatWidget />
 }
