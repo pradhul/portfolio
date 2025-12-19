@@ -13,9 +13,9 @@ import {
 } from './FestivalEffects'
 
 // Text decoration components
-export function TextSnowPile({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function TextSnowPile({ children, className = '', style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   return (
-    <span className={`relative inline-block ${className}`}>
+    <span className={`relative inline-block ${className}`} style={style}>
       {children}
       <span className="absolute -top-2 left-0 right-0 h-2 overflow-hidden pointer-events-none z-10">
         <span className="absolute left-0 top-0 w-3 h-3 bg-white rounded-full opacity-80" style={{ left: '10%' }} />
@@ -28,9 +28,9 @@ export function TextSnowPile({ children, className = '' }: { children: React.Rea
   )
 }
 
-export function TextSparkles({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function TextSparkles({ children, className = '', style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   return (
-    <span className={`relative inline-block ${className}`}>
+    <span className={`relative inline-block ${className}`} style={style}>
       {children}
       <span className="absolute -top-1 left-0 right-0 h-2 overflow-hidden pointer-events-none z-10">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -56,9 +56,9 @@ export function TextSparkles({ children, className = '' }: { children: React.Rea
   )
 }
 
-export function TextLights({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function TextLights({ children, className = '', style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   return (
-    <span className={`relative inline-block ${className}`}>
+    <span className={`relative inline-block ${className}`} style={style}>
       {children}
       <span className="absolute -top-1 left-0 right-0 h-2 overflow-hidden pointer-events-none z-10">
         {Array.from({ length: 6 }).map((_, i) => (
@@ -82,9 +82,9 @@ export function TextLights({ children, className = '' }: { children: React.React
   )
 }
 
-export function TextPetals({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function TextPetals({ children, className = '', style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   return (
-    <span className={`relative inline-block ${className}`}>
+    <span className={`relative inline-block ${className}`} style={style}>
       {children}
       <span className="absolute -top-1 left-0 right-0 h-2 overflow-hidden pointer-events-none z-10">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -110,9 +110,9 @@ export function TextPetals({ children, className = '' }: { children: React.React
   )
 }
 
-export function TextConfetti({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function TextConfetti({ children, className = '', style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   return (
-    <span className={`relative inline-block ${className}`}>
+    <span className={`relative inline-block ${className}`} style={style}>
       {children}
       <span className="absolute -top-1 left-0 right-0 h-2 overflow-hidden pointer-events-none z-10">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -408,17 +408,25 @@ export function FestivalTextDecoration({
     return <>{children}</>
   }
 
+  // Apply gradient styles to preserve text visibility when using background-clip
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(to right, ${festival.colors.primary}, ${festival.colors.secondary}, ${festival.colors.accent})`,
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  }
+
   switch (festival.textDecoration) {
     case 'snow':
-      return <TextSnowPile className={className}>{children}</TextSnowPile>
+      return <TextSnowPile className={className} style={gradientStyle}>{children}</TextSnowPile>
     case 'sparkles':
-      return <TextSparkles className={className}>{children}</TextSparkles>
+      return <TextSparkles className={className} style={gradientStyle}>{children}</TextSparkles>
     case 'lights':
-      return <TextLights className={className}>{children}</TextLights>
+      return <TextLights className={className} style={gradientStyle}>{children}</TextLights>
     case 'petals':
-      return <TextPetals className={className}>{children}</TextPetals>
+      return <TextPetals className={className} style={gradientStyle}>{children}</TextPetals>
     case 'confetti':
-      return <TextConfetti className={className}>{children}</TextConfetti>
+      return <TextConfetti className={className} style={gradientStyle}>{children}</TextConfetti>
     default:
       return <>{children}</>
   }
