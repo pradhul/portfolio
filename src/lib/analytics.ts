@@ -11,7 +11,7 @@ export async function trackEvent(eventName: string, params?: EventParams) {
       logEvent(analytics, eventName, params)
     }
   } catch (error) {
-    console.error('Error tracking event:', error)
+    console.error(`Error tracking event ${eventName}:`, error)
   }
 }
 

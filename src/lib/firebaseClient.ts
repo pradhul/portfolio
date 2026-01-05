@@ -62,15 +62,17 @@ export async function getAnalyticsInstance(): Promise<Analytics | null> {
     return null
   }
 
-  // Check if Analytics is supported
-  const supported = await isSupported()
-  if (!supported) {
-    console.warn('Firebase Analytics is not supported in this environment')
-    return null
-  }
-
   try {
+    // Check if Analytics is supported
+    const supported = await isSupported()
+    if (!supported) {
+      return null
+    }
+
+    // Get Firebase app (this will validate config)
     const firebaseApp = getFirebaseApp()
+    
+    // Initialize Analytics
     analytics = getAnalytics(firebaseApp)
     return analytics
   } catch (error) {
