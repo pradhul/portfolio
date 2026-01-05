@@ -22,6 +22,7 @@ export default function ChatWidget() {
     const userQuestion = question.trim()
     
     // Track the question being asked
+    console.log('[Chat Widget] Tracking chat question:', userQuestion)
     await trackChatQuestion(userQuestion)
 
     setIsLoading(true)
@@ -41,11 +42,13 @@ export default function ChatWidget() {
 
       if (!response.ok) {
         // Track failed response
+        console.log('[Chat Widget] Tracking failed chat response')
         await trackChatResponse(userQuestion, false)
         throw new Error(data.error || 'Failed to get response')
       }
 
       // Track successful response
+      console.log('[Chat Widget] Tracking successful chat response')
       await trackChatResponse(userQuestion, true)
       setAnswer(data.answer)
       setQuestion('') // Clear input after successful submission
