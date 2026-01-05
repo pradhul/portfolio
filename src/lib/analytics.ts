@@ -5,13 +5,21 @@ import { logEvent, EventParams } from 'firebase/analytics'
  * Track a custom event in Firebase Analytics
  */
 export async function trackEvent(eventName: string, params?: EventParams) {
+  console.log(`[Analytics Debug] trackEvent called: ${eventName}`, params)
   try {
     const analytics = await getAnalyticsInstance()
+    console.log(`[Analytics Debug] Analytics instance for ${eventName}:`, !!analytics)
     if (analytics) {
       logEvent(analytics, eventName, params)
+      console.log(`[Analytics Debug] Event ${eventName} logged successfully`)
+    } else {
+      console.warn(`[Analytics Debug] Cannot track ${eventName} - Analytics instance is null`)
     }
   } catch (error) {
-    console.error(`Error tracking event ${eventName}:`, error)
+    console.error(`[Analytics Debug] Error tracking event ${eventName}:`, error)
+    if (error instanceof Error) {
+      console.error(`[Analytics Debug] Error details:`, error.message)
+    }
   }
 }
 

@@ -13,16 +13,30 @@ const getFirebaseConfig = () => {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
   }
 
+  // Debug: Log which variables are present (without exposing values)
+  if (typeof window !== 'undefined') {
+    const envStatus = Object.entries(config).map(([key, value]) => ({
+      key,
+      present: !!value,
+      length: value ? value.length : 0
+    }))
+    console.log('[Firebase Config Debug] Environment variables status:', envStatus)
+    
+    // Also check raw process.env to see if variables exist with different names
+    const allEnvKeys = Object.keys(process.env).filter(key => key.includes('FIREBASE'))
+    console.log('[Firebase Config Debug] All FIREBASE env vars found:', allEnvKeys)
+  }
+
   // Validate that all required config values are present
   const missingKeys = Object.entries(config)
     .filter(([, value]) => !value)
     .map(([key]) => key)
 
   if (missingKeys.length > 0) {
-    throw new Error(
-      `Missing Firebase configuration: ${missingKeys.join(', ')}. ` +
+    const errorMsg = `Missing Firebase configuration: ${missingKeys.join(', ')}. ` +
       'Please set these environment variables in your .env.local file or Vercel deployment settings.'
-    )
+    console.error('[Firebase Config Debug]', errorMsg)
+    throw new Error(errorMsg)
   }
 
   return config
@@ -54,29 +68,43 @@ export function getFirebaseApp(): FirebaseApp {
 export async function getAnalyticsInstance(): Promise<Analytics | null> {
   // Return cached instance if available
   if (analytics) {
+    console.log('[Firebase Analytics Debug] Using cached Analytics instance')
     return analytics
   }
 
   // Check if we're in the browser
   if (typeof window === 'undefined') {
+    console.log('[Firebase Analytics Debug] Not in browser environment (SSR)')
     return null
   }
 
   try {
+    console.log('[Firebase Analytics Debug] Starting Analytics initialization...')
+    
     // Check if Analytics is supported
     const supported = await isSupported()
+    console.log('[Firebase Analytics Debug] Analytics supported:', supported)
     if (!supported) {
+      console.warn('[Firebase Analytics Debug] Analytics is not supported in this environment')
       return null
     }
 
     // Get Firebase app (this will validate config)
+    console.log('[Firebase Analytics Debug] Getting Firebase app...')
     const firebaseApp = getFirebaseApp()
+    console.log('[Firebase Analytics Debug] Firebase app obtained:', !!firebaseApp)
     
     // Initialize Analytics
+    console.log('[Firebase Analytics Debug] Initializing Analytics...')
     analytics = getAnalytics(firebaseApp)
+    console.log('[Firebase Analytics Debug] Analytics initialized successfully:', !!analytics)
     return analytics
   } catch (error) {
-    console.error('Error initializing Firebase Analytics:', error)
+    console.error('[Firebase Analytics Debug] Error initializing Firebase Analytics:', error)
+    if (error instanceof Error) {
+      console.error('[Firebase Analytics Debug] Error message:', error.message)
+      console.error('[Firebase Analytics Debug] Error stack:', error.stack)
+    }
     return null
   }
 }
