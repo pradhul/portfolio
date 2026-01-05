@@ -18,9 +18,12 @@ const getFirebaseConfig = () => {
     const envStatus = Object.entries(config).map(([key, value]) => ({
       key,
       present: !!value,
-      length: value ? value.length : 0
+      length: value ? value.length : 0,
+      // Show first/last few chars for verification (not full value for security)
+      preview: value ? `${value.substring(0, 4)}...${value.substring(value.length - 4)}` : 'missing'
     }))
     console.log('[Firebase Config Debug] Environment variables status:', envStatus)
+    console.log('[Firebase Config Debug] Measurement ID:', config.measurementId ? `${config.measurementId.substring(0, 4)}...${config.measurementId.substring(config.measurementId.length - 4)}` : 'MISSING')
     
     // Also check raw process.env to see if variables exist with different names
     const allEnvKeys = Object.keys(process.env).filter(key => key.includes('FIREBASE'))

@@ -20,11 +20,19 @@ export default function FirebaseAnalytics() {
         if (analytics) {
           // Log a page_view event to verify Analytics is working
           console.log('[Firebase Analytics Debug] Logging page_view event...')
-          logEvent(analytics, 'page_view', {
+          const pageViewParams = {
             page_path: window.location.pathname,
             page_title: document.title,
+          }
+          logEvent(analytics, 'page_view', pageViewParams)
+          console.log('[Firebase Analytics Debug] page_view event logged successfully', pageViewParams)
+          
+          // Also log a test event to verify events are being sent
+          logEvent(analytics, 'firebase_analytics_test', {
+            test: true,
+            timestamp: new Date().toISOString(),
           })
-          console.log('[Firebase Analytics Debug] page_view event logged successfully')
+          console.log('[Firebase Analytics Debug] Test event "firebase_analytics_test" logged')
         } else {
           console.warn('[Firebase Analytics Debug] Analytics instance is null, cannot log events')
         }
