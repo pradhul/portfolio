@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react'
 import { useChristmasTheme } from './ChristmasTheme'
+import { trackChatQuestion, trackChatResponse } from '@/lib/analytics'
 
 export default function ChatWidget() {
   const isChristmas = useChristmasTheme()
@@ -18,6 +19,11 @@ export default function ChatWidget() {
     
     if (!question.trim() || isLoading) return
 
+    const userQuestion = question.trim()
+    
+    // Track the question being asked
+    await trackChatQuestion(userQuestion)
+
     setIsLoading(true)
     setError('')
     setAnswer('')
@@ -28,15 +34,19 @@ export default function ChatWidget() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: question.trim() }),
+        body: JSON.stringify({ question: userQuestion }),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        // Track failed response
+        await trackChatResponse(userQuestion, false)
         throw new Error(data.error || 'Failed to get response')
       }
 
+      // Track successful response
+      await trackChatResponse(userQuestion, true)
       setAnswer(data.answer)
       setQuestion('') // Clear input after successful submission
     } catch (err) {
