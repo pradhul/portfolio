@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default: Deny all client-side access
+    // All Firestore operations are performed server-side via Firebase Admin SDK
+    // which bypasses these rules. These rules prevent any accidental client-side access.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Optional: If you need to allow client-side read access to festivalDates in the future,
+    // you can uncomment and customize this rule:
+    // match /festivalDates/{year} {
+    //   allow read: if true;  // Public read access to festival dates
+    //   allow write: if false; // Only server-side writes
+    // }
+    
+    // Translation cache collections remain private (server-only)
+    // match /translatedContent/{document=**} {
+    //   allow read, write: if false; // Server-only access
+    // }
+    
+    // match /translations/{document=**} {
+    //   allow read, write: if false; // Server-only access
+    // }
+  }
+}
+
+

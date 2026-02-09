@@ -14,7 +14,9 @@ import {
   Sparkles,
   User,
   Briefcase,
-  MessageCircle
+  MessageCircle,
+  ExternalLink,
+  BarChart3
 } from 'lucide-react'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
@@ -598,6 +600,88 @@ function HomeContent() {
                         alt="vsColorCode Demo"
                         width={800}
                         height={600}
+                        className="w-full h-auto rounded-lg shadow-lg"
+                        loading="lazy"
+                      />
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Chart Studio Project */}
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.8 }}
+              className="bg-black/30 backdrop-blur-md border border-teal-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-teal-500/40 transition-all duration-300"
+            >
+              <div className="flex flex-col md:flex-row items-center gap-12">
+                <div className="flex-1">
+                  <div className="flex items-center mb-8">
+                    <motion.div 
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className="bg-white p-4 rounded-xl shadow-lg mr-6"
+                    >
+                      <BarChart3 className="w-16 h-16 text-teal-600" />
+                    </motion.div>
+                    <div>
+                      <div className="text-xs font-semibold text-teal-400 mb-2 tracking-wider">{tString('portfolio.chartStudio.category')}</div>
+                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.chartStudio.title')}</h3>
+                    </div>
+                  </div>
+
+                  <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
+                    {tString('portfolio.chartStudio.description')}
+                  </p>
+
+                  <div className="flex flex-wrap gap-4">
+                    <motion.a
+                      href="https://soft-dieffenbachia-ba97b4.netlify.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 shadow-teal-500/50"
+                      style={activeFestival ? {
+                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
+                      } : undefined}
+                    >
+                      <ExternalLink size={18} />
+                      <span>{tString('portfolio.chartStudio.liveDemo')}</span>
+                    </motion.a>
+                    <motion.a
+                      href="/portfolio/chartstudio"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 bg-transparent border-2 border-teal-500/50 hover:border-teal-400 text-teal-400 font-semibold py-3 px-6 rounded-lg transition-all"
+                    >
+                      <span>{tString('portfolio.chartStudio.viewProject')}</span>
+                    </motion.a>
+                  </div>
+                </div>
+
+                <div className="flex-1 mt-6 md:mt-0">
+                  <motion.div 
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gray-900/50 rounded-xl shadow-xl overflow-hidden border border-teal-500/20"
+                  >
+                    <div className="bg-gray-800/50 p-3 flex items-center justify-between border-b border-teal-500/20">
+                      <div className="flex space-x-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                      </div>
+                      <div className="text-xs font-mono text-gray-400">{tString('portfolio.chartStudio.demoLabel')}</div>
+                    </div>
+                    <div className="p-4">
+                      <Image
+                        src="/chartStudio/Screenshot1.png"
+                        alt="Chart Studio"
+                        width={800}
+                        height={500}
                         className="w-full h-auto rounded-lg shadow-lg"
                         loading="lazy"
                       />

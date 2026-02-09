@@ -41,6 +41,14 @@ export const content = {
       viewGitHub: 'View on GitHub',
       demoLabel: 'vsColorCode demo',
     },
+    chartStudio: {
+      category: 'WEB APP',
+      title: 'Chart Studio',
+      description: 'Create bar and pie charts from Excel (.xlsx, .xls) or CSV files. Upload your data, paste from Excel, or edit cells in the preview—then customize your chart (title, colors, legend, grid) and export as PNG or PDF.',
+      liveDemo: 'Live Demo',
+      viewProject: 'View Project',
+      demoLabel: 'Chart Studio',
+    },
   },
   contact: {
     title: 'Get In Touch',
