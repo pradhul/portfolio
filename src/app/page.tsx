@@ -422,6 +422,99 @@ function HomeContent() {
           </motion.div>
 
           <div className="space-y-24">
+            {/* Ionic Measure */}
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.8 }}
+              className="bg-black/30 backdrop-blur-md border border-pink-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-pink-500/40 transition-all duration-300"
+            >
+              <div className="flex flex-col md:flex-row items-center gap-12">
+                <div className="flex-1">
+                  <div className="flex items-center mb-8">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      className="bg-white p-4 rounded-xl shadow-lg mr-6"
+                    >
+                      <Image
+                        src="/ionicMeasure/icon.png"
+                        alt="Ionic Measure Icon"
+                        width={80}
+                        height={80}
+                        loading="lazy"
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                      />
+                    </motion.div>
+                    <div>
+                      <div className="text-xs font-semibold text-pink-400 mb-2 tracking-wider">{tString('portfolio.ionicMeasure.category')}</div>
+                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.ionicMeasure.title')}</h3>
+                    </div>
+                  </div>
+
+                  <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
+                    {tString('portfolio.ionicMeasure.description')}
+                  </p>
+
+                  <div className="flex flex-wrap gap-4">
+                    <motion.a
+                      href="https://chromewebstore.google.com/detail/cemannkhghihhipcokcbnnaklafbfnpj"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 bg-transparent border-2 border-pink-500/50 hover:border-pink-400 text-pink-400 font-semibold py-3 px-6 rounded-lg transition-all"
+                    >
+                      <ExternalLink size={18} />
+                      <span>{tString('portfolio.ionicMeasure.viewWebStore')}</span>
+                    </motion.a>
+                    <motion.a
+                      href="https://github.com/pradhul/ionic-measure-extension"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 shadow-pink-500/50"
+                      style={activeFestival ? {
+                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
+                      } : undefined}
+                    >
+                      <Github size={18} />
+                      <span>{tString('portfolio.ionicMeasure.viewGitHub')}</span>
+                    </motion.a>
+                  </div>
+                </div>
+
+                <div className="flex-1 mt-6 md:mt-0">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gray-900/50 rounded-xl shadow-xl overflow-hidden border border-pink-500/20"
+                  >
+                    <div className="bg-gray-800/50 p-3 flex items-center justify-between border-b border-pink-500/20">
+                      <div className="flex space-x-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                      </div>
+                      <div className="text-xs font-mono text-gray-400">{tString('portfolio.ionicMeasure.demoLabel')}</div>
+                    </div>
+                    <div className="p-4">
+                      <Image
+                        src="/ionicMeasure/demo.png"
+                        alt="Ionic Measure Demo"
+                        width={800}
+                        height={600}
+                        className="w-full h-auto rounded-lg shadow-lg"
+                        loading="lazy"
+                      />
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
             {/* Squash-Push Project */}
             <motion.div
               initial={{ opacity: 0, x: -100 }}

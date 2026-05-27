@@ -25,6 +25,15 @@ export const content = {
   },
   portfolio: {
     title: 'Portfolio',
+    ionicMeasure: {
+      category: 'CHROME EXTENSION',
+      title: 'Ionic Measure',
+      description:
+        'Pixel-perfect measurement overlay for Ionic 7/8 apps in Chrome. Inspect component box models, measure spacing between elements, and check edge alignment with full-screen guides—built for Stencil shadow DOM and ion-content scrolling.',
+      viewGitHub: 'View on GitHub',
+      viewWebStore: 'View on Chrome Web Store',
+      demoLabel: 'Ionic Measure demo',
+    },
     squashPush: {
       category: 'VS CODE EXTENSION',
       title: 'Squash-Push',
