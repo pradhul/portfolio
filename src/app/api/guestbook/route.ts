@@ -1,20 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { getFirestoreInstance } from '@/lib/firebase'
-
-type SignaturePoint = {
-  x: number
-  y: number
-  t?: number
-}
-
-type SignatureStroke = SignaturePoint[]
+import {
+  fromStoredStrokes,
+  type SignaturePoint,
+  type SignatureStroke,
+  type StoredSignatureStroke,
+  toStoredStrokes,
+} from '@/lib/guestbookSignature'
 
 type GuestbookEntry = {
   id: string
   name: string
   message: string
-  signatureStrokes: SignatureStroke[]
+  signatureStrokes: StoredSignatureStroke[]
   createdAt: Date
   ipHash: string
 }
@@ -62,12 +61,35 @@ function createIpHash(ip: string): string {
   return crypto.createHash('sha256').update(`${salt}:${ip}`).digest('hex')
 }
 
-function validateSignatureStrokes(strokes: unknown): SignatureStroke[] {
+function parseIncomingStrokes(strokes: unknown): SignatureStroke[] {
   if (!Array.isArray(strokes) || strokes.length === 0) {
-    throw new Error('Signature is required.')
+    return []
   }
 
-  const compactStrokes = strokes.filter((stroke) => Array.isArray(stroke) && stroke.length > 0)
+  const parsed = strokes
+    .map((stroke): SignatureStroke | null => {
+      if (Array.isArray(stroke) && stroke.length > 0) {
+        return stroke as SignatureStroke
+      }
+
+      if (
+        typeof stroke === 'object' &&
+        stroke !== null &&
+        Array.isArray((stroke as StoredSignatureStroke).points) &&
+        (stroke as StoredSignatureStroke).points.length > 0
+      ) {
+        return (stroke as StoredSignatureStroke).points
+      }
+
+      return null
+    })
+    .filter((stroke): stroke is SignatureStroke => stroke !== null)
+
+  return parsed
+}
+
+function validateSignatureStrokes(strokes: unknown): StoredSignatureStroke[] {
+  const compactStrokes = parseIncomingStrokes(strokes)
 
   if (compactStrokes.length === 0) {
     throw new Error('Signature is required.')
@@ -127,7 +149,7 @@ function validateSignatureStrokes(strokes: unknown): SignatureStroke[] {
     throw new Error('Signature has too many points.')
   }
 
-  return normalizedStrokes
+  return toStoredStrokes(normalizedStrokes)
 }
 
 function validatePayload(body: unknown): Pick<GuestbookEntry, 'name' | 'message' | 'signatureStrokes'> {
@@ -207,7 +229,7 @@ export async function GET() {
         id: doc.id,
         name: data.name || '',
         message: data.message || '',
-        signatureStrokes: data.signatureStrokes || [],
+        signatureStrokes: fromStoredStrokes(data.signatureStrokes),
         createdAt: data.createdAt?.toDate?.()?.toISOString?.() || new Date().toISOString(),
       }
     })
@@ -253,7 +275,7 @@ export async function POST(request: NextRequest) {
         id: entry.id,
         name: entry.name,
         message: entry.message,
-        signatureStrokes: entry.signatureStrokes,
+        signatureStrokes: fromStoredStrokes(entry.signatureStrokes),
         createdAt: entry.createdAt.toISOString(),
       },
     })

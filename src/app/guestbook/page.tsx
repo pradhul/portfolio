@@ -4,14 +4,11 @@ import Link from 'next/link'
 import { FormEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Loader2, PenTool } from 'lucide-react'
-
-type SignaturePoint = {
-  x: number
-  y: number
-  t?: number
-}
-
-type SignatureStroke = SignaturePoint[]
+import {
+  normalizeStrokes,
+  type SignatureStroke,
+  toStoredStrokes,
+} from '@/lib/guestbookSignature'
 
 type GuestbookEntry = {
   id: string
@@ -19,10 +16,6 @@ type GuestbookEntry = {
   message: string
   signatureStrokes: SignatureStroke[]
   createdAt: string
-}
-
-function normalizeStrokes(strokes: SignatureStroke[]): SignatureStroke[] {
-  return strokes.filter((stroke) => stroke.length > 0)
 }
 
 const CANVAS_WIDTH = 680
@@ -165,9 +158,12 @@ export default function GuestbookPage() {
 
   const finishStroke = (event: ReactPointerEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return
-    event.currentTarget.releasePointerCapture(event.pointerId)
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
     setIsDrawing(false)
     activeStrokeRef.current = []
+    setStrokes((previous) => normalizeStrokes(previous))
   }
 
   const clearSignature = () => {
@@ -206,7 +202,7 @@ export default function GuestbookPage() {
         body: JSON.stringify({
           name: trimmedName,
           message: trimmedMessage,
-          signatureStrokes: normalizedStrokes,
+          signatureStrokes: toStoredStrokes(normalizedStrokes),
         }),
       })
 
