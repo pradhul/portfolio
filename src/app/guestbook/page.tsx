@@ -6,6 +6,9 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, Loader2, PenTool } from 'lucide-react'
 import {
   normalizeStrokes,
+  scaleStrokesToFit,
+  SIGNATURE_PAD_HEIGHT,
+  SIGNATURE_PAD_WIDTH,
   type SignatureStroke,
   toStoredStrokes,
 } from '@/lib/guestbookSignature'
@@ -18,20 +21,21 @@ type GuestbookEntry = {
   createdAt: string
 }
 
-const CANVAS_WIDTH = 680
-const CANVAS_HEIGHT = 220
+const PREVIEW_WIDTH = 220
+const PREVIEW_HEIGHT = 80
 
 function drawStrokes(
   ctx: CanvasRenderingContext2D,
   strokes: SignatureStroke[],
   width: number,
-  height: number
+  height: number,
+  lineWidth = 2.4
 ): void {
   ctx.clearRect(0, 0, width, height)
   ctx.lineJoin = 'round'
   ctx.lineCap = 'round'
   ctx.strokeStyle = '#22d3ee'
-  ctx.lineWidth = 2.4
+  ctx.lineWidth = lineWidth
 
   for (const stroke of strokes) {
     if (stroke.length === 0) continue
@@ -55,14 +59,19 @@ function SignaturePreview({ strokes }: { strokes: SignatureStroke[] }) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    drawStrokes(ctx, strokes, canvas.width, canvas.height)
+    const { strokes: scaledStrokes, lineWidth } = scaleStrokesToFit(
+      strokes,
+      canvas.width,
+      canvas.height
+    )
+    drawStrokes(ctx, scaledStrokes, canvas.width, canvas.height, lineWidth)
   }, [strokes])
 
   return (
     <canvas
       ref={previewRef}
-      width={220}
-      height={80}
+      width={PREVIEW_WIDTH}
+      height={PREVIEW_HEIGHT}
       className="w-full rounded-lg border border-cyan-500/20 bg-black/30"
       aria-label="Submitted signature preview"
     />
@@ -294,8 +303,8 @@ export default function GuestbookPage() {
                 <div className="rounded-xl border border-cyan-500/30 bg-black/40 p-2">
                   <canvas
                     ref={canvasRef}
-                    width={CANVAS_WIDTH}
-                    height={CANVAS_HEIGHT}
+                    width={SIGNATURE_PAD_WIDTH}
+                    height={SIGNATURE_PAD_HEIGHT}
                     onPointerDown={beginStroke}
                     onPointerMove={continueStroke}
                     onPointerUp={finishStroke}
