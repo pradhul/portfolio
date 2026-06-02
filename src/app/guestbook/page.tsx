@@ -21,6 +21,10 @@ type GuestbookEntry = {
   createdAt: string
 }
 
+function normalizeStrokes(strokes: SignatureStroke[]): SignatureStroke[] {
+  return strokes.filter((stroke) => stroke.length > 0)
+}
+
 const CANVAS_WIDTH = 680
 const CANVAS_HEIGHT = 220
 
@@ -116,7 +120,8 @@ export default function GuestbookPage() {
     drawStrokes(ctx, strokes, canvas.width, canvas.height)
   }, [strokes])
 
-  const hasSignature = useMemo(() => strokes.some((stroke) => stroke.length > 0), [strokes])
+  const normalizedStrokes = useMemo(() => normalizeStrokes(strokes), [strokes])
+  const hasSignature = normalizedStrokes.length > 0
 
   const mapClientPoint = (event: PointerEvent | ReactPointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
@@ -201,7 +206,7 @@ export default function GuestbookPage() {
         body: JSON.stringify({
           name: trimmedName,
           message: trimmedMessage,
-          signatureStrokes: strokes,
+          signatureStrokes: normalizedStrokes,
         }),
       })
 

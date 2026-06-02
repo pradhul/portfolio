@@ -35,7 +35,7 @@ const VALIDATION_ERROR_PREFIXES = [
   'Name is too long',
   'Signature is required.',
   'Signature has too many strokes.',
-  'Each signature stroke must contain points.',
+  'Invalid signature stroke.',
   'A signature stroke has too many points.',
   'Invalid signature point.',
   'Signature point coordinates are invalid.',
@@ -67,15 +67,21 @@ function validateSignatureStrokes(strokes: unknown): SignatureStroke[] {
     throw new Error('Signature is required.')
   }
 
-  if (strokes.length > MAX_STROKES) {
+  const compactStrokes = strokes.filter((stroke) => Array.isArray(stroke) && stroke.length > 0)
+
+  if (compactStrokes.length === 0) {
+    throw new Error('Signature is required.')
+  }
+
+  if (compactStrokes.length > MAX_STROKES) {
     throw new Error('Signature has too many strokes.')
   }
 
   let totalPoints = 0
 
-  const normalizedStrokes = strokes.map((stroke) => {
-    if (!Array.isArray(stroke) || stroke.length === 0) {
-      throw new Error('Each signature stroke must contain points.')
+  const normalizedStrokes = compactStrokes.map((stroke) => {
+    if (!Array.isArray(stroke)) {
+      throw new Error('Invalid signature stroke.')
     }
 
     if (stroke.length > MAX_POINTS_PER_STROKE) {
