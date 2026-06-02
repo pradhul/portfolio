@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { motion } from 'framer-motion'
@@ -16,7 +17,8 @@ import {
   Briefcase,
   MessageCircle,
   ExternalLink,
-  BarChart3
+  BarChart3,
+  PenTool
 } from 'lucide-react'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
@@ -82,6 +84,7 @@ function HomeContent() {
     { id: 'about', label: tString('nav.about'), icon: User },
     { id: 'portfolio', label: tString('nav.portfolio'), icon: Briefcase },
     { id: 'contact', label: tString('nav.contact'), icon: MessageCircle },
+    { id: 'guestbook', label: tString('nav.guestbook'), icon: PenTool, href: '/guestbook' },
   ]
 
   return (
@@ -123,17 +126,36 @@ function HomeContent() {
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = activeSection === item.id
+              const itemClasses = `relative px-4 py-2 rounded-lg transition-all ${
+                isActive
+                  ? 'text-cyan-400 bg-cyan-500/10'
+                  : 'text-gray-400 hover:text-cyan-400'
+              }`
+
+              if (item.href) {
+                return (
+                  <motion.div
+                    key={item.id}
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Link href={item.href} className={itemClasses}>
+                      <div className="flex items-center gap-2">
+                        <Icon size={18} />
+                        <span className="text-sm font-medium">{item.label}</span>
+                      </div>
+                    </Link>
+                  </motion.div>
+                )
+              }
+
               return (
                 <motion.button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`relative px-4 py-2 rounded-lg transition-all ${
-                    isActive 
-                      ? 'text-cyan-400 bg-cyan-500/10' 
-                      : 'text-gray-400 hover:text-cyan-400'
-                  }`}
+                  className={itemClasses}
                 >
                   <div className="flex items-center gap-2">
                     <Icon size={18} />

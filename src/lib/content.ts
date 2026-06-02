@@ -6,6 +6,7 @@ export const content = {
     about: 'About',
     portfolio: 'Portfolio',
     contact: 'Contact',
+    guestbook: 'Guestbook',
   },
   hero: {
     title: 'Pradhul Dev',
@@ -63,6 +64,23 @@ export const content = {
     title: 'Get In Touch',
     subtitle: "Let's discuss your next project or just say hello!",
     connectLabel: 'Connect with me on',
+  },
+  guestbook: {
+    title: 'Guestbook',
+    subtitle: 'Drop a note, add your signature, and leave a little good vibe behind.',
+    form: {
+      nameLabel: 'Name (optional)',
+      messageLabel: 'Message',
+      signatureLabel: 'Signature',
+      clearSignature: 'Clear signature',
+      submit: 'Post to guestbook',
+      posting: 'Posting...',
+    },
+    states: {
+      empty: 'No entries yet. Be the first to leave a message.',
+      loading: 'Loading entries...',
+      success: 'Thanks! Your message was posted.',
+    },
   },
   footer: {
     copyright: 'Pradhul Dev. All rights reserved.',
