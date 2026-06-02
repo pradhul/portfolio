@@ -10,9 +10,7 @@ export const content = {
   },
   hero: {
     title: 'Pradhul Dev',
-    subtitle: 'Web & Mobile Developer',
-    experience: '8+ Years of Experience',
-    downloadResume: 'Download Resume',
+    downloadResume: 'Resume',
     viewPortfolio: 'View Portfolio',
   },
   about: {

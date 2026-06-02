@@ -244,29 +244,11 @@ function HomeContent() {
             )}
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-2xl md:text-3xl text-gray-300 mb-4 font-light"
-          >
-            {tString('hero.subtitle')}
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-lg text-gray-400 mb-12"
-          >
-            {tString('hero.experience')}
-          </motion.p>
-
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="flex flex-wrap justify-center gap-4"
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mt-12 flex flex-wrap justify-center gap-4"
           >
             <motion.a
               href="/PRADHUL_DEV_RESUME.pdf"
