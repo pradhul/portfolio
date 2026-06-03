@@ -18,7 +18,8 @@ import {
   MessageCircle,
   ExternalLink,
   BarChart3,
-  PenTool
+  PenTool,
+  Shield
 } from 'lucide-react'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
@@ -781,6 +782,95 @@ function HomeContent() {
                         height={500}
                         className="w-full h-auto rounded-lg shadow-lg"
                         loading="lazy"
+                      />
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* UploadSpec Project */}
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.8 }}
+              className="bg-black/30 backdrop-blur-md border border-emerald-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-emerald-500/40 transition-all duration-300"
+            >
+              <div className="flex flex-col md:flex-row-reverse items-center gap-12">
+                <div className="flex-1">
+                  <div className="flex items-center mb-8">
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: -5 }}
+                      className="bg-white p-4 rounded-xl shadow-lg mr-6"
+                    >
+                      <Image
+                        src="/uploadSpec/logo.svg"
+                        alt="UploadSpec"
+                        width={80}
+                        height={80}
+                      />
+                    </motion.div>
+                    <div>
+                      <div className="text-xs font-semibold text-emerald-400 mb-2 tracking-wider">{tString('portfolio.uploadSpec.category')}</div>
+                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.uploadSpec.title')}</h3>
+                    </div>
+                  </div>
+
+                  <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
+                    {tString('portfolio.uploadSpec.description')}
+                  </p>
+
+                  <div className="flex flex-wrap gap-4">
+                    <motion.a
+                      href="https://uploadspec.web.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-600 hover:to-teal-500 shadow-emerald-500/50"
+                      style={activeFestival ? {
+                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
+                      } : undefined}
+                    >
+                      <ExternalLink size={18} />
+                      <span>{tString('portfolio.uploadSpec.liveDemo')}</span>
+                    </motion.a>
+                    <motion.a
+                      href="/portfolio/uploadspec"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 bg-transparent border-2 border-emerald-500/50 hover:border-emerald-400 text-emerald-400 font-semibold py-3 px-6 rounded-lg transition-all"
+                    >
+                      <span>{tString('portfolio.uploadSpec.viewProject')}</span>
+                    </motion.a>
+                  </div>
+                </div>
+
+                <div className="flex-1 mt-6 md:mt-0">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gray-900/50 rounded-xl shadow-xl overflow-hidden border border-emerald-500/20"
+                  >
+                    <div className="bg-gray-800/50 p-3 flex items-center justify-between border-b border-emerald-500/20">
+                      <div className="flex space-x-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                      </div>
+                      <div className="text-xs font-mono text-gray-400 flex items-center gap-1">
+                        <Shield size={12} className="text-emerald-400" />
+                        {tString('portfolio.uploadSpec.demoLabel')}
+                      </div>
+                    </div>
+                    <div className="p-8 flex items-center justify-center bg-gradient-to-br from-emerald-950/50 to-teal-950/50 min-h-[240px]">
+                      <Image
+                        src="/uploadSpec/logo.svg"
+                        alt="UploadSpec"
+                        width={140}
+                        height={140}
+                        className="opacity-90"
                       />
                     </div>
                   </motion.div>

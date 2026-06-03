@@ -57,6 +57,15 @@ export const content = {
       viewProject: 'View Project',
       demoLabel: 'Chart Studio',
     },
+    uploadSpec: {
+      category: 'WEB APP',
+      title: 'UploadSpec',
+      description:
+        'Portal-ready photo and signature tools for Indian application portals. Resize to exact pixels and KB ranges for UPSC, SSC, bank exams, state PSC, passport, and more—processed entirely in your browser with no server upload.',
+      liveDemo: 'Visit site',
+      viewProject: 'View Project',
+      demoLabel: 'UploadSpec',
+    },
   },
   contact: {
     title: 'Get In Touch',

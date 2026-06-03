@@ -9,6 +9,7 @@ const EXCLUDED_FROM_TRANSLATION = [
   'Pradhul',
   'Squash-Push',
   'vsColorCode',
+  'UploadSpec',
 ]
 
 // Check if a string should be excluded from translation
