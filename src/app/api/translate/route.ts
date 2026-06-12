@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { translate } from 'google-translate-api-x'
-import { getFirestoreInstance } from '@/lib/firebase'
+import { getOptionalFirestore } from '@/lib/firebase'
 import crypto from 'crypto'
 
 // Strings that should never be translated (case-insensitive matching)
@@ -114,10 +114,13 @@ function reconstructObject(strings: Array<{ key: string; value: string }>, origi
 }
 
 export async function POST(request: NextRequest) {
+  let sourceContent: Record<string, unknown> | null = null
+
   try {
     const body = await request.json()
     const content: Record<string, unknown> = body.content
     const targetLanguage: string = body.targetLanguage
+    sourceContent = content
 
     if (!content || !targetLanguage) {
       return NextResponse.json(
@@ -131,22 +134,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ translatedContent: content })
     }
 
-    const db = getFirestoreInstance()
+    const db = getOptionalFirestore()
     const contentHash = createHash(JSON.stringify(content))
 
-    // Check Firebase cache first
-    try {
-      const cacheDoc = await db.collection('translatedContent').doc(`${contentHash}_${targetLanguage}`).get()
-      
-      if (cacheDoc.exists) {
-        const cached = cacheDoc.data()
-        if (cached && cached.content) {
-          return NextResponse.json({ translatedContent: cached.content })
+    // Check Firebase cache first (when configured)
+    if (db) {
+      try {
+        const cacheDoc = await db.collection('translatedContent').doc(`${contentHash}_${targetLanguage}`).get()
+
+        if (cacheDoc.exists) {
+          const cached = cacheDoc.data()
+          if (cached && cached.content) {
+            return NextResponse.json({ translatedContent: cached.content })
+          }
         }
+      } catch (error) {
+        console.error('Error checking cache:', error)
+        // Continue to translation if cache check fails
       }
-    } catch (error) {
-      console.error('Error checking cache:', error)
-      // Continue to translation if cache check fails
     }
 
     // Extract all strings from content
@@ -162,17 +167,19 @@ export async function POST(request: NextRequest) {
 
         // Check individual string cache
         const stringHash = createHash(value)
-        
-        try {
-          const stringCacheDoc = await db.collection('translations').doc(`${stringHash}_${targetLanguage}`).get()
-          if (stringCacheDoc.exists) {
-            const cached = stringCacheDoc.data()
-            if (cached && cached.translatedText) {
-              return { key, value: cached.translatedText }
+
+        if (db) {
+          try {
+            const stringCacheDoc = await db.collection('translations').doc(`${stringHash}_${targetLanguage}`).get()
+            if (stringCacheDoc.exists) {
+              const cached = stringCacheDoc.data()
+              if (cached && cached.translatedText) {
+                return { key, value: cached.translatedText }
+              }
             }
+          } catch {
+            // Continue to translation
           }
-        } catch {
-          // Continue to translation
         }
 
         try {
@@ -181,15 +188,17 @@ export async function POST(request: NextRequest) {
           const translatedText = result.text
 
           // Cache the translation
-          try {
-            await db.collection('translations').doc(`${stringHash}_${targetLanguage}`).set({
-              sourceText: value,
-              translatedText,
-              language: targetLanguage,
-              lastUpdated: new Date(),
-            })
-          } catch (error) {
-            console.error('Error caching translation:', error)
+          if (db) {
+            try {
+              await db.collection('translations').doc(`${stringHash}_${targetLanguage}`).set({
+                sourceText: value,
+                translatedText,
+                language: targetLanguage,
+                lastUpdated: new Date(),
+              })
+            } catch (error) {
+              console.error('Error caching translation:', error)
+            }
           }
 
           return { key, value: translatedText }
@@ -212,28 +221,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Cache the full translated content
-    try {
-      await db.collection('translatedContent').doc(`${contentHash}_${targetLanguage}`).set({
-        content: translatedContent,
-        language: targetLanguage,
-        lastUpdated: new Date(),
-      })
-    } catch (error) {
-      console.error('Error caching translated content:', error)
-      // Continue even if caching fails
+    if (db) {
+      try {
+        await db.collection('translatedContent').doc(`${contentHash}_${targetLanguage}`).set({
+          content: translatedContent,
+          language: targetLanguage,
+          lastUpdated: new Date(),
+        })
+      } catch (error) {
+        console.error('Error caching translated content:', error)
+        // Continue even if caching fails
+      }
     }
 
     return NextResponse.json({ translatedContent })
   } catch (error) {
     console.error('Error in translate API:', error)
-    // Try to get content from request if possible
-    try {
-      const body = await request.json()
-      if (body?.content) {
-        return NextResponse.json({ translatedContent: body.content })
-      }
-    } catch {
-      // Ignore
+    if (sourceContent) {
+      return NextResponse.json({ translatedContent: sourceContent })
     }
     return NextResponse.json(
       { error: 'Translation failed', translatedContent: null },

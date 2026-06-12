@@ -47,3 +47,24 @@ export function getFirestoreInstance(): Firestore {
   const { db } = getFirebaseAdmin()
   return db
 }
+
+export function getOptionalFirestore(): Firestore | null {
+  const projectId = process.env.FIREBASE_PROJECT_ID
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY
+
+  if (!projectId || !clientEmail || !privateKey) {
+    return null
+  }
+
+  try {
+    return getFirestoreInstance()
+  } catch (error) {
+    console.error('Firebase unavailable:', error)
+    return null
+  }
+}
+
+export function isFirebaseConfigured(): boolean {
+  return getOptionalFirestore() !== null
+}

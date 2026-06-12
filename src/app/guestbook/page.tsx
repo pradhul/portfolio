@@ -86,7 +86,8 @@ export default function GuestbookPage() {
   const [message, setMessage] = useState('')
   const [strokes, setStrokes] = useState<SignatureStroke[]>([])
   const [isDrawing, setIsDrawing] = useState(false)
-  const [error, setError] = useState('')
+  const [submitError, setSubmitError] = useState('')
+  const [loadError, setLoadError] = useState('')
   const [success, setSuccess] = useState('')
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -95,6 +96,7 @@ export default function GuestbookPage() {
   useEffect(() => {
     const loadEntries = async () => {
       setLoadingEntries(true)
+      setLoadError('')
       try {
         const response = await fetch('/api/guestbook')
         const data = await response.json()
@@ -103,7 +105,7 @@ export default function GuestbookPage() {
         }
         setEntries(data.entries || [])
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load entries.')
+        setLoadError(err instanceof Error ? err.message : 'Failed to load entries.')
       } finally {
         setLoadingEntries(false)
       }
@@ -177,7 +179,7 @@ export default function GuestbookPage() {
 
   const clearSignature = () => {
     setStrokes([])
-    setError('')
+    setSubmitError('')
     setSuccess('')
   }
 
@@ -189,17 +191,17 @@ export default function GuestbookPage() {
     const trimmedName = name.trim()
 
     if (!trimmedMessage) {
-      setError('Please write a message before submitting.')
+      setSubmitError('Please write a message before submitting.')
       return
     }
 
     if (!hasSignature) {
-      setError('Please add your signature before submitting.')
+      setSubmitError('Please add your signature before submitting.')
       return
     }
 
     setSubmitting(true)
-    setError('')
+    setSubmitError('')
     setSuccess('')
 
     try {
@@ -226,7 +228,7 @@ export default function GuestbookPage() {
       setStrokes([])
       setSuccess('Thanks! Your message was posted.')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not submit your entry.')
+      setSubmitError(err instanceof Error ? err.message : 'Could not submit your entry.')
     } finally {
       setSubmitting(false)
     }
@@ -315,7 +317,7 @@ export default function GuestbookPage() {
                 </div>
               </div>
 
-              {error && <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{error}</p>}
+              {submitError && <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{submitError}</p>}
               {success && <p className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">{success}</p>}
 
               <motion.button
@@ -339,6 +341,10 @@ export default function GuestbookPage() {
                 <Loader2 size={18} className="animate-spin" />
                 Loading entries...
               </div>
+            ) : loadError ? (
+              <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                {loadError}
+              </p>
             ) : entries.length === 0 ? (
               <p className="text-cream-faint">No entries yet. Be the first to leave a message.</p>
             ) : (

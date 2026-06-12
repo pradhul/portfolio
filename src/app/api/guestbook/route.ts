@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { getFirestoreInstance } from '@/lib/firebase'
 import {
   fromStoredStrokes,
   type SignaturePoint,
@@ -8,25 +7,18 @@ import {
   type StoredSignatureStroke,
   toStoredStrokes,
 } from '@/lib/guestbookSignature'
+import {
+  createGuestbookEntry,
+  isGuestbookStorageAvailable,
+  listGuestbookEntries,
+} from '@/lib/guestbookStore'
 
-type GuestbookEntry = {
-  id: string
-  name: string
-  message: string
-  signatureStrokes: StoredSignatureStroke[]
-  createdAt: Date
-  ipHash: string
-}
-
-const GUESTBOOK_COLLECTION = 'guestbookEntries'
 const MAX_MESSAGE_LENGTH = 500
 const MAX_NAME_LENGTH = 80
 const MAX_STROKES = 40
 const MAX_POINTS_PER_STROKE = 300
 const MAX_TOTAL_POINTS = 3000
-const RATE_LIMIT_WINDOW_MS = 60 * 1000
 
-const inMemoryRateLimit = new Map<string, number>()
 const VALIDATION_ERROR_PREFIXES = [
   'Invalid request payload.',
   'Message is required.',
@@ -152,7 +144,7 @@ function validateSignatureStrokes(strokes: unknown): StoredSignatureStroke[] {
   return toStoredStrokes(normalizedStrokes)
 }
 
-function validatePayload(body: unknown): Pick<GuestbookEntry, 'name' | 'message' | 'signatureStrokes'> {
+function validatePayload(body: unknown): { name: string; message: string; signatureStrokes: StoredSignatureStroke[] } {
   if (typeof body !== 'object' || body === null) {
     throw new Error('Invalid request payload.')
   }
@@ -187,54 +179,29 @@ function validatePayload(body: unknown): Pick<GuestbookEntry, 'name' | 'message'
   }
 }
 
-async function isRateLimited(ipHash: string): Promise<boolean> {
-  const now = Date.now()
-  const lastInMemory = inMemoryRateLimit.get(ipHash)
-  if (lastInMemory && now - lastInMemory < RATE_LIMIT_WINDOW_MS) {
-    return true
-  }
-
-  const db = getFirestoreInstance()
-  const rateDoc = await db.collection('guestbookRateLimits').doc(ipHash).get()
-  const lastSubmittedAt = rateDoc.data()?.lastSubmittedAt?.toDate?.() as Date | undefined
-
-  if (lastSubmittedAt && now - lastSubmittedAt.getTime() < RATE_LIMIT_WINDOW_MS) {
-    return true
-  }
-
-  return false
-}
-
-async function updateRateLimit(ipHash: string): Promise<void> {
-  const db = getFirestoreInstance()
-  inMemoryRateLimit.set(ipHash, Date.now())
-
-  await db.collection('guestbookRateLimits').doc(ipHash).set({
-    lastSubmittedAt: new Date(),
-  })
+function storageUnavailableResponse() {
+  return NextResponse.json(
+    {
+      error:
+        'Guestbook storage is not configured. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY.',
+    },
+    { status: 503 }
+  )
 }
 
 export async function GET() {
+  if (!isGuestbookStorageAvailable()) {
+    return storageUnavailableResponse()
+  }
+
   try {
-    const db = getFirestoreInstance()
-    const snapshot = await db
-      .collection(GUESTBOOK_COLLECTION)
-      .orderBy('createdAt', 'desc')
-      .limit(20)
-      .get()
-
-    const entries = snapshot.docs.map((doc) => {
-      const data = doc.data()
-      return {
-        id: doc.id,
-        name: data.name || '',
-        message: data.message || '',
-        signatureStrokes: fromStoredStrokes(data.signatureStrokes),
-        createdAt: data.createdAt?.toDate?.()?.toISOString?.() || new Date().toISOString(),
-      }
+    const entries = await listGuestbookEntries()
+    return NextResponse.json({
+      entries: entries.map((entry) => ({
+        ...entry,
+        signatureStrokes: fromStoredStrokes(entry.signatureStrokes),
+      })),
     })
-
-    return NextResponse.json({ entries })
   } catch (error) {
     console.error('Error fetching guestbook entries:', error)
     return NextResponse.json({ error: 'Failed to load guestbook entries.' }, { status: 500 })
@@ -242,44 +209,37 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isGuestbookStorageAvailable()) {
+    return storageUnavailableResponse()
+  }
+
   try {
     const body = await request.json()
     const payload = validatePayload(body)
     const ip = getClientIp(request)
     const ipHash = createIpHash(ip)
 
-    const limited = await isRateLimited(ipHash)
-    if (limited) {
+    const entry = await createGuestbookEntry({
+      name: payload.name,
+      message: payload.message,
+      signatureStrokes: payload.signatureStrokes,
+      ipHash,
+    })
+
+    return NextResponse.json({
+      entry: {
+        ...entry,
+        signatureStrokes: fromStoredStrokes(entry.signatureStrokes),
+      },
+    })
+  } catch (error) {
+    if (error instanceof Error && error.message === 'RATE_LIMITED') {
       return NextResponse.json(
         { error: 'You are posting too quickly. Please wait a minute before trying again.' },
         { status: 429 }
       )
     }
 
-    const db = getFirestoreInstance()
-    const docRef = db.collection(GUESTBOOK_COLLECTION).doc()
-    const entry: GuestbookEntry = {
-      id: docRef.id,
-      name: payload.name,
-      message: payload.message,
-      signatureStrokes: payload.signatureStrokes,
-      createdAt: new Date(),
-      ipHash,
-    }
-
-    await docRef.set(entry)
-    await updateRateLimit(ipHash)
-
-    return NextResponse.json({
-      entry: {
-        id: entry.id,
-        name: entry.name,
-        message: entry.message,
-        signatureStrokes: fromStoredStrokes(entry.signatureStrokes),
-        createdAt: entry.createdAt.toISOString(),
-      },
-    })
-  } catch (error) {
     const message = error instanceof Error ? error.message : 'Could not submit guestbook entry.'
 
     if (message.startsWith('Failed to parse')) {
@@ -288,6 +248,10 @@ export async function POST(request: NextRequest) {
 
     if (VALIDATION_ERROR_PREFIXES.some((prefix) => message.startsWith(prefix))) {
       return NextResponse.json({ error: message }, { status: 422 })
+    }
+
+    if (message === 'Guestbook storage is not configured.') {
+      return storageUnavailableResponse()
     }
 
     console.error('Error submitting guestbook entry:', error)
