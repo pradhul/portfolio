@@ -6,20 +6,14 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { 
-  Code, 
-  FileText, 
-  Github, 
+import {
+  FileText,
+  Github,
   Package,
   ChevronDown,
-  Sparkles,
-  User,
-  Briefcase,
-  MessageCircle,
   ExternalLink,
   BarChart3,
-  PenTool,
-  Shield
+  ArrowUpRight
 } from 'lucide-react'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
@@ -40,11 +34,68 @@ const GitHubActivity = dynamic(() => import('@/components/GitHubActivity'), {
   loading: () => (
     <div className="w-full overflow-x-auto">
       <div className="inline-block min-w-full">
-        <div className="text-gray-400 text-center py-8">Loading activity...</div>
+        <div className="text-cream-faint text-center py-8">Loading activity...</div>
       </div>
     </div>
   ),
 })
+
+// Shared button styles
+const btnPrimary =
+  'inline-flex items-center gap-2 rounded-full bg-brass px-7 py-3.5 font-semibold text-ink transition-colors hover:bg-brass-bright'
+const btnGhost =
+  'inline-flex items-center gap-2 rounded-full border border-line px-7 py-3.5 font-medium text-cream-muted transition-colors hover:border-cream-muted hover:text-cream'
+const btnPrimarySm =
+  'inline-flex items-center gap-2 rounded-full bg-brass px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-brass-bright'
+const btnGhostSm =
+  'inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-cream-muted transition-colors hover:border-cream-muted hover:text-cream'
+
+function SectionHeading({
+  index,
+  title,
+  activeFestival,
+}: {
+  index: string
+  title: React.ReactNode
+  activeFestival: ReturnType<typeof useFestivalTheme>['activeFestival']
+}) {
+  return (
+    <div className="flex items-baseline gap-5 border-t border-line pt-8">
+      <span className="font-mono text-sm text-brass">{index}</span>
+      <h2
+        className="font-display text-4xl md:text-6xl font-medium tracking-tight text-cream"
+        style={activeFestival ? {
+          backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+        } : undefined}
+      >
+        {title}
+      </h2>
+    </div>
+  )
+}
+
+function ProjectFrame({
+  caption,
+  figure,
+  children,
+}: {
+  caption: string
+  figure: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-line bg-ink-soft">
+      <div className="flex items-center justify-between border-b border-line px-5 py-3">
+        <span className="font-mono text-xs uppercase tracking-widest text-cream-faint">{figure}</span>
+        <span className="font-mono text-xs text-cream-faint">{caption}</span>
+      </div>
+      <div className="p-4">{children}</div>
+    </div>
+  )
+}
 
 function HomeContent() {
   const [activeSection, setActiveSection] = useState('hero')
@@ -56,7 +107,7 @@ function HomeContent() {
     const handleScroll = () => {
       const sections = ['hero', 'about', 'portfolio', 'contact']
       const scrollPosition = window.scrollY + window.innerHeight / 2
-      
+
       for (const section of sections) {
         const element = document.getElementById(section)
         if (element) {
@@ -81,38 +132,33 @@ function HomeContent() {
   }
 
   const navItems = [
-    { id: 'hero', label: tString('nav.home'), icon: Code },
-    { id: 'about', label: tString('nav.about'), icon: User },
-    { id: 'portfolio', label: tString('nav.portfolio'), icon: Briefcase },
-    { id: 'contact', label: tString('nav.contact'), icon: MessageCircle },
-    { id: 'guestbook', label: tString('nav.guestbook'), icon: PenTool, href: '/guestbook' },
+    { id: 'hero', label: tString('nav.home') },
+    { id: 'about', label: tString('nav.about') },
+    { id: 'portfolio', label: tString('nav.portfolio') },
+    { id: 'contact', label: tString('nav.contact') },
+    { id: 'guestbook', label: tString('nav.guestbook'), href: '/guestbook' },
   ]
 
   return (
     <FestivalThemeProvider activeFestival={activeFestival}>
-      <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-black text-white scroll-smooth">
+      <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-ink text-cream scroll-smooth">
         <Analytics />
         <SpeedInsights />
         {/* Lazy load heavy background components after initial render */}
         <Suspense fallback={null}>
           <LazyBackgroundComponents />
         </Suspense>
-      
+
       {/* Navigation */}
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/20 border-b border-cyan-500/10"
+        className="fixed top-0 left-0 right-0 z-50 border-b border-line bg-ink/80 backdrop-blur-md"
       >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className={`text-2xl font-bold cursor-pointer ${
-              activeFestival
-                ? `bg-gradient-to-r from-[${activeFestival.colors.primary}] via-[${activeFestival.colors.secondary}] to-[${activeFestival.colors.accent}] bg-clip-text text-transparent`
-                : 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent'
-            }`}
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <div
+            className="cursor-pointer font-display text-xl font-semibold tracking-tight text-cream transition-colors hover:text-brass"
             onClick={() => scrollToSection('hero')}
             style={activeFestival ? {
               backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
@@ -122,58 +168,44 @@ function HomeContent() {
             } : undefined}
           >
             {tString('brand')}
-          </motion.div>
-          <div className="hidden md:flex gap-2 items-center">
+          </div>
+          <div className="hidden items-center gap-1 md:flex">
             {navItems.map((item) => {
-              const Icon = item.icon
               const isActive = activeSection === item.id
-              const itemClasses = `relative px-4 py-2 rounded-lg transition-all ${
-                isActive
-                  ? 'text-cyan-400 bg-cyan-500/10'
-                  : 'text-gray-400 hover:text-cyan-400'
+              const itemClasses = `relative px-4 py-2 text-sm transition-colors ${
+                isActive ? 'text-cream' : 'text-cream-muted hover:text-cream'
               }`
 
               if (item.href) {
                 return (
-                  <motion.div
-                    key={item.id}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link href={item.href} className={itemClasses}>
-                      <div className="flex items-center gap-2">
-                        <Icon size={18} />
-                        <span className="text-sm font-medium">{item.label}</span>
-                      </div>
-                    </Link>
-                  </motion.div>
+                  <Link key={item.id} href={item.href} className={itemClasses}>
+                    {item.label}
+                  </Link>
                 )
               }
 
               return (
-                <motion.button
+                <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
                   className={itemClasses}
                 >
-                  <div className="flex items-center gap-2">
-                    <Icon size={18} />
-                    <span className="text-sm font-medium">{item.label}</span>
-                  </div>
+                  {item.label}
                   {isActive && (
                     <motion.div
                       layoutId="activeSection"
-                      className="absolute inset-0 bg-cyan-500/10 rounded-lg border border-cyan-500/30"
+                      className="absolute inset-x-4 -bottom-px h-px bg-brass"
                       initial={false}
                       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      style={activeFestival ? { backgroundColor: activeFestival.colors.primary } : undefined}
                     />
                   )}
-                </motion.button>
+                </button>
               )
             })}
-            <LanguageSwitcher />
+            <div className="ml-3">
+              <LanguageSwitcher />
+            </div>
           </div>
           <div className="md:hidden">
             <LanguageSwitcher />
@@ -182,53 +214,23 @@ function HomeContent() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section id="hero" className="relative min-h-screen flex items-center justify-center px-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="text-center z-10 max-w-5xl mx-auto"
+      <section id="hero" className="relative flex min-h-screen items-center px-6">
+        <div className="mx-auto w-full max-w-6xl z-10 pt-28 pb-16">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-brass"
+            style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, type: 'spring', stiffness: 200 }}
-              className="inline-block mb-8"
-            >
-            <div className="relative">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 border-2 rounded-full border-cyan-500/30"
-                style={activeFestival ? { borderColor: `${activeFestival.colors.primary}30` } : undefined}
-              />
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-2 border-2 rounded-full border-purple-500/30"
-                style={activeFestival ? { borderColor: `${activeFestival.colors.secondary}30` } : undefined}
-              />
-              <div 
-                className="relative p-8 rounded-full backdrop-blur-sm border border-cyan-500/30"
-                style={activeFestival ? {
-                  background: `linear-gradient(to bottom right, ${activeFestival.colors.primary}20, ${activeFestival.colors.secondary}20, ${activeFestival.colors.accent}20)`,
-                  borderColor: `${activeFestival.colors.primary}30`,
-                } : undefined}
-              >
-                <Code 
-                  size={64} 
-                  className="text-cyan-400"
-                  style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
-                />
-              </div>
-            </div>
-          </motion.div>
+            Web &amp; Mobile Developer — 8+ years
+          </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            className="text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-tight bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+            transition={{ delay: 0.1, duration: 0.7 }}
+            className="font-display text-[clamp(3.5rem,12vw,9.5rem)] font-medium leading-[0.95] tracking-tight text-cream"
             style={activeFestival ? {
               backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
               WebkitBackgroundClip: 'text',
@@ -246,733 +248,565 @@ function HomeContent() {
           </motion.h1>
 
           <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="mt-10 h-px w-full bg-line"
+          />
+
+          <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="mt-12 flex flex-wrap justify-center gap-4"
+            transition={{ delay: 0.35, duration: 0.6 }}
+            className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <motion.a
+            <a
               href="/PRADHUL_DEV_RESUME.pdf"
               download="PRADHUL_DEV_RESUME.pdf"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-black font-semibold px-8 py-4 rounded-full transition-all shadow-lg bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50"
+              className={btnPrimary}
               style={activeFestival ? {
                 background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
               } : undefined}
             >
-              <FileText size={20} />
+              <FileText size={18} />
               <span>{tString('hero.downloadResume')}</span>
-            </motion.a>
+            </a>
 
-            <motion.button
+            <button
               onClick={() => scrollToSection('portfolio')}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 bg-transparent border-2 font-semibold px-8 py-4 rounded-full transition-all backdrop-blur-sm border-cyan-500/50 hover:border-cyan-400 text-cyan-400"
+              className={btnGhost}
               style={activeFestival ? {
                 borderColor: `${activeFestival.colors.primary}50`,
                 color: activeFestival.colors.primary,
               } : undefined}
             >
-              <Sparkles size={20} />
               <span>{tString('hero.viewPortfolio')}</span>
-            </motion.button>
+              <ArrowUpRight size={18} />
+            </button>
           </motion.div>
+        </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="mt-20"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        >
+          <motion.button
+            onClick={() => scrollToSection('about')}
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            className="text-cream-faint transition-colors hover:text-brass"
+            style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+            aria-label="Scroll to about section"
           >
-            <motion.button
-              onClick={() => scrollToSection('about')}
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="transition-colors text-cyan-400 hover:text-cyan-300"
-              style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
-            >
-              <ChevronDown size={40} />
-            </motion.button>
-          </motion.div>
+            <ChevronDown size={28} />
+          </motion.button>
         </motion.div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="relative min-h-screen flex items-center justify-center px-6 py-20">
-        <div className="max-w-5xl mx-auto z-10">
+      <section id="about" className="relative px-6 py-28">
+        <div className="mx-auto max-w-6xl z-10 relative">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.7 }}
           >
-            <h2 
-              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500"
-              style={activeFestival ? {
-                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              } : undefined}
-            >
-              {activeFestival ? (
+            <SectionHeading
+              index="01"
+              activeFestival={activeFestival}
+              title={activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
                   {tString('about.title')}
                 </FestivalTextDecoration>
               ) : (
                 tString('about.title')
               )}
-            </h2>
-            <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
+            />
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-black/30 backdrop-blur-md border border-cyan-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-cyan-500/40 transition-all duration-300"
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="mt-14 grid gap-10 md:grid-cols-[1fr_2fr]"
           >
-            {(() => {
-              const paragraphs = t('about.paragraphs')
-              if (Array.isArray(paragraphs)) {
-                return paragraphs.map((para: string, index: number) => {
-                  // For the first paragraph, highlight "Pradhul" with styled span
-                  if (index === 0 && para.includes('Pradhul')) {
-                    const parts = para.split('Pradhul')
+            <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
+              {tString('nav.about')}
+            </div>
+            <div className="max-w-prose">
+              {(() => {
+                const paragraphs = t('about.paragraphs')
+                if (Array.isArray(paragraphs)) {
+                  return paragraphs.map((para: string, index: number) => {
+                    // For the first paragraph, highlight "Pradhul" with styled span
+                    if (index === 0 && para.includes('Pradhul')) {
+                      const parts = para.split('Pradhul')
+                      return (
+                        <p key={index} className="mb-6 font-display text-2xl leading-snug text-cream md:text-3xl last:mb-0">
+                          {parts[0]}
+                          <span className="text-brass" style={activeFestival ? { color: activeFestival.colors.primary } : undefined}>Pradhul</span>
+                          {parts[1]}
+                        </p>
+                      )
+                    }
                     return (
-                      <p key={index} className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6 last:mb-0">
-                        {parts[0]}
-                        <span className="text-cyan-400 font-semibold">Pradhul</span>
-                        {parts[1]}
+                      <p key={index} className="mb-6 text-base leading-relaxed text-cream-muted md:text-lg last:mb-0">
+                        {para}
                       </p>
                     )
-                  }
-                  return (
-                    <p key={index} className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6 last:mb-0">
-                      {para}
-                    </p>
-                  )
-                })
-              }
-              return null
-            })()}
+                  })
+                }
+                return null
+              })()}
+            </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="bg-black/30 backdrop-blur-md border border-cyan-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-cyan-500/40 transition-all duration-300 mt-8"
-            style={activeFestival ? {
-              borderColor: `${activeFestival.colors.primary}30`,
-            } : undefined}
+            transition={{ duration: 0.7, delay: 0.25 }}
+            className="mt-20 grid gap-10 md:grid-cols-[1fr_2fr]"
           >
-            <h3 
-              className="text-2xl md:text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500"
-              style={activeFestival ? {
-                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              } : undefined}
-            >
-              {activeFestival ? (
-                <FestivalTextDecoration festival={activeFestival}>
-                  GitHub Activity
-                </FestivalTextDecoration>
-              ) : (
-                'GitHub Activity'
-              )}
-            </h3>
-            <GitHubActivity username="pradhul" />
+            <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
+              GitHub Activity
+            </div>
+            <div className="overflow-hidden rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
+              <GitHubActivity username="pradhul" />
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Portfolio Section */}
-      <section id="portfolio" className="relative min-h-screen flex items-center justify-center px-6 py-20">
-        <div className="max-w-7xl mx-auto z-10 w-full">
+      <section id="portfolio" className="relative px-6 py-28">
+        <div className="mx-auto max-w-6xl z-10 relative w-full">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-20"
+            transition={{ duration: 0.7 }}
           >
-            <h2 
-              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500"
-              style={activeFestival ? {
-                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              } : undefined}
-            >
-              {activeFestival ? (
+            <SectionHeading
+              index="02"
+              activeFestival={activeFestival}
+              title={activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
                   {tString('portfolio.title')}
                 </FestivalTextDecoration>
               ) : (
                 tString('portfolio.title')
               )}
-            </h2>
-            <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto rounded-full" />
+            />
           </motion.div>
 
-          <div className="space-y-24">
+          <div className="mt-16 space-y-24">
             {/* Ionic Measure */}
             <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8 }}
-              className="bg-black/30 backdrop-blur-md border border-pink-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-pink-500/40 transition-all duration-300"
+              transition={{ duration: 0.7 }}
+              className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
             >
-              <div className="flex flex-col md:flex-row items-center gap-12">
-                <div className="flex-1">
-                  <div className="flex items-center mb-8">
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="bg-white p-4 rounded-xl shadow-lg mr-6"
-                    >
-                      <Image
-                        src="/ionicMeasure/icon.png"
-                        alt="Ionic Measure Icon"
-                        width={80}
-                        height={80}
-                        loading="lazy"
-                        placeholder="blur"
-                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                      />
-                    </motion.div>
-                    <div>
-                      <div className="text-xs font-semibold text-pink-400 mb-2 tracking-wider">{tString('portfolio.ionicMeasure.category')}</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.ionicMeasure.title')}</h3>
-                    </div>
+              <div>
+                <div className="mb-6 flex items-center gap-5">
+                  <div className="rounded-xl border border-line bg-cream p-3">
+                    <Image
+                      src="/ionicMeasure/icon.png"
+                      alt="Ionic Measure Icon"
+                      width={56}
+                      height={56}
+                      loading="lazy"
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                    />
                   </div>
-
-                  <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    {tString('portfolio.ionicMeasure.description')}
-                  </p>
-
-                  <div className="flex flex-wrap gap-4">
-                    <motion.a
-                      href="https://chromewebstore.google.com/detail/cemannkhghihhipcokcbnnaklafbfnpj"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 bg-transparent border-2 border-pink-500/50 hover:border-pink-400 text-pink-400 font-semibold py-3 px-6 rounded-lg transition-all"
-                    >
-                      <ExternalLink size={18} />
-                      <span>{tString('portfolio.ionicMeasure.viewWebStore')}</span>
-                    </motion.a>
-                    <motion.a
-                      href="https://github.com/pradhul/ionic-measure-extension"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 shadow-pink-500/50"
-                      style={activeFestival ? {
-                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
-                      } : undefined}
-                    >
-                      <Github size={18} />
-                      <span>{tString('portfolio.ionicMeasure.viewGitHub')}</span>
-                    </motion.a>
+                  <div>
+                    <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.ionicMeasure.category')}</div>
+                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.ionicMeasure.title')}</h3>
                   </div>
                 </div>
 
-                <div className="flex-1 mt-6 md:mt-0">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gray-900/50 rounded-xl shadow-xl overflow-hidden border border-pink-500/20"
+                <p className="mb-8 max-w-prose leading-relaxed text-cream-muted">
+                  {tString('portfolio.ionicMeasure.description')}
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://chromewebstore.google.com/detail/cemannkhghihhipcokcbnnaklafbfnpj"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnPrimarySm}
+                    style={activeFestival ? {
+                      background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                    } : undefined}
                   >
-                    <div className="bg-gray-800/50 p-3 flex items-center justify-between border-b border-pink-500/20">
-                      <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      </div>
-                      <div className="text-xs font-mono text-gray-400">{tString('portfolio.ionicMeasure.demoLabel')}</div>
-                    </div>
-                    <div className="p-4">
-                      <Image
-                        src="/ionicMeasure/demo.png"
-                        alt="Ionic Measure Demo"
-                        width={800}
-                        height={600}
-                        className="w-full h-auto rounded-lg shadow-lg"
-                        loading="lazy"
-                      />
-                    </div>
-                  </motion.div>
+                    <ExternalLink size={16} />
+                    <span>{tString('portfolio.ionicMeasure.viewWebStore')}</span>
+                  </a>
+                  <a
+                    href="https://github.com/pradhul/ionic-measure-extension"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnGhostSm}
+                  >
+                    <Github size={16} />
+                    <span>{tString('portfolio.ionicMeasure.viewGitHub')}</span>
+                  </a>
                 </div>
               </div>
+
+              <ProjectFrame figure="Fig. 01" caption={tString('portfolio.ionicMeasure.demoLabel')}>
+                <Image
+                  src="/ionicMeasure/demo.png"
+                  alt="Ionic Measure Demo"
+                  width={800}
+                  height={600}
+                  className="h-auto w-full rounded-lg"
+                  loading="lazy"
+                />
+              </ProjectFrame>
             </motion.div>
 
             {/* Squash-Push Project */}
             <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8 }}
-              className="bg-black/30 backdrop-blur-md border border-cyan-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-cyan-500/40 transition-all duration-300"
+              transition={{ duration: 0.7 }}
+              className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
             >
-              <div className="flex flex-col md:flex-row items-center gap-12">
-                <div className="flex-1">
-                  <div className="flex items-center mb-8">
-                    <motion.div 
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="bg-white p-4 rounded-xl shadow-lg mr-6"
-                    >
-                      <Image 
-                        src="/squashPush/icon.png" 
-                        alt="Squash-Push Icon" 
-                        width={80} 
-                        height={80}
-                        loading="lazy"
-                        placeholder="blur"
-                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                      />
-                    </motion.div>
-                    <div>
-                      <div className="text-xs font-semibold text-cyan-400 mb-2 tracking-wider">{tString('portfolio.squashPush.category')}</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.squashPush.title')}</h3>
-                    </div>
+              <div className="lg:order-2">
+                <div className="mb-6 flex items-center gap-5">
+                  <div className="rounded-xl border border-line bg-cream p-3">
+                    <Image
+                      src="/squashPush/icon.png"
+                      alt="Squash-Push Icon"
+                      width={56}
+                      height={56}
+                      loading="lazy"
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                    />
                   </div>
-
-                  <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    {tString('portfolio.squashPush.description')}
-                  </p>
-
-                  <div className="flex flex-wrap gap-4">
-                    <motion.a
-                      href="https://marketplace.visualstudio.com/items?itemName=PradhulDev.squash-push"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 text-black font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50"
-                      style={activeFestival ? {
-                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
-                      } : undefined}
-                    >
-                      <Package size={18} />
-                      <span>{tString('portfolio.squashPush.marketplace')}</span>
-                    </motion.a>
-                    <motion.a
-                      href="https://github.com/pradhul/squash-push"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 bg-transparent border-2 border-cyan-500/50 hover:border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg transition-all"
-                    >
-                      <Github size={18} />
-                      <span>{tString('portfolio.squashPush.viewGitHub')}</span>
-                    </motion.a>
+                  <div>
+                    <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.squashPush.category')}</div>
+                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.squashPush.title')}</h3>
                   </div>
                 </div>
 
-                <div className="flex-1 mt-6 md:mt-0">
-                  <motion.div 
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gray-900/50 rounded-xl shadow-xl overflow-hidden border border-cyan-500/20"
+                <p className="mb-8 max-w-prose leading-relaxed text-cream-muted">
+                  {tString('portfolio.squashPush.description')}
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://marketplace.visualstudio.com/items?itemName=PradhulDev.squash-push"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnPrimarySm}
+                    style={activeFestival ? {
+                      background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                    } : undefined}
                   >
-                    <div className="bg-gray-800/50 p-3 flex items-center justify-between border-b border-cyan-500/20">
-                      <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      </div>
-                      <div className="text-xs font-mono text-gray-400">{tString('portfolio.squashPush.demoLabel')}</div>
-                    </div>
-                    <div className="p-4">
-                      <Image
-                        src="/squashPush/recording.gif"
-                        alt="Squash-Push Demo"
-                        width={800}
-                        height={600}
-                        className="w-full h-auto rounded-lg shadow-lg"
-                        loading="lazy"
-                        unoptimized
-                      />
-                    </div>
-                  </motion.div>
+                    <Package size={16} />
+                    <span>{tString('portfolio.squashPush.marketplace')}</span>
+                  </a>
+                  <a
+                    href="https://github.com/pradhul/squash-push"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnGhostSm}
+                  >
+                    <Github size={16} />
+                    <span>{tString('portfolio.squashPush.viewGitHub')}</span>
+                  </a>
                 </div>
+              </div>
+
+              <div className="lg:order-1">
+                <ProjectFrame figure="Fig. 02" caption={tString('portfolio.squashPush.demoLabel')}>
+                  <Image
+                    src="/squashPush/recording.gif"
+                    alt="Squash-Push Demo"
+                    width={800}
+                    height={600}
+                    className="h-auto w-full rounded-lg"
+                    loading="lazy"
+                    unoptimized
+                  />
+                </ProjectFrame>
               </div>
             </motion.div>
 
             {/* VS ColorCode Project */}
             <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8 }}
-              className="bg-black/30 backdrop-blur-md border border-purple-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-purple-500/40 transition-all duration-300"
+              transition={{ duration: 0.7 }}
+              className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
             >
-              <div className="flex flex-col md:flex-row-reverse items-center gap-12">
-                <div className="flex-1">
-                  <div className="flex items-center mb-8">
-                    <motion.div 
-                      whileHover={{ scale: 1.1, rotate: -5 }}
-                      className="bg-white p-4 rounded-xl shadow-lg mr-6"
-                    >
-                      <Image 
-                        src="/vsColorCode/icon.png" 
-                        alt="vsColorCode Icon" 
-                        width={80} 
-                        height={80}
-                        loading="lazy"
-                        placeholder="blur"
-                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                      />
-                    </motion.div>
-                    <div>
-                      <div className="text-xs font-semibold text-purple-400 mb-2 tracking-wider">{tString('portfolio.vsColorCode.category')}</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.vsColorCode.title')}</h3>
-                    </div>
+              <div>
+                <div className="mb-6 flex items-center gap-5">
+                  <div className="rounded-xl border border-line bg-cream p-3">
+                    <Image
+                      src="/vsColorCode/icon.png"
+                      alt="vsColorCode Icon"
+                      width={56}
+                      height={56}
+                      loading="lazy"
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                    />
                   </div>
-
-                  <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    {tString('portfolio.vsColorCode.description')}
-                  </p>
-
-                  <div className="flex flex-wrap gap-4">
-                    <motion.a
-                      href="https://marketplace.visualstudio.com/items?itemName=PradhulDev.vscolorcode"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 shadow-purple-500/50"
-                      style={activeFestival ? {
-                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
-                      } : undefined}
-                    >
-                      <Package size={18} />
-                      <span>{tString('portfolio.vsColorCode.marketplace')}</span>
-                    </motion.a>
-                    <motion.a
-                      href="https://github.com/pradhul/vscolorcode"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 bg-transparent border-2 border-purple-500/50 hover:border-purple-400 text-purple-400 font-semibold py-3 px-6 rounded-lg transition-all"
-                    >
-                      <Github size={18} />
-                      <span>{tString('portfolio.vsColorCode.viewGitHub')}</span>
-                    </motion.a>
+                  <div>
+                    <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.vsColorCode.category')}</div>
+                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.vsColorCode.title')}</h3>
                   </div>
                 </div>
 
-                <div className="flex-1 mt-6 md:mt-0">
-                  <motion.div 
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gray-900/50 rounded-xl shadow-xl overflow-hidden border border-purple-500/20"
+                <p className="mb-8 max-w-prose leading-relaxed text-cream-muted">
+                  {tString('portfolio.vsColorCode.description')}
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://marketplace.visualstudio.com/items?itemName=PradhulDev.vscolorcode"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnPrimarySm}
+                    style={activeFestival ? {
+                      background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                    } : undefined}
                   >
-                    <div className="bg-gray-800/50 p-3 flex items-center justify-between border-b border-purple-500/20">
-                      <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      </div>
-                      <div className="text-xs font-mono text-gray-400">{tString('portfolio.vsColorCode.demoLabel')}</div>
-                    </div>
-                    <div className="p-4">
-                      <Image
-                        src="/vsColorCode/demo.png"
-                        alt="vsColorCode Demo"
-                        width={800}
-                        height={600}
-                        className="w-full h-auto rounded-lg shadow-lg"
-                        loading="lazy"
-                      />
-                    </div>
-                  </motion.div>
+                    <Package size={16} />
+                    <span>{tString('portfolio.vsColorCode.marketplace')}</span>
+                  </a>
+                  <a
+                    href="https://github.com/pradhul/vscolorcode"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnGhostSm}
+                  >
+                    <Github size={16} />
+                    <span>{tString('portfolio.vsColorCode.viewGitHub')}</span>
+                  </a>
                 </div>
               </div>
+
+              <ProjectFrame figure="Fig. 03" caption={tString('portfolio.vsColorCode.demoLabel')}>
+                <Image
+                  src="/vsColorCode/demo.png"
+                  alt="vsColorCode Demo"
+                  width={800}
+                  height={600}
+                  className="h-auto w-full rounded-lg"
+                  loading="lazy"
+                />
+              </ProjectFrame>
             </motion.div>
 
             {/* Chart Studio Project */}
             <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8 }}
-              className="bg-black/30 backdrop-blur-md border border-teal-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-teal-500/40 transition-all duration-300"
+              transition={{ duration: 0.7 }}
+              className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
             >
-              <div className="flex flex-col md:flex-row items-center gap-12">
-                <div className="flex-1">
-                  <div className="flex items-center mb-8">
-                    <motion.div 
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="bg-white p-4 rounded-xl shadow-lg mr-6"
-                    >
-                      <BarChart3 className="w-16 h-16 text-teal-600" />
-                    </motion.div>
-                    <div>
-                      <div className="text-xs font-semibold text-teal-400 mb-2 tracking-wider">{tString('portfolio.chartStudio.category')}</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.chartStudio.title')}</h3>
-                    </div>
+              <div className="lg:order-2">
+                <div className="mb-6 flex items-center gap-5">
+                  <div className="rounded-xl border border-line bg-cream p-3">
+                    <BarChart3 className="h-14 w-14 text-ink" />
                   </div>
-
-                  <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    {tString('portfolio.chartStudio.description')}
-                  </p>
-
-                  <div className="flex flex-wrap gap-4">
-                    <motion.a
-                      href="https://soft-dieffenbachia-ba97b4.netlify.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 shadow-teal-500/50"
-                      style={activeFestival ? {
-                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
-                      } : undefined}
-                    >
-                      <ExternalLink size={18} />
-                      <span>{tString('portfolio.chartStudio.liveDemo')}</span>
-                    </motion.a>
-                    <motion.a
-                      href="/portfolio/chartstudio"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 bg-transparent border-2 border-teal-500/50 hover:border-teal-400 text-teal-400 font-semibold py-3 px-6 rounded-lg transition-all"
-                    >
-                      <span>{tString('portfolio.chartStudio.viewProject')}</span>
-                    </motion.a>
+                  <div>
+                    <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.chartStudio.category')}</div>
+                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.chartStudio.title')}</h3>
                   </div>
                 </div>
 
-                <div className="flex-1 mt-6 md:mt-0">
-                  <motion.div 
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gray-900/50 rounded-xl shadow-xl overflow-hidden border border-teal-500/20"
+                <p className="mb-8 max-w-prose leading-relaxed text-cream-muted">
+                  {tString('portfolio.chartStudio.description')}
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://soft-dieffenbachia-ba97b4.netlify.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnPrimarySm}
+                    style={activeFestival ? {
+                      background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                    } : undefined}
                   >
-                    <div className="bg-gray-800/50 p-3 flex items-center justify-between border-b border-teal-500/20">
-                      <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      </div>
-                      <div className="text-xs font-mono text-gray-400">{tString('portfolio.chartStudio.demoLabel')}</div>
-                    </div>
-                    <div className="p-4">
-                      <Image
-                        src="/chartStudio/Screenshot1.png"
-                        alt="Chart Studio"
-                        width={800}
-                        height={500}
-                        className="w-full h-auto rounded-lg shadow-lg"
-                        loading="lazy"
-                      />
-                    </div>
-                  </motion.div>
+                    <ExternalLink size={16} />
+                    <span>{tString('portfolio.chartStudio.liveDemo')}</span>
+                  </a>
+                  <a href="/portfolio/chartstudio" className={btnGhostSm}>
+                    <span>{tString('portfolio.chartStudio.viewProject')}</span>
+                    <ArrowUpRight size={16} />
+                  </a>
                 </div>
+              </div>
+
+              <div className="lg:order-1">
+                <ProjectFrame figure="Fig. 04" caption={tString('portfolio.chartStudio.demoLabel')}>
+                  <Image
+                    src="/chartStudio/Screenshot1.png"
+                    alt="Chart Studio"
+                    width={800}
+                    height={500}
+                    className="h-auto w-full rounded-lg"
+                    loading="lazy"
+                  />
+                </ProjectFrame>
               </div>
             </motion.div>
 
             {/* UploadSpec Project */}
             <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8 }}
-              className="bg-black/30 backdrop-blur-md border border-emerald-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-emerald-500/40 transition-all duration-300"
+              transition={{ duration: 0.7 }}
+              className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
             >
-              <div className="flex flex-col md:flex-row-reverse items-center gap-12">
-                <div className="flex-1">
-                  <div className="flex items-center mb-8">
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: -5 }}
-                      className="bg-white p-4 rounded-xl shadow-lg mr-6"
-                    >
-                      <Image
-                        src="/uploadSpec/logo.svg"
-                        alt="UploadSpec"
-                        width={80}
-                        height={80}
-                      />
-                    </motion.div>
-                    <div>
-                      <div className="text-xs font-semibold text-emerald-400 mb-2 tracking-wider">{tString('portfolio.uploadSpec.category')}</div>
-                      <h3 className="text-4xl md:text-5xl font-bold text-white">{tString('portfolio.uploadSpec.title')}</h3>
-                    </div>
+              <div>
+                <div className="mb-6 flex items-center gap-5">
+                  <div className="rounded-xl border border-line bg-cream p-3">
+                    <Image
+                      src="/uploadSpec/logo.svg"
+                      alt="UploadSpec"
+                      width={56}
+                      height={56}
+                    />
                   </div>
-
-                  <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-                    {tString('portfolio.uploadSpec.description')}
-                  </p>
-
-                  <div className="flex flex-wrap gap-4">
-                    <motion.a
-                      href="https://uploadspec.web.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-600 hover:to-teal-500 shadow-emerald-500/50"
-                      style={activeFestival ? {
-                        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                        boxShadow: `0 10px 15px -3px ${activeFestival.colors.primary}50`,
-                      } : undefined}
-                    >
-                      <ExternalLink size={18} />
-                      <span>{tString('portfolio.uploadSpec.liveDemo')}</span>
-                    </motion.a>
-                    <motion.a
-                      href="/portfolio/uploadspec"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 bg-transparent border-2 border-emerald-500/50 hover:border-emerald-400 text-emerald-400 font-semibold py-3 px-6 rounded-lg transition-all"
-                    >
-                      <span>{tString('portfolio.uploadSpec.viewProject')}</span>
-                    </motion.a>
+                  <div>
+                    <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.uploadSpec.category')}</div>
+                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.uploadSpec.title')}</h3>
                   </div>
                 </div>
 
-                <div className="flex-1 mt-6 md:mt-0">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gray-900/50 rounded-xl shadow-xl overflow-hidden border border-emerald-500/20"
+                <p className="mb-8 max-w-prose leading-relaxed text-cream-muted">
+                  {tString('portfolio.uploadSpec.description')}
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://uploadspec.web.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnPrimarySm}
+                    style={activeFestival ? {
+                      background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                    } : undefined}
                   >
-                    <div className="bg-gray-800/50 p-3 flex items-center justify-between border-b border-emerald-500/20">
-                      <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      </div>
-                      <div className="text-xs font-mono text-gray-400 flex items-center gap-1">
-                        <Shield size={12} className="text-emerald-400" />
-                        {tString('portfolio.uploadSpec.demoLabel')}
-                      </div>
-                    </div>
-                    <div className="p-8 flex items-center justify-center bg-gradient-to-br from-emerald-950/50 to-teal-950/50 min-h-[240px]">
-                      <Image
-                        src="/uploadSpec/logo.svg"
-                        alt="UploadSpec"
-                        width={140}
-                        height={140}
-                        className="opacity-90"
-                      />
-                    </div>
-                  </motion.div>
+                    <ExternalLink size={16} />
+                    <span>{tString('portfolio.uploadSpec.liveDemo')}</span>
+                  </a>
+                  <a href="/portfolio/uploadspec" className={btnGhostSm}>
+                    <span>{tString('portfolio.uploadSpec.viewProject')}</span>
+                    <ArrowUpRight size={16} />
+                  </a>
                 </div>
               </div>
+
+              <ProjectFrame figure="Fig. 05" caption={tString('portfolio.uploadSpec.demoLabel')}>
+                <div className="flex min-h-[240px] items-center justify-center rounded-lg bg-ink-raised">
+                  <Image
+                    src="/uploadSpec/logo.svg"
+                    alt="UploadSpec"
+                    width={120}
+                    height={120}
+                    className="opacity-90"
+                  />
+                </div>
+              </ProjectFrame>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="relative min-h-screen flex items-center justify-center px-6 py-20">
-        <div className="max-w-5xl mx-auto z-10 w-full">
+      <section id="contact" className="relative px-6 py-28">
+        <div className="mx-auto max-w-6xl z-10 relative w-full">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.7 }}
           >
-            <h2 
-              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500"
-              style={activeFestival ? {
-                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              } : undefined}
-            >
-              {activeFestival ? (
+            <SectionHeading
+              index="03"
+              activeFestival={activeFestival}
+              title={activeFestival ? (
                 <FestivalTextDecoration festival={activeFestival}>
                   {tString('contact.title')}
                 </FestivalTextDecoration>
               ) : (
                 tString('contact.title')
               )}
-            </h2>
-            <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full" />
-            <p className="text-xl text-gray-300">
+            />
+            <p className="mt-6 max-w-prose text-lg text-cream-muted">
               {tString('contact.subtitle')}
             </p>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-black/30 backdrop-blur-md border border-cyan-500/20 rounded-3xl p-8 md:p-12 shadow-2xl hover:border-cyan-500/40 transition-all duration-300"
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="mt-14"
           >
-            <div className="space-y-8 mb-12">
-              <motion.a
-                href="mailto:pradhuldev.1990@gmail.com"
-                whileHover={{ scale: 1.02, x: 10 }}
-                className="flex items-center gap-6 text-lg text-gray-300 hover:text-cyan-400 transition-colors group"
-              >
-                <motion.div 
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                  className="p-4 rounded-full bg-cyan-500/20 border border-cyan-500/30 group-hover:bg-cyan-500/30 group-hover:border-cyan-500/50 transition-all"
-                >
-                  <IoMail className="text-cyan-400 text-2xl" />
-                </motion.div>
-                <span className="text-xl">pradhuldev.1990@gmail.com</span>
-              </motion.a>
+            <a
+              href="mailto:pradhuldev.1990@gmail.com"
+              className="group flex items-baseline gap-4 border-t border-line py-7 transition-colors"
+            >
+              <IoMail className="self-center text-xl text-cream-faint transition-colors group-hover:text-brass" />
+              <span className="font-display text-2xl font-medium tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
+                pradhuldev.1990@gmail.com
+              </span>
+              <ArrowUpRight className="ml-auto self-center text-cream-faint transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-brass" size={22} />
+            </a>
 
-              <motion.a
-                href="tel:+919986981757"
-                whileHover={{ scale: 1.02, x: 10 }}
-                className="flex items-center gap-6 text-lg text-gray-300 hover:text-cyan-400 transition-colors group"
-              >
-                <motion.div 
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                  className="p-4 rounded-full bg-cyan-500/20 border border-cyan-500/30 group-hover:bg-cyan-500/30 group-hover:border-cyan-500/50 transition-all"
-                >
-                  <FaPhone className="text-cyan-400 text-xl" />
-                </motion.div>
-                <span className="text-xl">+91-9986981757</span>
-              </motion.a>
-            </div>
+            <a
+              href="tel:+919986981757"
+              className="group flex items-baseline gap-4 border-t border-line py-7 transition-colors"
+            >
+              <FaPhone className="self-center text-lg text-cream-faint transition-colors group-hover:text-brass" />
+              <span className="font-display text-2xl font-medium tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
+                +91&#8209;9986981757
+              </span>
+              <ArrowUpRight className="ml-auto self-center text-cream-faint transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-brass" size={22} />
+            </a>
 
-            <div className="border-t border-cyan-500/20 pt-12">
-              <p className="text-center text-gray-400 mb-8 text-lg">{tString('contact.connectLabel')}</p>
-              <div className="flex justify-center gap-8">
+            <div className="border-t border-line pt-10">
+              <p className="mb-6 font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">{tString('contact.connectLabel')}</p>
+              <div className="flex flex-wrap gap-6">
                 {[
-                  { icon: FaLinkedin, href: 'https://www.linkedin.com/in/pradhul-dev-30708814b/', color: 'text-blue-400 hover:text-blue-300' },
-                  { icon: FaGithubSquare, href: 'https://github.com/pradhul', color: 'text-gray-300 hover:text-white' },
-                  { icon: SiStackoverflow, href: 'https://stackoverflow.com/users/3309470/p-rad', color: 'text-orange-400 hover:text-orange-300' },
-                  { icon: FaSquareUpwork, href: 'https://www.upwork.com/freelancers/~01a32f29fafd184f21', color: 'text-green-400 hover:text-green-300' },
-                ].map(({ icon: Icon, href, color }) => (
-                  <motion.a
+                  { icon: FaLinkedin, href: 'https://www.linkedin.com/in/pradhul-dev-30708814b/', label: 'LinkedIn' },
+                  { icon: FaGithubSquare, href: 'https://github.com/pradhul', label: 'GitHub' },
+                  { icon: SiStackoverflow, href: 'https://stackoverflow.com/users/3309470/p-rad', label: 'Stack Overflow' },
+                  { icon: FaSquareUpwork, href: 'https://www.upwork.com/freelancers/~01a32f29fafd184f21', label: 'Upwork' },
+                ].map(({ icon: Icon, href, label }) => (
+                  <a
                     key={href}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.3, rotate: 10, y: -5 }}
-                    whileTap={{ scale: 0.9 }}
-                    className={`${color} text-4xl transition-all`}
+                    className="group inline-flex items-center gap-2 text-cream-muted transition-colors hover:text-brass"
                   >
-                    <Icon />
-                  </motion.a>
+                    <Icon className="text-2xl" />
+                    <span className="text-sm font-medium">{label}</span>
+                  </a>
                 ))}
               </div>
             </div>
@@ -981,12 +815,13 @@ function HomeContent() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 py-12 text-center text-gray-400 border-t border-cyan-500/10 bg-black/20 backdrop-blur-sm">
+      <footer className="relative z-10 border-t border-line px-6 py-10">
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
+          className="mx-auto max-w-6xl font-mono text-xs text-cream-faint"
         >
           © {new Date().getFullYear()} {tString('footer.copyright')}
         </motion.p>

@@ -11,6 +11,27 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        ink: {
+          DEFAULT: "#0f0d0b",
+          soft: "#171411",
+          raised: "#1f1b17",
+        },
+        cream: {
+          DEFAULT: "#ece5d8",
+          muted: "#a89f8e",
+          faint: "#6e675b",
+        },
+        brass: {
+          DEFAULT: "#d9a441",
+          bright: "#ecb955",
+          dim: "#9a7430",
+        },
+        line: "rgba(236, 229, 216, 0.1)",
+      },
+      fontFamily: {
+        display: ["var(--font-fraunces)", "Georgia", "serif"],
+        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "monospace"],
       },
     },
   },

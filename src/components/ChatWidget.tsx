@@ -73,10 +73,10 @@ export default function ChatWidget() {
         onClick={() => setIsOpen(true)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className={`fixed bottom-6 right-6 z-50 text-white p-4 rounded-full shadow-lg transition-all ${
+        className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg transition-all ${
           isChristmas
-            ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
-            : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 shadow-cyan-500/50'
+            ? 'text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
+            : 'text-ink bg-brass hover:bg-brass-bright shadow-black/40'
         }`}
         aria-label="Open chat"
       >
@@ -91,23 +91,23 @@ export default function ChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3 }}
-            className={`fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] bg-black/90 backdrop-blur-md border rounded-2xl shadow-2xl overflow-hidden ${
-              isChristmas ? 'border-red-500/30' : 'border-cyan-500/30'
+            className={`fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] bg-ink-raised/95 backdrop-blur-md border rounded-2xl shadow-2xl overflow-hidden ${
+              isChristmas ? 'border-red-500/30' : 'border-line'
             }`}
           >
             {/* Header */}
-            <div className={`bg-gradient-to-r border-b p-4 flex items-center justify-between ${
+            <div className={`border-b p-4 flex items-center justify-between ${
               isChristmas
-                ? 'from-red-600/20 to-red-500/20 border-red-500/30'
-                : 'from-cyan-500/20 to-purple-500/20 border-cyan-500/30'
+                ? 'bg-gradient-to-r from-red-600/20 to-red-500/20 border-red-500/30'
+                : 'border-line'
             }`}>
               <div className="flex items-center gap-3">
-                <MessageCircle className={isChristmas ? 'text-red-400' : 'text-cyan-400'} size={20} />
-                <h3 className="text-lg font-semibold text-white">Ask About Me</h3>
+                <MessageCircle className={isChristmas ? 'text-red-400' : 'text-brass'} size={20} />
+                <h3 className="text-lg font-semibold text-cream">Ask About Me</h3>
               </div>
               <button
                 onClick={handleClose}
-                className="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10"
+                className="text-cream-faint hover:text-cream transition-colors p-1 rounded-full hover:bg-white/10"
                 aria-label="Close chat"
               >
                 <X size={20} />
@@ -123,10 +123,10 @@ export default function ChatWidget() {
                   className={`mb-4 p-4 border rounded-lg ${
                     isChristmas
                       ? 'bg-red-500/10 border-red-500/20'
-                      : 'bg-cyan-500/10 border-cyan-500/20'
+                      : 'bg-brass/10 border-line'
                   }`}
                 >
-                  <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
+                  <p className="text-cream-muted text-sm leading-relaxed whitespace-pre-wrap">
                     {answer}
                   </p>
                 </motion.div>
@@ -144,14 +144,14 @@ export default function ChatWidget() {
 
               {isLoading && (
                 <div className="flex items-center justify-center py-8">
-                  <Loader2 className={`${isChristmas ? 'text-red-400' : 'text-cyan-400'} animate-spin`} size={24} />
-                  <span className="ml-3 text-gray-400 text-sm">Thinking...</span>
+                  <Loader2 className={`${isChristmas ? 'text-red-400' : 'text-brass'} animate-spin`} size={24} />
+                  <span className="ml-3 text-cream-faint text-sm">Thinking...</span>
                 </div>
               )}
 
               {!answer && !error && !isLoading && (
                 <div className="text-center py-8">
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-cream-faint text-sm">
                     Ask me anything about my experience, skills, or background!
                   </p>
                 </div>
@@ -160,7 +160,7 @@ export default function ChatWidget() {
 
             {/* Input Form */}
             <form onSubmit={handleSubmit} className={`p-4 border-t ${
-              isChristmas ? 'border-red-500/20' : 'border-cyan-500/20'
+              isChristmas ? 'border-red-500/20' : 'border-line'
             }`}>
               <div className="flex gap-2">
                 <input
@@ -169,10 +169,10 @@ export default function ChatWidget() {
                   onChange={(e) => setQuestion(e.target.value)}
                   placeholder="Ask anything about me..."
                   disabled={isLoading}
-                  className={`flex-1 bg-black/50 border rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`flex-1 bg-ink/60 border rounded-lg px-4 py-2 text-cream placeholder-cream-faint focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed ${
                     isChristmas
                       ? 'border-red-500/30 focus:border-red-400 focus:ring-red-500/50'
-                      : 'border-cyan-500/30 focus:border-cyan-400 focus:ring-cyan-500/50'
+                      : 'border-line focus:border-brass focus:ring-brass/40'
                   }`}
                 />
                 <motion.button
@@ -180,10 +180,10 @@ export default function ChatWidget() {
                   disabled={!question.trim() || isLoading}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`text-white p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
+                  className={`p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
                     isChristmas
-                      ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400'
-                      : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400'
+                      ? 'text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400'
+                      : 'text-ink bg-brass hover:bg-brass-bright'
                   }`}
                   aria-label="Send message"
                 >

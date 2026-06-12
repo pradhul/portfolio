@@ -10,7 +10,7 @@ function FloatingParticles({ count = 2000 }) {
 
   const particles = useMemo(() => {
     const temp = []
-    const colors = ['#00ffff', '#a855f7', '#ec4899', '#06b6d4']
+    const colors = ['#d9a441', '#ece5d8', '#9a7430', '#a89f8e']
     for (let i = 0; i < count; i++) {
       const time = Math.random() * 100
       const factor = 20 + Math.random() * 100
@@ -56,10 +56,10 @@ function FloatingParticles({ count = 2000 }) {
 
   return (
     <>
-      <pointLight ref={light} distance={40} intensity={6} color="#00ffff" />
+      <pointLight ref={light} distance={40} intensity={4} color="#d9a441" />
       <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
         <sphereGeometry args={[0.15, 8, 8]} />
-        <meshPhongMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.3} />
+        <meshPhongMaterial color="#d9a441" emissive="#d9a441" emissiveIntensity={0.15} />
       </instancedMesh>
     </>
   )
@@ -93,11 +93,11 @@ function FloatingOrbs() {
       <group ref={group1} position={[-15, 5, -20]}>
         <Sphere args={[2, 32, 32]}>
           <meshStandardMaterial 
-            color="#00ffff" 
-            emissive="#00ffff" 
-            emissiveIntensity={0.2}
+            color="#d9a441" 
+            emissive="#d9a441" 
+            emissiveIntensity={0.15}
             transparent 
-            opacity={0.3}
+            opacity={0.2}
             wireframe
           />
         </Sphere>
@@ -105,11 +105,11 @@ function FloatingOrbs() {
       <group ref={group2} position={[15, -5, -25]}>
         <Sphere args={[1.5, 32, 32]}>
           <meshStandardMaterial 
-            color="#a855f7" 
-            emissive="#a855f7" 
-            emissiveIntensity={0.2}
+            color="#a89f8e" 
+            emissive="#a89f8e" 
+            emissiveIntensity={0.15}
             transparent 
-            opacity={0.3}
+            opacity={0.2}
             wireframe
           />
         </Sphere>
@@ -117,11 +117,11 @@ function FloatingOrbs() {
       <group ref={group3} position={[0, 0, -30]}>
         <Sphere args={[1.8, 32, 32]}>
           <meshStandardMaterial 
-            color="#ec4899" 
-            emissive="#ec4899" 
-            emissiveIntensity={0.2}
+            color="#9a7430" 
+            emissive="#9a7430" 
+            emissiveIntensity={0.15}
             transparent 
-            opacity={0.3}
+            opacity={0.2}
             wireframe
           />
         </Sphere>
@@ -133,15 +133,15 @@ function FloatingOrbs() {
 export default function ThreeBackground() {
   return (
     <div className="fixed inset-0 -z-10">
-      <div className="absolute inset-0 bg-black" />
+      <div className="absolute inset-0 bg-[#0f0d0b]" />
       <Canvas
         camera={{ position: [0, 0, 30], fov: 75 }}
         style={{ width: '100%', height: '100%' }}
         gl={{ antialias: true, alpha: true }}
       >
         <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={0.5} color="#00ffff" />
-        <pointLight position={[-10, -10, 10]} intensity={0.5} color="#a855f7" />
+        <pointLight position={[10, 10, 10]} intensity={0.4} color="#d9a441" />
+        <pointLight position={[-10, -10, 10]} intensity={0.4} color="#a89f8e" />
         <FloatingParticles count={800} />
         <FloatingOrbs />
       </Canvas>

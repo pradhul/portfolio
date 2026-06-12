@@ -5,8 +5,12 @@
 :root {
   --foreground-light: #171717;
   --background-light: #f5f5f5;
-  --foreground-dark: #e5e5e5;
-  --background-dark: #000000;
+  --foreground-dark: #ece5d8;
+  --background-dark: #0f0d0b;
+  --ink: #0f0d0b;
+  --cream: #ece5d8;
+  --cream-muted: #a89f8e;
+  --brass: #d9a441;
 }
 
 * {
@@ -20,11 +24,10 @@ html {
 }
 
 body {
-  background-color: #000000;
-  color: #e5e5e5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background-color: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -36,25 +39,26 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: var(--ink);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #00ffff, #a855f7);
+  background: #3a342c;
   border-radius: 5px;
+  border: 2px solid var(--ink);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #06b6d4, #9333ea);
+  background: var(--brass);
 }
 
 /* GitHub Calendar Styles */
 .react-github-calendar {
-  color: #ffffff !important;
+  color: #ece5d8 !important;
 }
 
 .react-github-calendar text {
-  fill: #ffffff !important;
+  fill: #ece5d8 !important;
 }
 
 .react-github-calendar svg {
@@ -63,30 +67,30 @@ body {
 }
 
 .react-github-calendar .month-label {
-  fill: #ffffff !important;
+  fill: #ece5d8 !important;
   font-size: 14px;
 }
 
 .react-github-calendar .weekday-label {
-  fill: #9ca3af !important;
+  fill: #a89f8e !important;
   font-size: 12px;
 }
 
 .react-github-calendar .contrib-footer {
-  color: #9ca3af !important;
+  color: #a89f8e !important;
   font-size: 12px;
   margin-top: 8px;
 }
 
 /* Selection */
 ::selection {
-  background-color: #00ffff;
-  color: #000000;
+  background-color: #d9a441;
+  color: #0f0d0b;
 }
 
 ::-moz-selection {
-  background-color: #00ffff;
-  color: #000000;
+  background-color: #d9a441;
+  color: #0f0d0b;
 }
 
 /* Smooth transitions */
@@ -96,15 +100,15 @@ body {
   transition-duration: 150ms;
 }
 
-/* Glass morphism effect */
+/* Soft panel surface */
 .glass {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(23, 20, 17, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 255, 255, 0.2);
+  border: 1px solid rgba(236, 229, 216, 0.1);
 }
 
-/* Gradient text animation */
+/* Gradient text animation (kept for festival themes) */
 @keyframes gradient-shift {
   0%, 100% {
     background-position: 0% 50%;
@@ -115,7 +119,7 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(-45deg, #00ffff, #a855f7, #ec4899, #00ffff);
+  background: linear-gradient(-45deg, #d9a441, #ecb955, #ece5d8, #d9a441);
   background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -123,28 +127,22 @@ body {
   animation: gradient-shift 8s ease infinite;
 }
 
-/* Glow effects */
-.glow-cyan {
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-}
-
-.glow-purple {
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-}
-
+/* Glow effects (kept for backward compatibility, toned down) */
+.glow-cyan,
+.glow-purple,
 .glow-pink {
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 0 20px rgba(217, 164, 65, 0.2);
 }
 
 /* Loading animation */
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 20px rgba(217, 164, 65, 0.35);
   }
   50% {
     opacity: 0.7;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+    box-shadow: 0 0 30px rgba(217, 164, 65, 0.55);
   }
 }
 

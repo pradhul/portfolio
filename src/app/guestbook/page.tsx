@@ -34,7 +34,7 @@ function drawStrokes(
   ctx.clearRect(0, 0, width, height)
   ctx.lineJoin = 'round'
   ctx.lineCap = 'round'
-  ctx.strokeStyle = '#22d3ee'
+  ctx.strokeStyle = '#d9a441'
   ctx.lineWidth = lineWidth
 
   for (const stroke of strokes) {
@@ -72,7 +72,7 @@ function SignaturePreview({ strokes }: { strokes: SignatureStroke[] }) {
       ref={previewRef}
       width={PREVIEW_WIDTH}
       height={PREVIEW_HEIGHT}
-      className="w-full rounded-lg border border-cyan-500/20 bg-black/30"
+      className="w-full rounded-lg border border-line bg-ink/60"
       aria-label="Submitted signature preview"
     />
   )
@@ -233,12 +233,12 @@ export default function GuestbookPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-ink text-cream">
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="mb-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+            className="inline-flex items-center gap-2 text-cream-muted hover:text-brass transition-colors"
           >
             <ArrowLeft size={18} />
             Back to home
@@ -246,19 +246,19 @@ export default function GuestbookPage() {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <section className="rounded-2xl border border-cyan-500/20 bg-black/40 p-6 md:p-8 backdrop-blur-sm">
+          <section className="rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
             <div className="mb-6">
-              <h1 className="mb-2 text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <h1 className="mb-2 font-display text-4xl md:text-5xl font-medium tracking-tight text-cream">
                 Guestbook
               </h1>
-              <p className="text-gray-300">
+              <p className="text-cream-muted">
                 Drop a note, add your signature, and leave a little good vibe behind.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label htmlFor="guest-name" className="mb-2 block text-sm font-medium text-gray-200">
+                <label htmlFor="guest-name" className="mb-2 block text-sm font-medium text-cream">
                   Name (optional)
                 </label>
                 <input
@@ -268,12 +268,12 @@ export default function GuestbookPage() {
                   onChange={(event) => setName(event.target.value)}
                   maxLength={80}
                   placeholder="Your name"
-                  className="w-full rounded-lg border border-cyan-500/30 bg-black/40 px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
+                  className="w-full rounded-lg border border-line bg-ink/60 px-4 py-3 text-cream placeholder:text-cream-faint focus:outline-none focus:ring-2 focus:ring-brass/40"
                 />
               </div>
 
               <div>
-                <label htmlFor="guest-message" className="mb-2 block text-sm font-medium text-gray-200">
+                <label htmlFor="guest-message" className="mb-2 block text-sm font-medium text-cream">
                   Message
                 </label>
                 <textarea
@@ -284,23 +284,23 @@ export default function GuestbookPage() {
                   required
                   rows={5}
                   placeholder="Write a short message..."
-                  className="w-full rounded-lg border border-cyan-500/30 bg-black/40 px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
+                  className="w-full rounded-lg border border-line bg-ink/60 px-4 py-3 text-cream placeholder:text-cream-faint focus:outline-none focus:ring-2 focus:ring-brass/40"
                 />
-                <p className="mt-1 text-xs text-gray-500">{message.length}/500</p>
+                <p className="mt-1 text-xs text-cream-faint">{message.length}/500</p>
               </div>
 
               <div>
                 <div className="mb-2 flex items-center justify-between">
-                  <label className="block text-sm font-medium text-gray-200">Signature</label>
+                  <label className="block text-sm font-medium text-cream">Signature</label>
                   <button
                     type="button"
                     onClick={clearSignature}
-                    className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                    className="text-sm text-brass hover:text-brass-bright transition-colors"
                   >
                     Clear signature
                   </button>
                 </div>
-                <div className="rounded-xl border border-cyan-500/30 bg-black/40 p-2">
+                <div className="rounded-xl border border-line bg-ink/60 p-2">
                   <canvas
                     ref={canvasRef}
                     width={SIGNATURE_PAD_WIDTH}
@@ -309,7 +309,7 @@ export default function GuestbookPage() {
                     onPointerMove={continueStroke}
                     onPointerUp={finishStroke}
                     onPointerLeave={finishStroke}
-                    className="h-[220px] w-full touch-none rounded-lg bg-black/30"
+                    className="h-[220px] w-full touch-none rounded-lg bg-ink/40"
                     aria-label="Signature pad"
                   />
                 </div>
@@ -323,7 +323,7 @@ export default function GuestbookPage() {
                 disabled={submitting}
                 whileHover={{ scale: submitting ? 1 : 1.01 }}
                 whileTap={{ scale: submitting ? 1 : 0.99 }}
-                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500 px-6 py-3 font-semibold text-black disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-full bg-brass px-6 py-3 font-semibold text-ink transition-colors hover:bg-brass-bright disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? <Loader2 size={18} className="animate-spin" /> : <PenTool size={18} />}
                 {submitting ? 'Posting...' : 'Post to guestbook'}
@@ -331,30 +331,30 @@ export default function GuestbookPage() {
             </form>
           </section>
 
-          <section className="rounded-2xl border border-cyan-500/20 bg-black/40 p-6 md:p-8 backdrop-blur-sm">
-            <h2 className="mb-6 text-2xl font-semibold text-cyan-300">Recent messages</h2>
+          <section className="rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
+            <h2 className="mb-6 font-display text-2xl font-medium tracking-tight text-cream">Recent messages</h2>
 
             {loadingEntries ? (
-              <div className="flex items-center gap-2 text-gray-400">
+              <div className="flex items-center gap-2 text-cream-faint">
                 <Loader2 size={18} className="animate-spin" />
                 Loading entries...
               </div>
             ) : entries.length === 0 ? (
-              <p className="text-gray-400">No entries yet. Be the first to leave a message.</p>
+              <p className="text-cream-faint">No entries yet. Be the first to leave a message.</p>
             ) : (
               <div className="space-y-4">
                 {entries.map((entry) => (
                   <article
                     key={entry.id}
-                    className="rounded-xl border border-cyan-500/20 bg-black/30 p-4"
+                    className="rounded-xl border border-line bg-ink/50 p-4"
                   >
                     <div className="mb-2 flex items-center justify-between gap-3">
-                      <p className="font-semibold text-white">{entry.name || 'Anonymous'}</p>
-                      <time className="text-xs text-gray-500">
+                      <p className="font-semibold text-cream">{entry.name || 'Anonymous'}</p>
+                      <time className="text-xs text-cream-faint">
                         {new Date(entry.createdAt).toLocaleString()}
                       </time>
                     </div>
-                    <p className="mb-3 text-gray-300">{entry.message}</p>
+                    <p className="mb-3 text-cream-muted">{entry.message}</p>
                     <SignaturePreview strokes={entry.signatureStrokes} />
                   </article>
                 ))}

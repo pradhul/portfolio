@@ -46,14 +46,14 @@ export default function GitHubActivity({ username = 'pradhul' }: GitHubActivityP
       }
     }
 
-    // Default theme matching portfolio colors (cyan/purple gradient)
+    // Default theme matching portfolio colors (warm brass scale)
     return {
       dark: [
-        'rgba(255, 255, 255, 0.1)', // level 0 - no contributions
-        'rgba(6, 182, 212, 0.3)', // level 1 - low cyan
-        'rgba(6, 182, 212, 0.6)', // level 2 - medium cyan
-        '#8b5cf6', // level 3 - purple
-        '#06b6d4', // level 4 - bright cyan
+        'rgba(236, 229, 216, 0.08)', // level 0 - no contributions
+        'rgba(217, 164, 65, 0.25)', // level 1 - low
+        'rgba(217, 164, 65, 0.5)', // level 2 - medium
+        'rgba(217, 164, 65, 0.75)', // level 3 - high
+        '#ecb955', // level 4 - highest
       ],
     }
   }, [activeFestival])

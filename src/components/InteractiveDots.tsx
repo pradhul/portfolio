@@ -152,23 +152,22 @@ export default function InteractiveDots() {
           ? Math.sqrt(Math.pow(mouse.x - dot.x, 2) + Math.pow(mouse.y - dot.y, 2))
           : Infinity
         
-        const baseOpacity = distanceToMouse < mouseRadius ? 0.9 : 0.5
+        const baseOpacity = distanceToMouse < mouseRadius ? 0.6 : 0.22
 
         // Draw outer glow first
         const glowGradient = ctx.createRadialGradient(dot.x, dot.y, 0, dot.x, dot.y, dot.radius * 3)
-        glowGradient.addColorStop(0, `rgba(0, 255, 255, ${baseOpacity * 0.4})`)
-        glowGradient.addColorStop(0.5, `rgba(0, 255, 255, ${baseOpacity * 0.2})`)
-        glowGradient.addColorStop(1, 'rgba(0, 255, 255, 0)')
+        glowGradient.addColorStop(0, `rgba(217, 164, 65, ${baseOpacity * 0.3})`)
+        glowGradient.addColorStop(0.5, `rgba(217, 164, 65, ${baseOpacity * 0.15})`)
+        glowGradient.addColorStop(1, 'rgba(217, 164, 65, 0)')
         ctx.fillStyle = glowGradient
         ctx.beginPath()
         ctx.arc(dot.x, dot.y, dot.radius * 3, 0, Math.PI * 2)
         ctx.fill()
 
-        // Draw main dot with bright cyan/white
+        // Draw main dot in warm brass
         ctx.beginPath()
         ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2)
-        // Use bright cyan that's very visible
-        ctx.fillStyle = `rgba(0, 255, 255, ${baseOpacity})`
+        ctx.fillStyle = `rgba(217, 164, 65, ${baseOpacity})`
         ctx.fill()
         
         // Add inner highlight for depth
@@ -180,8 +179,8 @@ export default function InteractiveDots() {
           dot.y, 
           dot.radius
         )
-        highlightGradient.addColorStop(0, `rgba(255, 255, 255, ${baseOpacity * 0.6})`)
-        highlightGradient.addColorStop(1, `rgba(0, 255, 255, ${baseOpacity * 0.3})`)
+        highlightGradient.addColorStop(0, `rgba(236, 229, 216, ${baseOpacity * 0.5})`)
+        highlightGradient.addColorStop(1, `rgba(217, 164, 65, ${baseOpacity * 0.25})`)
         ctx.fillStyle = highlightGradient
         ctx.beginPath()
         ctx.arc(dot.x, dot.y, dot.radius * 0.7, 0, Math.PI * 2)
@@ -194,10 +193,10 @@ export default function InteractiveDots() {
           const distance = Math.sqrt(dx * dx + dy * dy)
           
           if (distance < mouseRadius) {
-            const glowOpacity = (1 - distance / mouseRadius) * 0.3
+            const glowOpacity = (1 - distance / mouseRadius) * 0.25
             const gradient = ctx.createRadialGradient(dot.x, dot.y, 0, dot.x, dot.y, dot.radius * 3)
-            gradient.addColorStop(0, `rgba(0, 255, 255, ${glowOpacity})`)
-            gradient.addColorStop(1, 'rgba(0, 255, 255, 0)')
+            gradient.addColorStop(0, `rgba(217, 164, 65, ${glowOpacity})`)
+            gradient.addColorStop(1, 'rgba(217, 164, 65, 0)')
             ctx.fillStyle = gradient
             ctx.beginPath()
             ctx.arc(dot.x, dot.y, dot.radius * 3, 0, Math.PI * 2)

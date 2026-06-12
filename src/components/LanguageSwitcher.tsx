@@ -32,9 +32,9 @@ export default function LanguageSwitcher() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         disabled={isTranslating}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/30 backdrop-blur-sm border border-cyan-500/30 hover:border-cyan-500/50 text-white transition-all disabled:opacity-50"
+        className="flex items-center gap-2 px-4 py-2 rounded-full bg-ink-soft/60 backdrop-blur-sm border border-line hover:border-cream-muted text-cream transition-all disabled:opacity-50"
       >
-        <Globe size={18} className="text-cyan-400" />
+        <Globe size={16} className="text-cream-muted" />
         <span className="text-sm font-medium">
           {language === 'en' ? 'English' : `${currentLangInfo.flag} ${currentLangInfo.nativeName}`}
         </span>
@@ -63,7 +63,7 @@ export default function LanguageSwitcher() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full right-0 mt-2 w-56 bg-black/90 backdrop-blur-md border border-cyan-500/30 rounded-lg shadow-2xl overflow-hidden z-50"
+            className="absolute top-full right-0 mt-2 w-56 bg-ink-raised/95 backdrop-blur-md border border-line rounded-xl shadow-2xl overflow-hidden z-50"
           >
             <div className="py-2">
               {supportedLanguages.map((lang) => {
@@ -77,13 +77,13 @@ export default function LanguageSwitcher() {
                       setLanguage(lang)
                       setIsOpen(false)
                     }}
-                    whileHover={{ backgroundColor: 'rgba(6, 182, 212, 0.1)' }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-gray-300 hover:text-white transition-colors"
+                    whileHover={{ backgroundColor: 'rgba(217, 164, 65, 0.08)' }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-cream-muted hover:text-cream transition-colors"
                   >
                     <span className="text-lg">{langInfo.flag}</span>
                     <span className="flex-1">{langInfo.nativeName}</span>
                     {isSelected && (
-                      <Check size={16} className="text-cyan-400" />
+                      <Check size={16} className="text-brass" />
                     )}
                   </motion.button>
                 )
