@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react'
+import { MessageCircle, X, Send, Loader2, Languages } from 'lucide-react'
 import { useChristmasTheme } from './ChristmasTheme'
+import { useLanguage } from './LanguageProvider'
 import { trackChatQuestion, trackChatResponse } from '@/lib/analytics'
 
 export default function ChatWidget() {
   const isChristmas = useChristmasTheme()
+  const { isTranslating } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
@@ -68,19 +70,90 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating Chat Button */}
+      {/* Floating Chat Button — morphs into a spinner while translating */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg transition-all ${
+        disabled={isTranslating}
+        whileHover={isTranslating ? undefined : { scale: 1.1 }}
+        whileTap={isTranslating ? undefined : { scale: 0.9 }}
+        animate={isTranslating ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+        transition={
+          isTranslating
+            ? { duration: 1.4, repeat: Infinity, ease: 'easeInOut' }
+            : { type: 'spring', stiffness: 320, damping: 20 }
+        }
+        className={`fixed bottom-6 right-6 z-50 grid h-14 w-14 place-items-center rounded-full shadow-lg transition-colors ${
           isChristmas
             ? 'text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
             : 'text-ink bg-brass hover:bg-brass-bright shadow-black/40'
-        }`}
-        aria-label="Open chat"
+        } ${isTranslating ? 'cursor-progress' : ''}`}
+        aria-label={isTranslating ? 'Translating page…' : 'Open chat'}
+        aria-busy={isTranslating}
       >
-        <MessageCircle size={24} />
+        {/* Spinning progress ring */}
+        <AnimatePresence>
+          {isTranslating && (
+            <motion.svg
+              className="absolute inset-0 h-full w-full"
+              viewBox="0 0 100 100"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1, rotate: 360 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{
+                rotate: { duration: 0.9, repeat: Infinity, ease: 'linear' },
+                opacity: { duration: 0.25 },
+                scale: { type: 'spring', stiffness: 260, damping: 18 },
+              }}
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="currentColor"
+                strokeOpacity={0.22}
+                strokeWidth={7}
+              />
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={7}
+                strokeLinecap="round"
+                strokeDasharray="70 220"
+              />
+            </motion.svg>
+          )}
+        </AnimatePresence>
+
+        {/* Icon swap: chat bubble <-> translate glyph */}
+        <AnimatePresence mode="wait" initial={false}>
+          {isTranslating ? (
+            <motion.span
+              key="translating"
+              initial={{ scale: 0, rotate: -120, opacity: 0 }}
+              animate={{ scale: 1, rotate: 0, opacity: 1 }}
+              exit={{ scale: 0, rotate: 120, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 340, damping: 20 }}
+              className="relative grid place-items-center"
+            >
+              <Languages size={20} />
+            </motion.span>
+          ) : (
+            <motion.span
+              key="chat"
+              initial={{ scale: 0, rotate: 120, opacity: 0 }}
+              animate={{ scale: 1, rotate: 0, opacity: 1 }}
+              exit={{ scale: 0, rotate: -120, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 340, damping: 20 }}
+              className="relative grid place-items-center"
+            >
+              <MessageCircle size={24} />
+            </motion.span>
+          )}
+        </AnimatePresence>
       </motion.button>
 
       {/* Chat Window */}
