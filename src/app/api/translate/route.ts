@@ -12,12 +12,40 @@ const EXCLUDED_FROM_TRANSLATION = [
   'UploadSpec',
 ]
 
-// Check if a string should be excluded from translation
+// Check if a string should be left completely untranslated
 function shouldSkipTranslation(text: string): boolean {
-  const lowerText = text.toLowerCase()
-  return EXCLUDED_FROM_TRANSLATION.some(excluded => 
-    lowerText.includes(excluded.toLowerCase())
+  const trimmed = text.trim()
+  const lowerText = trimmed.toLowerCase()
+  return EXCLUDED_FROM_TRANSLATION.some(
+    (excluded) => lowerText === excluded.toLowerCase()
   )
+}
+
+function maskExcludedTerms(text: string): { masked: string; replacements: Array<{ token: string; original: string }> } {
+  let masked = text
+  const replacements: Array<{ token: string; original: string }> = []
+
+  EXCLUDED_FROM_TRANSLATION.forEach((term, index) => {
+    if (!masked.includes(term)) return
+    const token = `__KEEP_${index}__`
+    replacements.push({ token, original: term })
+    masked = masked.split(term).join(token)
+  })
+
+  return { masked, replacements }
+}
+
+function restoreExcludedTerms(text: string, replacements: Array<{ token: string; original: string }>): string {
+  return replacements.reduce(
+    (result, { token, original }) => result.split(token).join(original),
+    text
+  )
+}
+
+async function translateText(value: string, targetLanguage: string): Promise<string> {
+  const { masked, replacements } = maskExcludedTerms(value)
+  const result = await translate(masked, { to: targetLanguage })
+  return restoreExcludedTerms(result.text, replacements)
 }
 
 // Helper to create hash of text
@@ -113,14 +141,35 @@ function reconstructObject(strings: Array<{ key: string; value: string }>, origi
   return result
 }
 
-export async function POST(request: NextRequest) {
-  let sourceContent: Record<string, unknown> | null = null
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  mapper: (item: T) => Promise<R>
+): Promise<R[]> {
+  const results = new Array<R>(items.length)
+  let nextIndex = 0
 
+  async function worker() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex
+      nextIndex += 1
+      results[currentIndex] = await mapper(items[currentIndex])
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(concurrency, items.length) },
+    () => worker()
+  )
+  await Promise.all(workers)
+  return results
+}
+
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const content: Record<string, unknown> = body.content
     const targetLanguage: string = body.targetLanguage
-    sourceContent = content
 
     if (!content || !targetLanguage) {
       return NextResponse.json(
@@ -157,9 +206,8 @@ export async function POST(request: NextRequest) {
     // Extract all strings from content
     const strings = extractStrings(content)
     
-    // Translate all strings
-    const translatedStrings = await Promise.all(
-      strings.map(async ({ key, value }) => {
+    // Translate strings with limited concurrency to avoid rate limits
+    const translatedStrings = await mapWithConcurrency(strings, 4, async ({ key, value }) => {
         // Skip translation if string contains excluded terms (name, extension names, etc.)
         if (shouldSkipTranslation(value)) {
           return { key, value }
@@ -183,9 +231,7 @@ export async function POST(request: NextRequest) {
         }
 
         try {
-          // Translate using google-translate-api-x
-          const result = await translate(value, { to: targetLanguage })
-          const translatedText = result.text
+          const translatedText = await translateText(value, targetLanguage)
 
           // Cache the translation
           if (db) {
@@ -207,8 +253,7 @@ export async function POST(request: NextRequest) {
           // Return original if translation fails
           return { key, value }
         }
-      })
-    )
+    })
 
     // Reconstruct translated content object
     let translatedContent
@@ -237,12 +282,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ translatedContent })
   } catch (error) {
     console.error('Error in translate API:', error)
-    if (sourceContent) {
-      return NextResponse.json({ translatedContent: sourceContent })
-    }
     return NextResponse.json(
-      { error: 'Translation failed', translatedContent: null },
-      { status: 500 }
+      { error: 'Translation failed' },
+      { status: 503 }
     )
   }
 }

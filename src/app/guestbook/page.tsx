@@ -250,7 +250,7 @@ export default function GuestbookPage() {
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
             <div className="mb-6">
-              <h1 className="mb-2 font-display text-4xl md:text-5xl font-medium tracking-tight text-cream">
+              <h1 className="mb-2 font-display text-4xl md:text-5xl font-semibold tracking-tight text-cream">
                 Guestbook
               </h1>
               <p className="text-cream-muted">
@@ -334,7 +334,7 @@ export default function GuestbookPage() {
           </section>
 
           <section className="rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
-            <h2 className="mb-6 font-display text-2xl font-medium tracking-tight text-cream">Recent messages</h2>
+            <h2 className="mb-6 font-display text-2xl font-semibold tracking-tight text-cream">Recent messages</h2>
 
             {loadingEntries ? (
               <div className="flex items-center gap-2 text-cream-faint">

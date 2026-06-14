@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { content } from '@/lib/content'
+import { content, CONTENT_VERSION } from '@/lib/content'
 import { getLanguageFromBrowser, supportedLanguages } from '@/lib/countryToLanguage'
 
 type ContentType = typeof content
@@ -82,21 +82,24 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       }
 
       // Check localStorage cache first
-      const cacheKey = `translatedContent_${language}`
+      const cacheKey = `translatedContent_${language}_v${CONTENT_VERSION}`
       const cached = localStorage.getItem(cacheKey)
       if (cached) {
         try {
           const parsed = JSON.parse(cached)
           // Check if cache is recent (24 hours)
-          if (parsed.timestamp && Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000) {
+          if (parsed.content && parsed.timestamp && Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000) {
             setTranslatedContent(parsed.content)
             setIsTranslating(false)
             return
           }
         } catch {
-          // Invalid cache, continue to fetch
+          localStorage.removeItem(cacheKey)
         }
       }
+
+      // Remove legacy cache keys from older versions
+      localStorage.removeItem(`translatedContent_${language}`)
 
       // Fetch translation from API
       setIsTranslating(true)
@@ -117,6 +120,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         }
 
         const data = await response.json()
+        if (!data.translatedContent || data.error) {
+          throw new Error(data.error || 'Translation failed')
+        }
+
         setTranslatedContent(data.translatedContent)
 
         // Cache in localStorage
@@ -129,6 +136,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         )
       } catch (error) {
         console.error('Error loading translations:', error)
+        localStorage.removeItem(`translatedContent_${language}_v${CONTENT_VERSION}`)
         // Fallback to English on error
         setTranslatedContent(null)
       } finally {

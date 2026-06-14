@@ -10,11 +10,13 @@ export const content = {
   },
   hero: {
     title: 'Pradhul Dev',
+    subtitle: 'Web & Mobile Developer — 8+ years',
     downloadResume: 'Resume',
     viewPortfolio: 'View Portfolio',
   },
   about: {
     title: 'About Me',
+    githubActivity: 'GitHub Activity',
     paragraphs: [
       "Hi, I'm Pradhul, a passionate Web and Mobile Developer with over 8 years of experience crafting digital solutions.",
       'I specialize in building modern, responsive web applications and mobile apps that deliver exceptional user experiences. My expertise spans across various technologies and frameworks, allowing me to bring creative ideas to life.',
@@ -93,3 +95,6 @@ export const content = {
     copyright: 'Pradhul Dev. All rights reserved.',
   },
 }
+
+// Bump when content structure or copy changes to invalidate cached translations.
+export const CONTENT_VERSION = '2'

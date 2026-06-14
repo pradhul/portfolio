@@ -63,7 +63,7 @@ function SectionHeading({
     <div className="flex items-baseline gap-5 border-t border-line pt-8">
       <span className="font-mono text-sm text-brass">{index}</span>
       <h2
-        className="font-display text-4xl md:text-6xl font-medium tracking-tight text-cream"
+        className="font-display text-4xl md:text-6xl font-semibold tracking-tight text-cream"
         style={activeFestival ? {
           backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
           WebkitBackgroundClip: 'text',
@@ -223,14 +223,14 @@ function HomeContent() {
             className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-brass"
             style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
           >
-            Web &amp; Mobile Developer — 8+ years
+            {tString('hero.subtitle')}
           </motion.p>
 
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7 }}
-            className="font-display text-[clamp(3.5rem,12vw,9.5rem)] font-medium leading-[0.95] tracking-tight text-cream"
+            className="font-display text-[clamp(3.25rem,11vw,8.5rem)] font-bold leading-[0.92] tracking-[-0.03em] text-cream"
             style={activeFestival ? {
               backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
               WebkitBackgroundClip: 'text',
@@ -347,7 +347,7 @@ function HomeContent() {
                     if (index === 0 && para.includes('Pradhul')) {
                       const parts = para.split('Pradhul')
                       return (
-                        <p key={index} className="mb-6 font-display text-2xl leading-snug text-cream md:text-3xl last:mb-0">
+                        <p key={index} className="mb-6 text-2xl font-medium leading-snug text-cream md:text-3xl last:mb-0">
                           {parts[0]}
                           <span className="text-brass" style={activeFestival ? { color: activeFestival.colors.primary } : undefined}>Pradhul</span>
                           {parts[1]}
@@ -374,7 +374,7 @@ function HomeContent() {
             className="mt-20 grid gap-10 md:grid-cols-[1fr_2fr]"
           >
             <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
-              GitHub Activity
+              {tString('about.githubActivity')}
             </div>
             <div className="overflow-hidden rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
               <GitHubActivity username="pradhul" />
@@ -429,7 +429,7 @@ function HomeContent() {
                   </div>
                   <div>
                     <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.ionicMeasure.category')}</div>
-                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.ionicMeasure.title')}</h3>
+                    <h3 className="font-display text-3xl font-semibold tracking-tight text-cream md:text-4xl">{tString('portfolio.ionicMeasure.title')}</h3>
                   </div>
                 </div>
 
@@ -497,7 +497,7 @@ function HomeContent() {
                   </div>
                   <div>
                     <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.squashPush.category')}</div>
-                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.squashPush.title')}</h3>
+                    <h3 className="font-display text-3xl font-semibold tracking-tight text-cream md:text-4xl">{tString('portfolio.squashPush.title')}</h3>
                   </div>
                 </div>
 
@@ -568,7 +568,7 @@ function HomeContent() {
                   </div>
                   <div>
                     <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.vsColorCode.category')}</div>
-                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.vsColorCode.title')}</h3>
+                    <h3 className="font-display text-3xl font-semibold tracking-tight text-cream md:text-4xl">{tString('portfolio.vsColorCode.title')}</h3>
                   </div>
                 </div>
 
@@ -628,7 +628,7 @@ function HomeContent() {
                   </div>
                   <div>
                     <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.chartStudio.category')}</div>
-                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.chartStudio.title')}</h3>
+                    <h3 className="font-display text-3xl font-semibold tracking-tight text-cream md:text-4xl">{tString('portfolio.chartStudio.title')}</h3>
                   </div>
                 </div>
 
@@ -690,7 +690,7 @@ function HomeContent() {
                   </div>
                   <div>
                     <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.uploadSpec.category')}</div>
-                    <h3 className="font-display text-3xl font-medium tracking-tight text-cream md:text-4xl">{tString('portfolio.uploadSpec.title')}</h3>
+                    <h3 className="font-display text-3xl font-semibold tracking-tight text-cream md:text-4xl">{tString('portfolio.uploadSpec.title')}</h3>
                   </div>
                 </div>
 
@@ -771,7 +771,7 @@ function HomeContent() {
               className="group flex items-baseline gap-4 border-t border-line py-7 transition-colors"
             >
               <IoMail className="self-center text-xl text-cream-faint transition-colors group-hover:text-brass" />
-              <span className="font-display text-2xl font-medium tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
+              <span className="font-display text-2xl font-semibold tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
                 pradhuldev.1990@gmail.com
               </span>
               <ArrowUpRight className="ml-auto self-center text-cream-faint transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-brass" size={22} />
@@ -782,7 +782,7 @@ function HomeContent() {
               className="group flex items-baseline gap-4 border-t border-line py-7 transition-colors"
             >
               <FaPhone className="self-center text-lg text-cream-faint transition-colors group-hover:text-brass" />
-              <span className="font-display text-2xl font-medium tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
+              <span className="font-display text-2xl font-semibold tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
                 +91&#8209;9986981757
               </span>
               <ArrowUpRight className="ml-auto self-center text-cream-faint transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-brass" size={22} />
