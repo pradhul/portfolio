@@ -68,6 +68,15 @@ export const content = {
       viewProject: 'View Project',
       demoLabel: 'UploadSpec',
     },
+    linkShelf: {
+      category: 'PWA',
+      title: 'Link Shelf',
+      description:
+        'Household PWA for saving Instagram, YouTube, and other links via Telegram bot or the web UI. Tag and favorite items, search your shelf, and let Gemini auto-categorize multi-link drops—built with Next.js, Neon Postgres, and an installable progressive web app.',
+      liveDemo: 'Live Demo',
+      viewGitHub: 'View on GitHub',
+      demoLabel: 'Link Shelf',
+    },
   },
   contact: {
     title: 'Get In Touch',
@@ -97,4 +106,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '2'
+export const CONTENT_VERSION = '3'

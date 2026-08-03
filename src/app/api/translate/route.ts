@@ -10,6 +10,7 @@ const EXCLUDED_FROM_TRANSLATION = [
   'Squash-Push',
   'vsColorCode',
   'UploadSpec',
+  'Link Shelf',
 ]
 
 // Check if a string should be left completely untranslated

@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ExternalLink,
   BarChart3,
+  Bookmark,
   ArrowUpRight
 } from 'lucide-react'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
@@ -729,6 +730,68 @@ function HomeContent() {
                   />
                 </div>
               </ProjectFrame>
+            </motion.div>
+
+            {/* Link Shelf Project */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.7 }}
+              className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
+            >
+              <div className="lg:order-2">
+                <div className="mb-6 flex items-center gap-5">
+                  <div className="rounded-xl border border-line bg-cream p-3">
+                    <Bookmark className="h-14 w-14 text-ink" />
+                  </div>
+                  <div>
+                    <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.linkShelf.category')}</div>
+                    <h3 className="font-display text-3xl font-semibold tracking-tight text-cream md:text-4xl">{tString('portfolio.linkShelf.title')}</h3>
+                  </div>
+                </div>
+
+                <p className="mb-8 max-w-prose leading-relaxed text-cream-muted">
+                  {tString('portfolio.linkShelf.description')}
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://link-shelf-puce.vercel.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnPrimarySm}
+                    style={activeFestival ? {
+                      background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                    } : undefined}
+                  >
+                    <ExternalLink size={16} />
+                    <span>{tString('portfolio.linkShelf.liveDemo')}</span>
+                  </a>
+                  <a
+                    href="https://github.com/pradhul/link-shelf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnGhostSm}
+                  >
+                    <Github size={16} />
+                    <span>{tString('portfolio.linkShelf.viewGitHub')}</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="lg:order-1">
+                <ProjectFrame figure="Fig. 06" caption={tString('portfolio.linkShelf.demoLabel')}>
+                  <Image
+                    src="/linkShelf/demo.jpg"
+                    alt="Link Shelf"
+                    width={1024}
+                    height={556}
+                    className="h-auto w-full rounded-lg"
+                    loading="lazy"
+                  />
+                </ProjectFrame>
+              </div>
             </motion.div>
           </div>
         </div>
