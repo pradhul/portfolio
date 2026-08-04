@@ -21,7 +21,7 @@ export const content = {
       "Hi, I'm Pradhul, a passionate Web and Mobile Developer with over 8 years of experience crafting digital solutions.",
       'I specialize in building modern, responsive web applications and mobile apps that deliver exceptional user experiences. My expertise spans across various technologies and frameworks, allowing me to bring creative ideas to life.',
       "When I'm not coding, I enjoy creating developer tools and extensions that make the development workflow more efficient. Check out my VS Code extensions below!",
-      'Beyond coding and hanging out with friends, I have a passion for beatboxing, exploring music and movies, and gaming on my Nintendo Switch. I also love experimenting with new projects using my Raspberry Pi, constantly tinkering and learning new things.',
+      'Beyond coding and hanging out with friends, I have a passion for beatboxing, exploring music and movies, and gaming on my Nintendo Switch. I train MMA to stay healthy and fit, and I love experimenting with new projects using my Raspberry Pi—always tinkering and learning something new.',
     ],
   },
   portfolio: {
@@ -74,8 +74,17 @@ export const content = {
       description:
         'Household PWA for saving Instagram, YouTube, and other links via Telegram bot or the web UI. Tag and favorite items, search your shelf, and let Gemini auto-categorize multi-link drops—built with Next.js, Neon Postgres, and an installable progressive web app.',
       liveDemo: 'Live Demo',
+      viewProject: 'View Project',
       viewGitHub: 'View on GitHub',
       demoLabel: 'Link Shelf',
+    },
+    quickPlate: {
+      category: 'TELEGRAM BOT',
+      title: 'QuickPlate',
+      description:
+        'Private Telegram bot for a small household—send /recipe (optionally with up to 3 ingredients) and get one easy, healthy YouTube recipe with title, link, and thumbnail. Built on Cloudflare Workers, Workers KV for per-chat dedupe, and the YouTube Data API.',
+      viewGitHub: 'View on GitHub',
+      demoLabel: 'QuickPlate in Telegram',
     },
   },
   contact: {
@@ -106,4 +115,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '3'
+export const CONTENT_VERSION = '5'

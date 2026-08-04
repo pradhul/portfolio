@@ -2,6 +2,7 @@ import SquashPushSummary from "./squashpush/SquashPushSummary";
 import VSColorCodeSummary from "./squashpush/VSColorCodeSummary";
 import ChartStudioSummary from "./squashpush/ChartStudioSummary";
 import UploadSpecSummary from "./squashpush/UploadSpecSummary";
+import LinkShelfSummary from "./squashpush/LinkShelfSummary";
 
 export default function Portfolio() {
   return (
@@ -24,6 +25,11 @@ export default function Portfolio() {
       <a href="./portfolio/uploadspec" className="block">
         <div className="bg-gradient-to-r from-emerald-800 to-teal-600 py-12 px-6 md:px-12 lg:px-24 ">
           <UploadSpecSummary />
+        </div>
+      </a>
+      <a href="./portfolio/linkshelf" className="block">
+        <div className="bg-gradient-to-r from-violet-700 to-fuchsia-600 py-12 px-6 md:px-12 lg:px-24 ">
+          <LinkShelfSummary />
         </div>
       </a>
     </div>

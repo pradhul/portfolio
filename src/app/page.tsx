@@ -14,6 +14,7 @@ import {
   ExternalLink,
   BarChart3,
   Bookmark,
+  UtensilsCrossed,
   ArrowUpRight
 } from 'lucide-react'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
@@ -768,6 +769,9 @@ function HomeContent() {
                     <ExternalLink size={16} />
                     <span>{tString('portfolio.linkShelf.liveDemo')}</span>
                   </a>
+                  <a href="/portfolio/linkshelf" className={btnGhostSm}>
+                    <span>{tString('portfolio.linkShelf.viewProject')}</span>
+                  </a>
                   <a
                     href="https://github.com/pradhul/link-shelf"
                     target="_blank"
@@ -792,6 +796,59 @@ function HomeContent() {
                   />
                 </ProjectFrame>
               </div>
+            </motion.div>
+
+            {/* QuickPlate Project */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.7 }}
+              className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
+            >
+              <div>
+                <div className="mb-6 flex items-center gap-5">
+                  <div className="rounded-xl border border-line bg-cream p-3">
+                    <UtensilsCrossed className="h-14 w-14 text-ink" />
+                  </div>
+                  <div>
+                    <div className="mb-1 font-mono text-xs uppercase tracking-[0.25em] text-brass">{tString('portfolio.quickPlate.category')}</div>
+                    <h3 className="font-display text-3xl font-semibold tracking-tight text-cream md:text-4xl">{tString('portfolio.quickPlate.title')}</h3>
+                  </div>
+                </div>
+
+                <p className="mb-8 max-w-prose leading-relaxed text-cream-muted">
+                  {tString('portfolio.quickPlate.description')}
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://github.com/pradhul/quickplate"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnPrimarySm}
+                    style={activeFestival ? {
+                      background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                    } : undefined}
+                  >
+                    <Github size={16} />
+                    <span>{tString('portfolio.quickPlate.viewGitHub')}</span>
+                  </a>
+                </div>
+              </div>
+
+              <ProjectFrame figure="Fig. 07" caption={tString('portfolio.quickPlate.demoLabel')}>
+                <div className="flex justify-center rounded-lg bg-ink-raised p-4">
+                  <Image
+                    src="/quickPlate/demo.png"
+                    alt="QuickPlate Telegram bot — /recipe fish returns a blackened fish YouTube recipe"
+                    width={544}
+                    height={1024}
+                    className="h-auto w-full max-w-[280px] rounded-lg"
+                    loading="lazy"
+                  />
+                </div>
+              </ProjectFrame>
             </motion.div>
           </div>
         </div>
