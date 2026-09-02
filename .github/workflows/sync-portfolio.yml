@@ -69,7 +69,9 @@ jobs:
       - name: Open pull request
         if: steps.changes.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Prefer GH_PAT — default GITHUB_TOKEN cannot create PRs unless the
+          # repo setting "Allow GitHub Actions to create and approve pull requests" is on.
+          GH_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
         run: |
           BRANCH="portfolio/sync-$(date +%Y%m%d-%H%M%S)"
           git config user.name "github-actions[bot]"
@@ -78,8 +80,13 @@ jobs:
           git add src public
           git commit -m "portfolio: sync project cards from GitHub"
           git push origin "$BRANCH"
-          gh pr create \
+
+          if ! gh pr create \
             --title "portfolio: sync project cards from GitHub" \
             --body-file .sync-summary.md \
             --base main \
-            --head "$BRANCH"
+            --head "$BRANCH"; then
+            echo "::error::Could not open PR. Either enable Settings → Actions → General → 'Allow GitHub Actions to create and approve pull requests', or set secret GH_PAT with classic 'repo' scope (or fine-grained Pull requests: write)."
+            echo "Branch already pushed: https://github.com/${{ github.repository }}/compare/main...$BRANCH"
+            exit 1
+          fi
