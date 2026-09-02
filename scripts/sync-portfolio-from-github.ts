@@ -87,6 +87,25 @@ async function githubJson<T>(endpoint: string): Promise<T | null> {
   return (await response.json()) as T
 }
 
+/** Best-effort fetch — 403/404/network issues return null instead of failing the sync. */
+async function githubJsonOptional<T>(endpoint: string): Promise<T | null> {
+  try {
+    const response = await fetch(`${GITHUB_API}${endpoint}`, { headers: githubHeaders() })
+    if (!response.ok) {
+      console.warn(
+        `  optional ${endpoint}: ${response.status} ${response.statusText} (continuing without it)`
+      )
+      return null
+    }
+    return (await response.json()) as T
+  } catch (error) {
+    console.warn(
+      `  optional ${endpoint}: ${error instanceof Error ? error.message : error} (continuing without it)`
+    )
+    return null
+  }
+}
+
 type RawRepo = {
   full_name: string
   name: string
@@ -436,6 +455,11 @@ type SyncResult = {
   upcoming: number
 }
 
+type SkippedRepo = {
+  repo: string
+  reason: string
+}
+
 async function syncRepo(
   fullName: string,
   existingProject: Project | undefined,
@@ -490,7 +514,7 @@ async function syncRepo(
   console.log(`  ${fullName}: changed (${storedTag ?? 'none'} -> ${releaseTag ?? 'none'})`)
 
   const issues =
-    (await githubJson<RawIssue[]>(
+    (await githubJsonOptional<RawIssue[]>(
       `/repos/${fullName}/issues?state=open&labels=enhancement&per_page=${MAX_ENHANCEMENT_ISSUES}`
     )) ?? []
 
@@ -664,6 +688,7 @@ async function main() {
   )
 
   const results: SyncResult[] = []
+  const skipped: SkippedRepo[] = []
 
   for (const target of targets) {
     const existing = knownProjects.get(target.toLowerCase())
@@ -688,40 +713,66 @@ async function main() {
         }
       }
     } catch (error) {
-      console.error(`Failed to sync ${target}:`, error instanceof Error ? error.message : error)
-      process.exitCode = 1
-      return
+      const reason = error instanceof Error ? error.message : String(error)
+      console.warn(`Skipping ${target}: ${reason}`)
+      skipped.push({ repo: target, reason })
     }
   }
 
-  if (results.length === 0) {
+  if (results.length === 0 && skipped.length === 0) {
     console.log('Nothing changed. No files written.')
     await writeFile(SUMMARY_FILE, '')
     return
   }
 
   // Only invalidate cached translations when the copy itself moved.
-  if (files.content !== originalContent) {
+  if (results.length > 0 && files.content !== originalContent) {
     files.content = bumpContentVersion(files.content)
   }
 
-  await writeFile(PROJECTS_FILE, files.projects)
-  await writeFile(CONTENT_FILE, files.content)
+  if (results.length > 0) {
+    await writeFile(PROJECTS_FILE, files.projects)
+    await writeFile(CONTENT_FILE, files.content)
+  }
 
-  const summary = [
-    '## Portfolio sync',
-    '',
-    ...results.map((result) => {
-      const badge = result.status === 'released' ? result.releaseTag : 'In Progress'
-      return `- **${result.id}** (${result.repo}) — ${result.action}, badge \`${badge}\`, ${result.features} feature(s), ${result.upcoming} upcoming`
-    }),
-    '',
-    'Copy was drafted by Gemini from the README and release notes. Review the wording and screenshots before merging.',
-  ].join('\n')
+  const summaryParts = ['## Portfolio sync', '']
 
+  if (results.length > 0) {
+    summaryParts.push(
+      '### Updated',
+      '',
+      ...results.map((result) => {
+        const badge = result.status === 'released' ? result.releaseTag : 'In Progress'
+        return `- **${result.id}** (${result.repo}) — ${result.action}, badge \`${badge}\`, ${result.features} feature(s), ${result.upcoming} upcoming`
+      }),
+      ''
+    )
+  } else {
+    summaryParts.push('No card files changed.', '')
+  }
+
+  if (skipped.length > 0) {
+    summaryParts.push(
+      '### Skipped (individual errors — job continued)',
+      '',
+      ...skipped.map((item) => `- **${item.repo}** — ${item.reason}`),
+      ''
+    )
+  }
+
+  if (results.length > 0) {
+    summaryParts.push(
+      'Copy was drafted by Gemini from the README and release notes. Review the wording and screenshots before merging.'
+    )
+  }
+
+  const summary = summaryParts.join('\n')
   await writeFile(SUMMARY_FILE, summary)
   console.log(`\n${summary}`)
-}
+
+  if (skipped.length > 0) {
+    console.warn(`\n${skipped.length} repo(s) skipped due to individual errors.`)
+  }
 
 // Guarded so the patch helpers above can be imported by tests without running a sync.
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
