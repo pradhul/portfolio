@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       repo:
-        description: 'Optional owner/name. Leave blank to check all tracked repos.'
+        description: 'Optional owner/name. Leave blank to sync all your GitHub repos.'
         required: false
         type: string
       force:
@@ -44,6 +44,8 @@ jobs:
       - name: Run sync
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # GH_PAT: classic `repo` or fine-grained read on your repos — needed for private projects.
+          GH_PAT: ${{ secrets.GH_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Passed as env rather than interpolated into the shell command.
           INPUT_REPO: ${{ inputs.repo }}

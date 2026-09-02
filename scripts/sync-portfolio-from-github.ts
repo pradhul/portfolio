@@ -1,15 +1,20 @@
 /**
  * Pull-based portfolio sync.
  *
- * Reads the tracked repos from src/data/projects.ts, asks GitHub for each
- * repo's latest release, and — only when something actually changed — has
- * Gemini draft updated card copy. Patches src/data/projects.ts and
- * src/lib/content.ts in place and writes a PR-ready summary.
+ * By default lists every repo you own on GitHub (public + private when the
+ * token can see them), skips forks/archived/this portfolio repo, and for each
+ * one either creates a new card or updates an existing entry when the release
+ * tag or README changed. Gemini drafts copy; results land in a PR.
  *
  * Usage:
  *   npx tsx scripts/sync-portfolio-from-github.ts
  *   npx tsx scripts/sync-portfolio-from-github.ts --repo pradhul/quickplate
  *   npx tsx scripts/sync-portfolio-from-github.ts --force
+ *
+ * Token: set GH_PAT (classic `repo` or fine-grained read on your repos) so
+ * private projects like unfear/SMSpend are visible. Falls back to GITHUB_TOKEN.
+ *
+ * Opt out a repo: add GitHub topic `no-portfolio`.
  */
 
 import { createHash } from 'node:crypto'
@@ -36,6 +41,7 @@ const SUMMARY_FILE = path.join(ROOT, '.sync-summary.md')
 const GITHUB_API = 'https://api.github.com'
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg']
 const MAX_ENHANCEMENT_ISSUES = 5
+const PORTFOLIO_REPO = process.env.PORTFOLIO_REPO ?? 'pradhul/portfolio'
 
 type Args = {
   repo: string | null
@@ -55,13 +61,17 @@ function parseArgs(argv: string[]): Args {
   return args
 }
 
+function githubToken(): string | undefined {
+  return process.env.GH_PAT || process.env.GITHUB_TOKEN
+}
+
 function githubHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     Accept: 'application/vnd.github+json',
     'X-GitHub-Api-Version': '2022-11-28',
     'User-Agent': 'portfolio-sync',
   }
-  const token = process.env.GITHUB_TOKEN
+  const token = githubToken()
   if (token) {
     headers.Authorization = `Bearer ${token}`
   }
@@ -86,6 +96,44 @@ type RawRepo = {
   language: string | null
   private: boolean
   default_branch: string
+  fork: boolean
+  archived: boolean
+  pushed_at?: string
+}
+
+/** Repos you own that should appear on the portfolio (unless --repo overrides). */
+export async function fetchAllOwnerRepos(): Promise<RawRepo[]> {
+  const token = githubToken()
+  if (!token) {
+    throw new Error('No GitHub token. Set GH_PAT or GITHUB_TOKEN.')
+  }
+
+  const all: RawRepo[] = []
+  let page = 1
+
+  while (true) {
+    const batch = await githubJson<RawRepo[]>(
+      `/user/repos?affiliation=owner&sort=pushed&per_page=100&page=${page}`
+    )
+    if (!batch || batch.length === 0) break
+    all.push(...batch)
+    if (batch.length < 100) break
+    page += 1
+  }
+
+  return all
+}
+
+export function shouldSyncRepo(repo: RawRepo, portfolioRepo = PORTFOLIO_REPO): boolean {
+  if (repo.fork) return false
+  if (repo.archived) return false
+  if (repo.full_name.toLowerCase() === portfolioRepo.toLowerCase()) return false
+  if (repo.topics?.includes('no-portfolio')) return false
+  return true
+}
+
+function countProjectsInSource(source: string): number {
+  return (source.match(/\n    id: '/g) ?? []).length
 }
 
 type RawRelease = {
@@ -392,7 +440,8 @@ async function syncRepo(
   fullName: string,
   existingProject: Project | undefined,
   force: boolean,
-  files: { projects: string; content: string }
+  files: { projects: string; content: string },
+  projectCountRef: { value: number }
 ): Promise<{ result: SyncResult; files: { projects: string; content: string } } | null> {
   const rawRepo = await githubJson<RawRepo>(`/repos/${fullName}`)
   if (!rawRepo) {
@@ -533,7 +582,8 @@ async function syncRepo(
       if (await downloadImage(card.demoUrl, path.join(PUBLIC_DIR, dest))) media.demo = dest
     }
 
-    const figure = `Fig. ${String(projects.length + 1).padStart(2, '0')}`
+    projectCountRef.value += 1
+    const figure = `Fig. ${String(projectCountRef.value).padStart(2, '0')}`
     const record = buildProjectRecord(
       card,
       repoInfo,
@@ -577,9 +627,28 @@ async function syncRepo(
 async function main() {
   const args = parseArgs(process.argv.slice(2))
 
-  const targets = args.repo
-    ? [args.repo]
-    : projects.map((project) => project.githubRepo)
+  let targets: string[]
+  if (args.repo) {
+    targets = [args.repo]
+  } else {
+    const allRepos = await fetchAllOwnerRepos()
+    const eligible = allRepos.filter((repo) => shouldSyncRepo(repo))
+    const skipped = allRepos.length - eligible.length
+    targets = eligible.map((repo) => repo.full_name)
+
+    const privateCount = eligible.filter((repo) => repo.private).length
+    console.log(
+      `Discovered ${allRepos.length} owned repo(s): syncing ${targets.length}` +
+        (skipped ? `, skipped ${skipped} (fork/archived/portfolio/no-portfolio)` : '') +
+        (privateCount ? `, including ${privateCount} private` : '')
+    )
+
+    if (allRepos.some((repo) => repo.private) && !process.env.GH_PAT) {
+      console.warn(
+        'Tip: private repos need GH_PAT (classic repo scope or fine-grained read) — GITHUB_TOKEN in Actions only sees this repo.'
+      )
+    }
+  }
 
   console.log(`Checking ${targets.length} repo(s)${args.force ? ' (force)' : ''}...`)
 
@@ -589,17 +658,34 @@ async function main() {
     content: originalContent,
   }
 
+  const projectCountRef = { value: countProjectsInSource(files.projects) }
+  const knownProjects = new Map(
+    projects.map((project) => [project.githubRepo.toLowerCase(), project] as const)
+  )
+
   const results: SyncResult[] = []
 
   for (const target of targets) {
-    const existing = projects.find(
-      (project) => project.githubRepo.toLowerCase() === target.toLowerCase()
-    )
+    const existing = knownProjects.get(target.toLowerCase())
     try {
-      const outcome = await syncRepo(target, existing, args.force, files)
+      const outcome = await syncRepo(target, existing, args.force, files, projectCountRef)
       if (outcome) {
         files = outcome.files
         results.push(outcome.result)
+        if (outcome.result.action === 'created') {
+          knownProjects.set(target.toLowerCase(), {
+            id: outcome.result.id,
+            githubRepo: target,
+            status: outcome.result.status,
+            release: null,
+            lastSyncedAt: new Date().toISOString(),
+            readmeHash: null,
+            figure: '',
+            icon: { type: 'lucide', name: 'Bookmark' },
+            media: { src: '', alt: '', width: 800, height: 600 },
+            links: [],
+          })
+        }
       }
     } catch (error) {
       console.error(`Failed to sync ${target}:`, error instanceof Error ? error.message : error)

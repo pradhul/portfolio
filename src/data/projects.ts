@@ -2,9 +2,8 @@
 // Copy (category/title/description/features/upcoming) lives in src/lib/content.ts
 // keyed by the same `id`, so it flows through the translation pipeline.
 //
-// The `githubRepo`, `status` and `release` fields are maintained by
-// scripts/sync-portfolio-from-github.ts — edit them by hand only when adding a
-// project manually.
+// Repo membership is managed by scripts/sync-portfolio-from-github.ts, which
+// discovers every repo you own on GitHub. Opt a repo out with topic `no-portfolio`.
 
 export type ProjectStatus = 'released' | 'in_progress'
 

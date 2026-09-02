@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url'
 import {
   patchProjectRecord,
   replaceContentField,
+  shouldSyncRepo,
   tsString,
   tsStringArray,
 } from './sync-portfolio-from-github'
@@ -157,6 +158,45 @@ check('rejects an unknown project id', () => {
       syncedAt: 'y',
     })
   )
+})
+
+console.log('\nrepo discovery filters')
+
+const repo = (overrides: Partial<Parameters<typeof shouldSyncRepo>[0]>) => ({
+  full_name: 'pradhul/example',
+  name: 'example',
+  description: null,
+  homepage: null,
+  language: null,
+  private: false,
+  default_branch: 'main',
+  fork: false,
+  archived: false,
+  ...overrides,
+})
+
+check('includes a normal public repo', () => {
+  assert.equal(shouldSyncRepo(repo({})), true)
+})
+
+check('skips forks', () => {
+  assert.equal(shouldSyncRepo(repo({ fork: true })), false)
+})
+
+check('skips archived repos', () => {
+  assert.equal(shouldSyncRepo(repo({ archived: true })), false)
+})
+
+check('skips the portfolio repo itself', () => {
+  assert.equal(shouldSyncRepo(repo({ full_name: 'pradhul/portfolio' })), false)
+})
+
+check('skips repos tagged no-portfolio', () => {
+  assert.equal(shouldSyncRepo(repo({ topics: ['no-portfolio'] })), false)
+})
+
+check('includes private repos when listed', () => {
+  assert.equal(shouldSyncRepo(repo({ private: true, full_name: 'pradhul/unfear' })), true)
 })
 
 console.log(failures === 0 ? '\nAll checks passed.' : `\n${failures} check(s) failed.`)
