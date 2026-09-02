@@ -773,6 +773,7 @@ async function main() {
   if (skipped.length > 0) {
     console.warn(`\n${skipped.length} repo(s) skipped due to individual errors.`)
   }
+}
 
 // Guarded so the patch helpers above can be imported by tests without running a sync.
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
