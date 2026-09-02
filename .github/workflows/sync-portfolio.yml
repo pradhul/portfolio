@@ -1,0 +1,83 @@
+name: Sync portfolio from GitHub
+
+on:
+  # "Sync now" — always available from the Actions tab.
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Optional owner/name. Leave blank to check all tracked repos.'
+        required: false
+        type: string
+      force:
+        description: 'Re-run Gemini even if the release tag is unchanged'
+        required: false
+        type: boolean
+        default: false
+  # Safety net: catches a release you forgot to sync, next time you ship.
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-portfolio
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # Skip the automatic run when the last commit came from the sync itself.
+    if: github.event_name == 'workflow_dispatch' || github.actor != 'github-actions[bot]'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run sync
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Passed as env rather than interpolated into the shell command.
+          INPUT_REPO: ${{ inputs.repo }}
+          INPUT_FORCE: ${{ inputs.force }}
+        run: |
+          ARGS=()
+          if [ -n "$INPUT_REPO" ]; then ARGS+=(--repo "$INPUT_REPO"); fi
+          if [ "$INPUT_FORCE" = "true" ]; then ARGS+=(--force); fi
+          npm run sync:portfolio -- "${ARGS[@]}"
+
+      - name: Detect changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain src public)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Nothing to sync."
+          fi
+
+      - name: Open pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="portfolio/sync-$(date +%Y%m%d-%H%M%S)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add src public
+          git commit -m "portfolio: sync project cards from GitHub"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "portfolio: sync project cards from GitHub" \
+            --body-file .sync-summary.md \
+            --base main \
+            --head "$BRANCH"
