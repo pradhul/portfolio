@@ -137,6 +137,21 @@ export const content = {
       viewGitHub: 'View on GitHub',
       demoLabel: 'QuickPlate in Telegram',
     },
+    pixelPerfectOverlay: {
+      category: 'CHROME EXTENSION',
+      title: 'Pixel Perfect Overlay',
+      description: 'Chrome extension for pixel-perfect UI comparison—upload a reference screenshot, overlay it on the live page, and align it with drag-and-resize handles while tuning opacity. Built for Windows VDI Chrome environments and Chrome DevTools mobile device emulation.',
+      features: [
+        'Upload reference image via file picker or drag-and-drop',
+        'Toggle overlay on/off, persists until cleared',
+        'Opacity slider (0–100%) with live updates',
+        'Drag and resize overlay directly on the page',
+        'Works in Chrome DevTools device emulation',
+      ],
+      upcomingFeatures: [],
+      viewGitHub: 'View on GitHub',
+      demoLabel: 'Pixel Perfect Overlay demo',
+    },
   },
   contact: {
     title: 'Get In Touch',
@@ -166,4 +181,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '6'
+export const CONTENT_VERSION = '7'

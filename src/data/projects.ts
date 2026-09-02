@@ -301,6 +301,29 @@ export const projects: Project[] = [
         primary: true,
       },
     ],
+  },  {
+    id: 'pixelPerfectOverlay',
+    githubRepo: 'pradhul/pixel-perfect-overlay',
+    status: 'in_progress',
+    release: null,
+    lastSyncedAt: '2026-09-02T14:57:07.253Z',
+    readmeHash: 'd079f5a827851c83',
+    figure: 'Fig. 08',
+    icon: { type: 'lucide', name: 'Bookmark' },
+    media: {
+      src: '/pixelPerfectOverlay/demo.png',
+      alt: 'Pixel Perfect Overlay',
+      width: 800,
+      height: 600,
+    },
+    links: [
+      {
+        type: 'github',
+        href: 'https://github.com/pradhul/pixel-perfect-overlay',
+        labelKey: 'viewGitHub',
+        primary: true,
+      },
+    ],
   },
 ]
 
