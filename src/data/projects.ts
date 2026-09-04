@@ -2,8 +2,9 @@
 // Copy (category/title/description/features/upcoming) lives in src/lib/content.ts
 // keyed by the same `id`, so it flows through the translation pipeline.
 //
-// Repo membership is managed by scripts/sync-portfolio-from-github.ts, which
-// discovers every repo you own on GitHub. Opt a repo out with topic `no-portfolio`.
+// Repo membership is both-ways via GitHub topic `portfolio`:
+// tagged → create/update; untagged → remove on the next Sync.
+// Until at least one repo is tagged, Sync only refreshes existing cards.
 
 export type ProjectStatus = 'released' | 'in_progress'
 

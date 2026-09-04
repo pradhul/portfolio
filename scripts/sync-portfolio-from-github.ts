@@ -1,10 +1,13 @@
 /**
- * Pull-based portfolio sync.
+ * Pull-based portfolio sync (both ways via GitHub topic `portfolio`).
  *
- * By default lists every repo you own on GitHub (public + private when the
- * token can see them), skips forks/archived/this portfolio repo, and for each
- * one either creates a new card or updates an existing entry when the release
- * tag or README changed. Gemini drafts copy; results land in a PR.
+ * Membership:
+ *   - Repo has topic `portfolio` → create or update its card
+ *   - Card exists but repo no longer has topic `portfolio` → remove the card
+ *
+ * Safety: if zero repos have the topic yet, skip creates and removals and only
+ * refresh cards already in projects.ts (so a Sync before you tag anything
+ * cannot wipe the site).
  *
  * Usage:
  *   npx tsx scripts/sync-portfolio-from-github.ts
@@ -12,9 +15,9 @@
  *   npx tsx scripts/sync-portfolio-from-github.ts --force
  *
  * Token: set GH_PAT (classic `repo` or fine-grained read on your repos) so
- * private projects like unfear/SMSpend are visible. Falls back to GITHUB_TOKEN.
+ * private projects are visible. Falls back to GITHUB_TOKEN.
  *
- * Opt out a repo: add GitHub topic `no-portfolio`.
+ * How to add the topic: repo → About (gear) → Topics → add `portfolio`.
  */
 
 import { createHash } from 'node:crypto'
@@ -42,6 +45,8 @@ const GITHUB_API = 'https://api.github.com'
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg']
 const MAX_ENHANCEMENT_ISSUES = 5
 const PORTFOLIO_REPO = process.env.PORTFOLIO_REPO ?? 'pradhul/portfolio'
+/** Opt-in topic. Both add and remove membership are driven by this. */
+export const PORTFOLIO_TOPIC = 'portfolio'
 
 type Args = {
   repo: string | null
@@ -143,16 +148,60 @@ export async function fetchAllOwnerRepos(): Promise<RawRepo[]> {
   return all
 }
 
+/** True when a repo should appear on the portfolio (opt-in topic). */
 export function shouldSyncRepo(repo: RawRepo, portfolioRepo = PORTFOLIO_REPO): boolean {
   if (repo.fork) return false
   if (repo.archived) return false
   if (repo.full_name.toLowerCase() === portfolioRepo.toLowerCase()) return false
   if (repo.topics?.includes('no-portfolio')) return false
-  return true
+  return Boolean(repo.topics?.includes(PORTFOLIO_TOPIC))
+}
+
+export function hasPortfolioTopic(repo: RawRepo): boolean {
+  return Boolean(repo.topics?.includes(PORTFOLIO_TOPIC))
 }
 
 function countProjectsInSource(source: string): number {
   return (source.match(/\n    id: '/g) ?? []).length
+}
+
+/** Remove one project object from the `projects` array in projects.ts. */
+export function removeProjectRecord(source: string, projectId: string): string {
+  const marker = `\n    id: '${projectId}',`
+  const idAt = source.indexOf(marker)
+  if (idAt === -1) {
+    throw new Error(`Could not find project record for "${projectId}"`)
+  }
+
+  // Walk backward to the opening `{` of this array element.
+  let start = idAt
+  while (start > 0 && source[start] !== '{') start -= 1
+  // Include the leading newline + indent before `{` when present.
+  if (start >= 3 && source.slice(start - 3, start) === '\n  ') {
+    start -= 3
+  } else if (start >= 1 && source[start - 1] === '\n') {
+    start -= 1
+  }
+
+  const endMarker = '\n  },'
+  const end = source.indexOf(endMarker, idAt)
+  if (end === -1) {
+    throw new Error(`Could not find end of project record for "${projectId}"`)
+  }
+  return source.slice(0, start) + source.slice(end + endMarker.length)
+}
+
+/** Remove one `portfolio.<id>` block from content.ts. */
+export function removeContentBlock(source: string, projectId: string): string {
+  const blockStart = source.indexOf(`\n    ${projectId}: {`)
+  if (blockStart === -1) {
+    throw new Error(`Could not find content block for "${projectId}"`)
+  }
+  const blockEnd = source.indexOf('\n    },', blockStart)
+  if (blockEnd === -1) {
+    throw new Error(`Could not find end of content block for "${projectId}"`)
+  }
+  return source.slice(0, blockStart) + source.slice(blockEnd + '\n    },'.length)
 }
 
 type RawRelease = {
@@ -460,6 +509,12 @@ type SkippedRepo = {
   reason: string
 }
 
+type RemovedRepo = {
+  id: string
+  repo: string
+  reason: string
+}
+
 async function syncRepo(
   fullName: string,
   existingProject: Project | undefined,
@@ -652,24 +707,40 @@ async function main() {
   const args = parseArgs(process.argv.slice(2))
 
   let targets: string[]
+  let taggedRepos = new Set<string>()
+  let bothWays = false
+
   if (args.repo) {
     targets = [args.repo]
+    console.log(`Manual single-repo sync: ${args.repo}`)
   } else {
     const allRepos = await fetchAllOwnerRepos()
-    const eligible = allRepos.filter((repo) => shouldSyncRepo(repo))
-    const skipped = allRepos.length - eligible.length
-    targets = eligible.map((repo) => repo.full_name)
-
-    const privateCount = eligible.filter((repo) => repo.private).length
-    console.log(
-      `Discovered ${allRepos.length} owned repo(s): syncing ${targets.length}` +
-        (skipped ? `, skipped ${skipped} (fork/archived/portfolio/no-portfolio)` : '') +
-        (privateCount ? `, including ${privateCount} private` : '')
-    )
+    const tagged = allRepos.filter((repo) => shouldSyncRepo(repo))
+    taggedRepos = new Set(tagged.map((repo) => repo.full_name.toLowerCase()))
+    bothWays = tagged.length > 0
 
     if (allRepos.some((repo) => repo.private) && !process.env.GH_PAT) {
       console.warn(
         'Tip: private repos need GH_PAT (classic repo scope or fine-grained read) — GITHUB_TOKEN in Actions only sees this repo.'
+      )
+    }
+
+    if (!bothWays) {
+      // No topics yet — do not create every repo or wipe existing cards.
+      targets = projects.map((project) => project.githubRepo)
+      console.log(
+        `No repos tagged "${PORTFOLIO_TOPIC}" yet. Safety mode: refreshing ${targets.length} existing card(s) only (no creates, no removals).`
+      )
+      console.log(
+        `Add the "${PORTFOLIO_TOPIC}" topic to repos you want on the site, then re-run Sync for both-ways membership.`
+      )
+    } else {
+      targets = tagged.map((repo) => repo.full_name)
+      const privateCount = tagged.filter((repo) => repo.private).length
+      console.log(
+        `Both-ways sync: ${tagged.length} repo(s) with topic "${PORTFOLIO_TOPIC}"` +
+          (privateCount ? ` (${privateCount} private)` : '') +
+          `. Cards missing that topic will be removed.`
       )
     }
   }
@@ -689,6 +760,34 @@ async function main() {
 
   const results: SyncResult[] = []
   const skipped: SkippedRepo[] = []
+  const removed: RemovedRepo[] = []
+
+  // Removals only when at least one repo is tagged (both-ways armed).
+  if (bothWays) {
+    for (const project of projects) {
+      const key = project.githubRepo.toLowerCase()
+      if (taggedRepos.has(key)) continue
+
+      try {
+        files = {
+          projects: removeProjectRecord(files.projects, project.id),
+          content: removeContentBlock(files.content, project.id),
+        }
+        projectCountRef.value = Math.max(0, projectCountRef.value - 1)
+        knownProjects.delete(key)
+        removed.push({
+          id: project.id,
+          repo: project.githubRepo,
+          reason: `missing topic "${PORTFOLIO_TOPIC}"`,
+        })
+        console.log(`  ${project.githubRepo}: removed (no "${PORTFOLIO_TOPIC}" topic)`)
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error)
+        console.warn(`Could not remove ${project.githubRepo}: ${reason}`)
+        skipped.push({ repo: project.githubRepo, reason: `remove failed: ${reason}` })
+      }
+    }
+  }
 
   for (const target of targets) {
     const existing = knownProjects.get(target.toLowerCase())
@@ -719,18 +818,18 @@ async function main() {
     }
   }
 
-  if (results.length === 0 && skipped.length === 0) {
+  if (results.length === 0 && skipped.length === 0 && removed.length === 0) {
     console.log('Nothing changed. No files written.')
     await writeFile(SUMMARY_FILE, '')
     return
   }
 
-  // Only invalidate cached translations when the copy itself moved.
-  if (results.length > 0 && files.content !== originalContent) {
+  const contentChanged = files.content !== originalContent
+  if ((results.length > 0 || removed.length > 0) && contentChanged) {
     files.content = bumpContentVersion(files.content)
   }
 
-  if (results.length > 0) {
+  if (results.length > 0 || removed.length > 0) {
     await writeFile(PROJECTS_FILE, files.projects)
     await writeFile(CONTENT_FILE, files.content)
   }
@@ -747,7 +846,18 @@ async function main() {
       }),
       ''
     )
-  } else {
+  }
+
+  if (removed.length > 0) {
+    summaryParts.push(
+      '### Removed (topic dropped)',
+      '',
+      ...removed.map((item) => `- **${item.id}** (${item.repo}) — ${item.reason}`),
+      ''
+    )
+  }
+
+  if (results.length === 0 && removed.length === 0) {
     summaryParts.push('No card files changed.', '')
   }
 
@@ -760,7 +870,7 @@ async function main() {
     )
   }
 
-  if (results.length > 0) {
+  if (results.length > 0 || removed.length > 0) {
     summaryParts.push(
       'Copy was drafted by Gemini from the README and release notes. Review the wording and screenshots before merging.'
     )

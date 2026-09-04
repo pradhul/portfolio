@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       repo:
-        description: 'Optional owner/name. Leave blank to sync all your GitHub repos.'
+        description: 'Optional owner/name. Leave blank to sync repos tagged portfolio (both-ways).'
         required: false
         type: string
       force:

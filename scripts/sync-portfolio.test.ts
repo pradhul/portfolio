@@ -12,6 +12,8 @@ import { fileURLToPath } from 'node:url'
 
 import {
   patchProjectRecord,
+  removeContentBlock,
+  removeProjectRecord,
   replaceContentField,
   shouldSyncRepo,
   tsString,
@@ -172,14 +174,19 @@ const repo = (overrides: Partial<Parameters<typeof shouldSyncRepo>[0]>) => ({
   default_branch: 'main',
   fork: false,
   archived: false,
+  topics: ['portfolio'],
   ...overrides,
 })
 
-check('includes a normal public repo', () => {
+check('includes a repo tagged portfolio', () => {
   assert.equal(shouldSyncRepo(repo({})), true)
 })
 
-check('skips forks', () => {
+check('skips repos without the portfolio topic', () => {
+  assert.equal(shouldSyncRepo(repo({ topics: [] })), false)
+})
+
+check('skips forks even with portfolio topic', () => {
   assert.equal(shouldSyncRepo(repo({ fork: true })), false)
 })
 
@@ -192,11 +199,27 @@ check('skips the portfolio repo itself', () => {
 })
 
 check('skips repos tagged no-portfolio', () => {
-  assert.equal(shouldSyncRepo(repo({ topics: ['no-portfolio'] })), false)
+  assert.equal(shouldSyncRepo(repo({ topics: ['portfolio', 'no-portfolio'] })), false)
 })
 
-check('includes private repos when listed', () => {
+check('includes private repos when tagged portfolio', () => {
   assert.equal(shouldSyncRepo(repo({ private: true, full_name: 'pradhul/unfear' })), true)
+})
+
+console.log('\nboth-ways removals')
+
+check('removes a project record from projects.ts', () => {
+  const next = removeProjectRecord(projectsSource, 'quickPlate')
+  assert.ok(!next.includes("id: 'quickPlate'"))
+  assert.match(next, /id: 'linkShelf',/)
+  assert.match(next, /export function findProjectByRepo/)
+})
+
+check('removes a content block from content.ts', () => {
+  const next = removeContentBlock(contentSource, 'quickPlate')
+  assert.ok(!next.includes('quickPlate: {'))
+  assert.match(next, /linkShelf: \{/)
+  assert.match(next, /contact: \{/)
 })
 
 console.log(failures === 0 ? '\nAll checks passed.' : `\n${failures} check(s) failed.`)
