@@ -334,8 +334,8 @@ export const projects: Project[] = [
     githubRepo: 'pradhul/Prism',
     status: 'in_progress',
     release: null,
-    lastSyncedAt: '2026-09-02T14:45:35.673Z',
-    readmeHash: '10238e434b2a70d6',
+    lastSyncedAt: '2026-09-04T14:34:53.099Z',
+    readmeHash: '5a32ff0225dc72eb',
     figure: 'Fig. 09',
     icon: { type: 'lucide', name: 'Bookmark' },
     media: {
