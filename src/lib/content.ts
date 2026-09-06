@@ -74,21 +74,6 @@ export const content = {
       viewGitHub: 'View on GitHub',
       demoLabel: 'vsColorCode demo',
     },
-    chartStudio: {
-      category: 'WEB APP',
-      title: 'Chart Studio',
-      description: 'Create bar and pie charts from Excel (.xlsx, .xls) or CSV files. Upload your data, paste from Excel, or edit cells in the preview—then customize your chart (title, colors, legend, grid) and export as PNG or PDF.',
-      features: [
-        'Import from .xlsx, .xls, and CSV, or paste straight from Excel',
-        'Edit cells inline in the live preview',
-        'Customize title, colors, legend, and grid',
-        'Export finished charts as PNG or PDF',
-      ],
-      upcomingFeatures: [],
-      liveDemo: 'Live Demo',
-      viewProject: 'View Project',
-      demoLabel: 'Chart Studio',
-    },
     uploadSpec: {
       category: 'WEB APP',
       title: 'UploadSpec',
@@ -153,18 +138,18 @@ export const content = {
     prism: {
       category: 'WEB APP',
       title: 'Prism',
-      description: 'A mobile-first web app that rethinks the email inbox, exploring three distinct, AI-native experiences beyond traditional folders and lists. Switch freely between Contextual Stream, Priority Grid, and Focused Arc views—all powered by mock AI for smart summaries and search. Built with SvelteKit and Tailwind CSS, this prototype simulates a mailbox of ~1,400 emails.',
+      description: 'A mobile-first web app that reimagines the email inbox, currently focusing on a Contextual Stream to group mail by what it needs from you. Experience AI-native features—like smart summaries, quick action buttons, and natural language search—all built with SvelteKit and Tailwind CSS on a simulated mailbox of ~1,400 emails.',
       features: [
-        'Three distinct AI-native inbox experiences: Stream, Grid, and Arc',
+        'Contextual Stream groups mail by actionability',
         'AI search to query your mailbox with natural language',
-        'Prototype simulates a mailbox of ~1,400 emails',
-        'Reactive store manages read, done, and archive state',
+        'Simulates a mailbox of ~1,400 emails for realistic scale',
+        'Dynamic mail tags and plain-language rules management',
         'Mobile-first design for phone-sized viewports',
       ],
       upcomingFeatures: [
         'Dark mode and real mail backend integration',
         'Tablet, desktop, and native mobile support',
-        'Full compose, search, and account settings',
+        'Full compose and account settings',
       ],
       viewGitHub: 'View on GitHub',
       demoLabel: 'Prism Inbox Concepts',
@@ -201,87 +186,19 @@ export const content = {
       viewGitHub: 'View on GitHub',
       demoLabel: 'Pixel Perfect Overlay',
     },
-    pradhul: {
+    magnus: {
       category: 'WEB APP',
-      title: 'Developer Profile',
-      description: 'This GitHub profile README acts as a dynamic developer portfolio, showcasing Pradhul Dev\'s core skills and providing quick access to his GitHub presence. It aggregates real-time stats like followers and repository count—built with markdown and custom ShieldCN badges.',
+      title: 'Magnus',
+      description: 'A 3D puzzle-platformer where players embody a salvage rigger with magnetic powers—pulling and pushing ferrous objects or being moved by heavier ones. Solve ten rooms of increasing difficulty in Chapter 1, \'Loading Bay 0,\' by mastering magnetic principles and environmental puzzles—built as a static site using Three.js.',
       features: [
-        'Displays real-time GitHub follower, star, and public repo counts',
-        'Highlights key technical skills with branded badges',
-        'Provides direct links to the full GitHub profile',
-        'Shows current location via a dedicated badge',
+        'Physics-based magnetic pull and push mechanics',
+        'Ten challenging rooms in Chapter 1, \'Loading Bay 0\'',
+        'Deterministic, turn-based gameplay with full undo history',
+        'Browser-playable with no installation via static site deployment',
       ],
       upcomingFeatures: [],
       viewGitHub: 'View on GitHub',
-      demoLabel: 'Pradhul Dev\'s Profile',
-    },
-    splitit: {
-      category: 'MOBILE APP',
-      title: 'Splitit',
-      description: 'A new mobile app project built with Expo and TypeScript, created using `create-expo-app`. It currently provides a universal starter template for developing cross-platform applications for Android, iOS, and the web—leveraging Expo\'s file-based routing.',
-      features: [
-        'Configured for universal app development (Android, iOS, web)',
-        'Utilizes Expo\'s file-based routing',
-        'Built on TypeScript for type safety',
-        'Starter code for quick project initialization',
-      ],
-      upcomingFeatures: [],
-      viewGitHub: 'View on GitHub',
-      demoLabel: 'Splitit project',
-    },
-    geminiTutorial: {
-      category: 'CLI TOOL',
-      title: 'Gemini Summarizer',
-      description: 'A Python CLI tool for exploring Gemini\'s system instructions and summarizing text files from the command line. It features a file summarizer to quickly digest content and allows for testing Gemini\'s persona capabilities—built with Python.',
-      features: [
-        'Summarizes text files directly from the command line',
-        'Explores Gemini system instructions for persona testing',
-        'Built using Python',
-      ],
-      upcomingFeatures: [],
-      viewGitHub: 'View on GitHub',
-      demoLabel: 'Gemini Summarizer CLI',
-    },
-    yaga: {
-      category: 'MOBILE APP',
-      title: 'YAGA',
-      description: 'A cross-platform mobile app built with TypeScript for efficient data management, featuring seamless plugin installation and an intuitive interface. It supports infinite scrolling lists and robust offline functionality, with secure access powered by biometrics.',
-      features: [
-        'Seamless plugin installation',
-        'Dynamic content lists with infinite scroll',
-        'Robust offline data support',
-        'Secure access using biometrics',
-      ],
-      upcomingFeatures: [],
-      viewGitHub: 'View on GitHub',
-      demoLabel: 'YAGA Mobile App',
-    },
-    writings: {
-      category: 'WEB APP',
-      title: 'Writing Showcase',
-      description: 'A Next.js web application for showcasing and managing writings—publicly view published works or manage them via a protected admin dashboard. It supports CRUD operations, drafts, and responsive design, built with Firebase Firestore and Authentication, TypeScript, and Tailwind CSS.',
-      features: [
-        'Public viewing of all published writings',
-        'Protected admin dashboard for managing content',
-        'Full CRUD operations for writings',
-        'Save writings as drafts before publishing',
-        'Responsive design across devices',
-      ],
-      upcomingFeatures: [],
-      viewGitHub: 'View on GitHub',
-      demoLabel: 'Writing Showcase',
-    },
-    iconsearch: {
-      category: 'WEB APP',
-      title: 'Icon Search',
-      description: 'A web app for semantically searching similar icon names. It helps users find related icons by understanding the context of their search query—powered by GloVe word embeddings and built with TypeScript.',
-      features: [
-        'Semantically searches for similar icon names',
-        'Leverages GloVe word embeddings for contextual matching',
-      ],
-      upcomingFeatures: [],
-      viewGitHub: 'View on GitHub',
-      demoLabel: 'Icon Search',
+      demoLabel: 'Magnus',
     },
   },
   contact: {
@@ -312,4 +229,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '7'
+export const CONTENT_VERSION = '8'
