@@ -1,8 +1,10 @@
-"use client";
-
+import type { Metadata } from "next";
 import Image from "next/image";
 import { ExternalLink, BarChart3, FileSpreadsheet, Palette, Download } from "lucide-react";
 import ChartStudioSummary from "../squashpush/ChartStudioSummary";
+import { createPageMetadata, pages } from "@/lib/seo";
+
+export const metadata: Metadata = createPageMetadata(pages.chartStudio);
 
 const CHART_STUDIO_URL = "https://soft-dieffenbachia-ba97b4.netlify.app/";
 

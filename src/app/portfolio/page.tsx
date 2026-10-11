@@ -1,8 +1,12 @@
+import type { Metadata } from "next";
 import SquashPushSummary from "./squashpush/SquashPushSummary";
 import VSColorCodeSummary from "./squashpush/VSColorCodeSummary";
 import ChartStudioSummary from "./squashpush/ChartStudioSummary";
 import UploadSpecSummary from "./squashpush/UploadSpecSummary";
 import LinkShelfSummary from "./squashpush/LinkShelfSummary";
+import { createPageMetadata, pages } from "@/lib/seo";
+
+export const metadata: Metadata = createPageMetadata(pages.portfolio);
 
 export default function Portfolio() {
   return (

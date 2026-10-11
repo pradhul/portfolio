@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import FirebaseAnalytics from "@/components/FirebaseAnalytics";
+import { SITE_NAME, SITE_URL, pages } from "@/lib/seo";
 
 const bodyFont = IBM_Plex_Sans({
   variable: "--font-body",
@@ -28,13 +29,27 @@ const monoFont = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pradhul Dev",
-  description: "Portfolio of Pradhul Dev",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://pradhul.dev'),
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: pages.home.description,
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: "Pradhul Dev - Web & Mobile Developer",
-    description: "Portfolio of Pradhul Dev - 8+ Years of Experience",
-    type: "website",
+    title: pages.home.ogTitle,
+    description: pages.home.description,
+    url: '/',
+    siteName: SITE_NAME,
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: pages.home.ogTitle,
+    description: pages.home.description,
   },
 };
 
