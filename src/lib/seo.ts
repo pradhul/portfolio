@@ -18,7 +18,7 @@ export const pages = {
     title: SITE_NAME,
     ogTitle: 'Pradhul Dev — Web & Mobile Developer',
     description:
-      'Portfolio of Pradhul Dev, a web and mobile developer with 8+ years of experience building apps, developer tools, and extensions.',
+      'Pradhul Dev is a web and mobile developer with 8+ years of experience — VS Code extension author, former Software Engineering Master at HashedIn by Deloitte, available for hire.',
     eyebrow: 'WEB & MOBILE DEVELOPER',
     absoluteTitle: true,
   },
@@ -26,7 +26,7 @@ export const pages = {
     path: '/about',
     title: 'About',
     description:
-      "Hi, I'm Pradhul, a web and mobile developer with over 8 years of experience crafting digital solutions, developer tools, and extensions.",
+      'Web and mobile developer with 8+ years of experience. VS Code extension author; former Software Engineering Master at HashedIn by Deloitte. Available for hire.',
     eyebrow: 'ABOUT',
   },
   contact: {

@@ -6,13 +6,12 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { motion } from 'framer-motion'
 import { FileText, ChevronDown, ArrowUpRight } from 'lucide-react'
-import ProjectCard from '@/components/ProjectCard'
-import { projects } from '@/data/projects'
+import PortfolioSection from '@/components/PortfolioSection'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
 import { LanguageLayout } from '@/components/LanguageLayout'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import { FaLinkedin, FaGithubSquare, FaPhone } from 'react-icons/fa'
+import { FaLinkedin, FaGithubSquare } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
 import { SiStackoverflow } from 'react-icons/si'
@@ -229,12 +228,38 @@ function HomeContent() {
             className="mt-10 flex flex-wrap items-center gap-4"
           >
             <a
-              href="/PRADHUL_DEV_RESUME.pdf"
-              download="PRADHUL_DEV_RESUME.pdf"
-              rel="noopener noreferrer"
+              href="mailto:pradhuldev.1990@gmail.com"
               className={btnPrimary}
               style={activeFestival ? {
                 background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+              } : undefined}
+            >
+              <IoMail size={18} />
+              <span>{tString('hero.hireMe')}</span>
+            </a>
+
+            <a
+              href="https://www.upwork.com/freelancers/~01a32f29fafd184f21"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={btnGhost}
+              style={activeFestival ? {
+                borderColor: `${activeFestival.colors.primary}50`,
+                color: activeFestival.colors.primary,
+              } : undefined}
+            >
+              <FaSquareUpwork size={18} />
+              <span>{tString('hero.upwork')}</span>
+            </a>
+
+            <a
+              href="/PRADHUL_DEV_RESUME.pdf"
+              download="PRADHUL_DEV_RESUME.pdf"
+              rel="noopener noreferrer"
+              className={btnGhost}
+              style={activeFestival ? {
+                borderColor: `${activeFestival.colors.primary}50`,
+                color: activeFestival.colors.primary,
               } : undefined}
             >
               <FileText size={18} />
@@ -331,6 +356,27 @@ function HomeContent() {
                 }
                 return null
               })()}
+              {(() => {
+                const skills = t('about.skills')
+                if (!Array.isArray(skills) || skills.length === 0) return null
+                return (
+                  <div className="mt-10">
+                    <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.25em] text-cream-faint">
+                      {tString('about.skillsLabel')}
+                    </div>
+                    <ul className="flex flex-wrap gap-2">
+                      {skills.map((skill) => (
+                        <li
+                          key={skill}
+                          className="rounded-full border border-line px-3 py-1.5 text-sm text-cream-muted"
+                        >
+                          {skill}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              })()}
             </div>
           </motion.div>
 
@@ -373,11 +419,7 @@ function HomeContent() {
             />
           </motion.div>
 
-          <div className="mt-16 space-y-24">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
+          <PortfolioSection />
         </div>
       </section>
 
@@ -420,17 +462,6 @@ function HomeContent() {
               <IoMail className="self-center text-xl text-cream-faint transition-colors group-hover:text-brass" />
               <span className="font-display text-2xl font-semibold tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
                 pradhuldev.1990@gmail.com
-              </span>
-              <ArrowUpRight className="ml-auto self-center text-cream-faint transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-brass" size={22} />
-            </a>
-
-            <a
-              href="tel:+919986981757"
-              className="group flex items-baseline gap-4 border-t border-line py-7 transition-colors"
-            >
-              <FaPhone className="self-center text-lg text-cream-faint transition-colors group-hover:text-brass" />
-              <span className="font-display text-2xl font-semibold tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
-                +91&#8209;9986981757
               </span>
               <ArrowUpRight className="ml-auto self-center text-cream-faint transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-brass" size={22} />
             </a>
