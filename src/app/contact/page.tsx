@@ -1,9 +1,13 @@
+import type { Metadata } from "next";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGithubSquare } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import { FaPhone } from "react-icons/fa6";
 import { SiStackoverflow } from "react-icons/si";
 import { FaSquareUpwork } from "react-icons/fa6";
+import { createPageMetadata, pages } from "@/lib/seo";
+
+export const metadata: Metadata = createPageMetadata(pages.contact);
 
 export default function Contact() {
   return (

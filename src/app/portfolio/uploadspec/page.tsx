@@ -1,7 +1,9 @@
-"use client";
-
+import type { Metadata } from "next";
 import { ExternalLink, ImageIcon, Shield, FileImage, Layers } from "lucide-react";
 import UploadSpecSummary from "../squashpush/UploadSpecSummary";
+import { createPageMetadata, pages } from "@/lib/seo";
+
+export const metadata: Metadata = createPageMetadata(pages.uploadSpec);
 
 const UPLOAD_SPEC_URL = "https://uploadspec.web.app/";
 

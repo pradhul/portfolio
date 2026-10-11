@@ -1,5 +1,3 @@
-'use client'
-
 import { Bookmark, ExternalLink, Github } from 'lucide-react'
 import Image from 'next/image'
 

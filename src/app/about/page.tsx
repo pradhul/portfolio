@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+import { createPageMetadata, pages } from "@/lib/seo";
+
+export const metadata: Metadata = createPageMetadata(pages.about);
 
 export default function About() {
   return (

@@ -1,5 +1,4 @@
-'use client'
-
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import {
   Bookmark,
@@ -10,6 +9,9 @@ import {
   Tags,
 } from 'lucide-react'
 import LinkShelfSummary from '../squashpush/LinkShelfSummary'
+import { createPageMetadata, pages } from '@/lib/seo'
+
+export const metadata: Metadata = createPageMetadata(pages.linkShelf)
 
 const LINK_SHELF_URL = 'https://link-shelf-puce.vercel.app/'
 const LINK_SHELF_GITHUB = 'https://github.com/pradhul/link-shelf'
