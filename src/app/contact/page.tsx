@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGithubSquare } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
-import { FaPhone } from "react-icons/fa6";
 import { SiStackoverflow } from "react-icons/si";
 import { FaSquareUpwork } from "react-icons/fa6";
 import { createPageMetadata, pages } from "@/lib/seo";
@@ -15,13 +14,10 @@ export default function Contact() {
       <div>
         <b>Contact Me</b>
         <p>
-          <a href="mailto:example@example.com">
+          <a href="mailto:pradhuldev.1990@gmail.com">
             <IoMail className="icon" />
           </a>
           pradhuldev.1990@gmail.com{" "}
-        </p>
-        <p>
-          <FaPhone className="icon" /> +91-9986981757
         </p>
         <div className="social">
           <a href="https://www.linkedin.com/in/pradhul-dev-30708814b/" target="_blank">

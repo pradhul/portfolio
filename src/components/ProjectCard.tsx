@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
@@ -110,22 +111,79 @@ function FeatureList({ heading, items }: { heading: string; items: string[] }) {
   )
 }
 
+function MediaFallback({ label }: { label: string }) {
+  return (
+    <div
+      role="img"
+      aria-label={label}
+      className="flex min-h-[240px] items-center justify-center rounded-lg bg-ink-raised px-6 text-center"
+    >
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-cream-faint">
+        Preview unavailable
+      </p>
+    </div>
+  )
+}
+
+function SafeImage({
+  src,
+  alt,
+  width,
+  height,
+  className,
+  unoptimized,
+  fallbackLabel,
+}: {
+  src: string
+  alt: string
+  width: number
+  height: number
+  className?: string
+  unoptimized?: boolean
+  fallbackLabel: string
+}) {
+  const [failed, setFailed] = useState(false)
+
+  if (failed) {
+    return <MediaFallback label={fallbackLabel} />
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      className={className}
+      loading="lazy"
+      unoptimized={unoptimized}
+      onError={() => setFailed(true)}
+    />
+  )
+}
+
 function ProjectIconBlock({ project }: { project: Project }) {
   const { icon } = project
+  const [failed, setFailed] = useState(false)
 
   return (
     <div className="rounded-xl border border-line bg-cream p-3">
-      {icon.type === 'image' ? (
+      {icon.type === 'image' && !failed ? (
         <Image
           src={icon.src}
           alt={icon.alt}
           width={56}
           height={56}
           loading="lazy"
+          onError={() => setFailed(true)}
           {...(icon.src.endsWith('.svg')
             ? {}
             : { placeholder: 'blur' as const, blurDataURL: ICON_BLUR_DATA_URL })}
         />
+      ) : icon.type === 'image' ? (
+        <div className="flex h-14 w-14 items-center justify-center font-mono text-[10px] uppercase tracking-widest text-ink/50">
+          N/A
+        </div>
       ) : (
         (() => {
           const LucideIcon = LUCIDE_ICONS[icon.name]
@@ -194,29 +252,30 @@ export default function ProjectCard({ project }: { project: Project }) {
       }
     : undefined
 
+  const fallbackLabel = `${tString(`${base}.title`)} preview unavailable`
   const media = (
     <ProjectFrame figure={project.figure} caption={tString(`${base}.demoLabel`)}>
       {project.media.contain ? (
         <div className="flex min-h-[240px] items-center justify-center rounded-lg bg-ink-raised p-4">
-          <Image
+          <SafeImage
             src={project.media.src}
             alt={project.media.alt}
             width={project.media.width}
             height={project.media.height}
             className={`h-auto w-full rounded-lg ${project.media.maxWidthClass ?? 'max-w-[120px] opacity-90'}`}
-            loading="lazy"
             unoptimized={project.media.unoptimized}
+            fallbackLabel={fallbackLabel}
           />
         </div>
       ) : (
-        <Image
+        <SafeImage
           src={project.media.src}
           alt={project.media.alt}
           width={project.media.width}
           height={project.media.height}
           className="h-auto w-full rounded-lg"
-          loading="lazy"
           unoptimized={project.media.unoptimized}
+          fallbackLabel={fallbackLabel}
         />
       )}
     </ProjectFrame>
