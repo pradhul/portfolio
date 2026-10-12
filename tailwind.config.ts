@@ -19,7 +19,7 @@ export default {
         cream: {
           DEFAULT: "#ece5d8",
           muted: "#a89f8e",
-          faint: "#6e675b",
+          faint: "#867e70",
         },
         brass: {
           DEFAULT: "#d9a441",

@@ -48,6 +48,10 @@ export type ProjectMedia = {
   /** Centered, padded frame used by logo-only and portrait screenshots. */
   contain?: boolean
   maxWidthClass?: string
+  video?: {
+    mp4: string
+    webm?: string
+  }
 }
 
 export type Project = {
@@ -117,11 +121,14 @@ export const projects: Project[] = [
     figure: 'Fig. 02',
     icon: { type: 'image', src: '/squashPush/icon.png', alt: 'Squash-Push Icon' },
     media: {
-      src: '/squashPush/recording.gif',
+      src: '/squashPush/recording-poster.jpg',
       alt: 'Squash-Push Demo',
-      width: 800,
-      height: 600,
-      unoptimized: true,
+      width: 960,
+      height: 760,
+      video: {
+        mp4: '/squashPush/recording.mp4',
+        webm: '/squashPush/recording.webm',
+      },
     },
     links: [
       {
