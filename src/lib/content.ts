@@ -13,15 +13,35 @@ export const content = {
     subtitle: 'Web & Mobile Developer — 8+ years',
     downloadResume: 'Resume',
     viewPortfolio: 'View Portfolio',
+    hireMe: 'Hire me',
+    upwork: 'Upwork',
   },
   about: {
     title: 'About Me',
     githubActivity: 'GitHub Activity',
+    skillsLabel: 'Skills',
     paragraphs: [
-      "Hi, I'm Pradhul, a passionate Web and Mobile Developer with over 8 years of experience crafting digital solutions.",
-      'I specialize in building modern, responsive web applications and mobile apps that deliver exceptional user experiences. My expertise spans across various technologies and frameworks, allowing me to bring creative ideas to life.',
-      "When I'm not coding, I enjoy creating developer tools and extensions that make the development workflow more efficient. Check out my VS Code extensions below!",
-      'Beyond coding and hanging out with friends, I have a passion for beatboxing, exploring music and movies, and gaming on my Nintendo Switch. I train MMA to stay healthy and fit, and I love experimenting with new projects using my Raspberry Pi—always tinkering and learning something new.',
+      "Hi, I'm Pradhul, a web and mobile developer with 8+ years of experience, and the author of VS Code extensions on the Marketplace.",
+      'I was a Software Engineering Master at HashedIn Technologies (HashedIn by Deloitte) from May 2015 to June 2023, leading teams of up to four on Android, React Native, React, and Angular projects — including Hiway, Sotera, GroupNexus, Buzztime, and Kaiser Permanente. Before that I was a software developer at Brainistic Technologies (July 2014 – May 2015), where I built HealEz as a Joomla component and QuizByte as a native Android app.',
+      'I also ship my own tools: Ionic Measure on the Chrome Web Store, Squash-Push and vsColorCode on the VS Code Marketplace, plus apps such as Link Shelf, UploadSpec, and SMSpend.',
+      "Off the clock I beatbox, train MMA, and tinker with a Raspberry Pi.",
+    ],
+    skills: [
+      'React',
+      'Next.js',
+      'Angular',
+      'TypeScript',
+      'React Native',
+      'Android (Kotlin, Jetpack Compose)',
+      'VS Code extensions',
+      'Chrome extensions',
+      'Node.js',
+      'Spring Boot',
+      'Firebase',
+      'Neon Postgres',
+      'Cloudflare Workers',
+      'GCP',
+      'Gemini API',
     ],
   },
   portfolio: {
@@ -31,6 +51,17 @@ export const content = {
       features: 'Features',
       upcoming: 'Upcoming',
     },
+    filtersLabel: 'Filter projects',
+    filters: {
+      all: 'All',
+      extensions: 'Extensions',
+      web: 'Web',
+      mobile: 'Mobile',
+      tools: 'Tools',
+    },
+    archiveEyebrow: 'Archive',
+    archiveTitle: 'More projects',
+    emptyFilter: 'Nothing featured in this category — see the archive below.',
     ionicMeasure: {
       category: 'CHROME EXTENSION',
       title: 'Ionic Measure',
@@ -286,7 +317,7 @@ export const content = {
   },
   contact: {
     title: 'Get In Touch',
-    subtitle: "Let's discuss your next project or just say hello!",
+    subtitle: "Available for hire — email me or reach out on Upwork.",
     connectLabel: 'Connect with me on',
   },
   guestbook: {
@@ -312,4 +343,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '7'
+export const CONTENT_VERSION = '8'

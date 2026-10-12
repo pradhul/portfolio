@@ -1,6 +1,7 @@
 // Single source of truth for portfolio project cards.
 // Copy (category/title/description/features/upcoming) lives in src/lib/content.ts
 // keyed by the same `id`, so it flows through the translation pipeline.
+// Homepage featured vs archive is curated in src/data/portfolioDisplay.ts — not here.
 //
 // Repo membership is both-ways via GitHub topic `portfolio`:
 // tagged → create/update; untagged → remove on the next Sync.
