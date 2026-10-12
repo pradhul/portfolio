@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
@@ -125,6 +125,35 @@ function MediaFallback({ label }: { label: string }) {
   )
 }
 
+type ProbeStatus = 'checking' | 'ok' | 'failed'
+
+function usePublicAsset(src: string): ProbeStatus {
+  const [status, setStatus] = useState<ProbeStatus>('checking')
+
+  useEffect(() => {
+    if (!src) {
+      setStatus('failed')
+      return
+    }
+    let cancelled = false
+    const probe = new window.Image()
+    probe.onload = () => {
+      if (!cancelled) setStatus('ok')
+    }
+    probe.onerror = () => {
+      if (!cancelled) setStatus('failed')
+    }
+    probe.src = src
+    return () => {
+      cancelled = true
+      probe.onload = null
+      probe.onerror = null
+    }
+  }, [src])
+
+  return status
+}
+
 function SafeImage({
   src,
   alt,
@@ -142,10 +171,14 @@ function SafeImage({
   unoptimized?: boolean
   fallbackLabel: string
 }) {
-  const [failed, setFailed] = useState(false)
+  const status = usePublicAsset(src)
 
-  if (failed) {
-    return <MediaFallback label={fallbackLabel} />
+  if (status !== 'ok') {
+    return status === 'failed' ? (
+      <MediaFallback label={fallbackLabel} />
+    ) : (
+      <div className="min-h-[240px] rounded-lg bg-ink-raised" aria-hidden />
+    )
   }
 
   return (
@@ -157,38 +190,36 @@ function SafeImage({
       className={className}
       loading="lazy"
       unoptimized={unoptimized}
-      onError={() => setFailed(true)}
     />
   )
 }
 
 function ProjectIconBlock({ project }: { project: Project }) {
   const { icon } = project
-  const [failed, setFailed] = useState(false)
+  const status = usePublicAsset(icon.type === 'image' ? icon.src : '')
 
   return (
     <div className="rounded-xl border border-line bg-cream p-3">
-      {icon.type === 'image' && !failed ? (
+      {icon.type === 'lucide' ? (
+        (() => {
+          const LucideIcon = LUCIDE_ICONS[icon.name]
+          return <LucideIcon className="h-14 w-14 text-ink" />
+        })()
+      ) : status === 'ok' ? (
         <Image
           src={icon.src}
           alt={icon.alt}
           width={56}
           height={56}
           loading="lazy"
-          onError={() => setFailed(true)}
           {...(icon.src.endsWith('.svg')
             ? {}
             : { placeholder: 'blur' as const, blurDataURL: ICON_BLUR_DATA_URL })}
         />
-      ) : icon.type === 'image' ? (
-        <div className="flex h-14 w-14 items-center justify-center font-mono text-[10px] uppercase tracking-widest text-ink/50">
-          N/A
-        </div>
       ) : (
-        (() => {
-          const LucideIcon = LUCIDE_ICONS[icon.name]
-          return <LucideIcon className="h-14 w-14 text-ink" />
-        })()
+        <div className="flex h-14 w-14 items-center justify-center font-mono text-[10px] uppercase tracking-widest text-ink/50">
+          {status === 'failed' ? 'N/A' : ''}
+        </div>
       )}
     </div>
   )
