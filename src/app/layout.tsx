@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
-import FirebaseAnalytics from "@/components/FirebaseAnalytics";
+import DeferredAnalytics from "@/components/DeferredAnalytics";
 import { SITE_NAME, SITE_URL, pages } from "@/lib/seo";
 
 const bodyFont = IBM_Plex_Sans({
@@ -17,7 +17,7 @@ const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
   preload: true,
-  weight: ["500", "600", "700"],
+  weight: ["600", "700"],
 });
 
 const monoFont = IBM_Plex_Mono({
@@ -64,7 +64,7 @@ export default function RootLayout({
         className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        <FirebaseAnalytics />
+        <DeferredAnalytics />
         {children}
       </body>
     </html>

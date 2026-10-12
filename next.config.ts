@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   },
   // Optimize bundle size
   experimental: {
-    optimizePackageImports: ['lucide-react', 'react-icons'],
+    optimizePackageImports: ['lucide-react', 'react-icons', 'framer-motion'],
   },
   // Compress responses
   compress: true,

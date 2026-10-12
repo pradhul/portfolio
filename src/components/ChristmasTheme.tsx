@@ -3,58 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-interface ChristmasConfig {
-  enabled: boolean
-  startMonth: number // 11 for December (0-indexed)
-  endMonth: number // 0 for January (0-indexed)
-  endDay: number // Day after which to disable (e.g., 2 for Jan 2nd)
-}
-
-// Configuration - can be easily adjusted
-const CHRISTMAS_CONFIG: ChristmasConfig = {
-  enabled: true, // Set to false to disable Christmas theme entirely
-  startMonth: 11, // December (0-indexed, so 11 = December)
-  endMonth: 0, // January (0-indexed, so 0 = January)
-  endDay: 2, // Disable after January 2nd
-}
-
-export function useChristmasTheme() {
-  const [isChristmas, setIsChristmas] = useState(false)
-
-  useEffect(() => {
-    if (!CHRISTMAS_CONFIG.enabled) {
-      setIsChristmas(false)
-      return
-    }
-
-    const checkDate = () => {
-      const now = new Date()
-      const month = now.getMonth()
-      const day = now.getDate()
-
-      // Check if it's December (month 11)
-      if (month === CHRISTMAS_CONFIG.startMonth) {
-        setIsChristmas(true)
-        return
-      }
-
-      // Check if it's January and before the end day
-      if (month === CHRISTMAS_CONFIG.endMonth && day <= CHRISTMAS_CONFIG.endDay) {
-        setIsChristmas(true)
-        return
-      }
-
-      setIsChristmas(false)
-    }
-
-    checkDate()
-    // Check daily to handle date changes
-    const interval = setInterval(checkDate, 1000 * 60 * 60) // Check every hour
-    return () => clearInterval(interval)
-  }, [])
-
-  return isChristmas
-}
+export { useChristmasTheme } from './useChristmasTheme'
 
 // Snowflake component
 function Snowflake({ delay, duration, left }: { delay: number; duration: number; left: number }) {

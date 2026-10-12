@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { ChevronDown, ChevronUp, Github, ExternalLink, Terminal, Code, Package, GitBranch, GitCommit, CheckCircle, RefreshCw, Search, AlertTriangle, BookOpen, Award } from 'lucide-react';
 import SquashPushSummary from "./SquashPushSummary";
 
@@ -49,7 +50,7 @@ export default function SquashPushPortfolio() {
               className={`px-4 py-2 font-medium text-sm mr-4 border-b-2 ${
                 activeTab === "overview"
                   ? "border-indigo-600 text-indigo-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  : "border-transparent text-gray-700 hover:text-gray-900"
               }`}
             >
               Overview
@@ -59,7 +60,7 @@ export default function SquashPushPortfolio() {
               className={`px-4 py-2 font-medium text-sm mr-4 border-b-2 ${
                 activeTab === "technical"
                   ? "border-indigo-600 text-indigo-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  : "border-transparent text-gray-700 hover:text-gray-900"
               }`}
             >
               Technical Details
@@ -69,7 +70,7 @@ export default function SquashPushPortfolio() {
               className={`px-4 py-2 font-medium text-sm mr-4 border-b-2 ${
                 activeTab === "development"
                   ? "border-indigo-600 text-indigo-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  : "border-transparent text-gray-700 hover:text-gray-900"
               }`}
             >
               Development
@@ -79,7 +80,7 @@ export default function SquashPushPortfolio() {
               className={`px-4 py-2 font-medium text-sm border-b-2 ${
                 activeTab === "future"
                   ? "border-indigo-600 text-indigo-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  : "border-transparent text-gray-700 hover:text-gray-900"
               }`}
             >
               Future Plans
@@ -527,7 +528,7 @@ export default function SquashPushPortfolio() {
             <div className="mb-6 md:mb-0">
               <div className="flex items-center">
                 <div className="bg-white p-1 rounded-md mr-2">
-                  <img src="/squashPush/icon.png" alt="Squash-Push Icon" className="w-8 h-8" />
+                  <Image src="/squashPush/icon.png" alt="Squash-Push Icon" width={32} height={32} />
                 </div>
                 <span className="text-xl font-semibold text-white">Squash-Push</span>
               </div>

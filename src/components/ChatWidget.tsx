@@ -3,14 +3,14 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Loader2, Languages } from 'lucide-react'
-import { useChristmasTheme } from './ChristmasTheme'
+import { useChristmasTheme } from './useChristmasTheme'
 import { useLanguage } from './LanguageProvider'
 import { trackChatQuestion, trackChatResponse } from '@/lib/analytics'
 
-export default function ChatWidget() {
+export default function ChatWidget({ startOpen = false }: { startOpen?: boolean }) {
   const isChristmas = useChristmasTheme()
   const { isTranslating } = useLanguage()
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(startOpen)
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
   const [isLoading, setIsLoading] = useState(false)

@@ -1,14 +1,15 @@
 'use client'
+import Image from "next/image";
 import { Github, Package } from "lucide-react";
 
-export default function SquashPushSummary() {
+export default function VSColorCodeSummary() {
   return (
     <div className="max-w-6xl mx-auto p-4">
       <div className="flex flex-col md:flex-row items-center gap-8">
         <div className="flex-1">
           <div className="flex items-center mb-6">
             <div className="bg-white p-2 rounded-lg shadow-lg mr-4">
-              <img src="/vsColorCode/icon.png" alt="vsColorCode Icon" className="w-12 h-12" />
+              <Image src="/vsColorCode/icon.png" alt="vsColorCode Icon" width={48} height={48} />
             </div>
             <div>
               <div className="text-xs font-semibold text-indigo-200">VS CODE EXTENSION</div>
@@ -54,10 +55,13 @@ export default function SquashPushSummary() {
               <div className="text-xs font-mono text-gray-400">vsColorCode demo</div>
             </div>
             <div className="p-4">
-              <img
+              <Image
                 src="/vsColorCode/demo.png"
                 alt="vsColorCode Demo"
+                width={800}
+                height={600}
                 className="w-full h-auto rounded shadow-lg"
+                loading="lazy"
               />
             </div>
           </div>

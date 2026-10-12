@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import DemoVideo from '@/components/DemoVideo'
 import {
   ArrowUpRight,
   BarChart3,
@@ -125,35 +126,6 @@ function MediaFallback({ label }: { label: string }) {
   )
 }
 
-type ProbeStatus = 'checking' | 'ok' | 'failed'
-
-function usePublicAsset(src: string): ProbeStatus {
-  const [status, setStatus] = useState<ProbeStatus>('checking')
-
-  useEffect(() => {
-    if (!src) {
-      setStatus('failed')
-      return
-    }
-    let cancelled = false
-    const probe = new window.Image()
-    probe.onload = () => {
-      if (!cancelled) setStatus('ok')
-    }
-    probe.onerror = () => {
-      if (!cancelled) setStatus('failed')
-    }
-    probe.src = src
-    return () => {
-      cancelled = true
-      probe.onload = null
-      probe.onerror = null
-    }
-  }, [src])
-
-  return status
-}
-
 function SafeImage({
   src,
   alt,
@@ -171,14 +143,10 @@ function SafeImage({
   unoptimized?: boolean
   fallbackLabel: string
 }) {
-  const status = usePublicAsset(src)
+  const [failed, setFailed] = useState(false)
 
-  if (status !== 'ok') {
-    return status === 'failed' ? (
-      <MediaFallback label={fallbackLabel} />
-    ) : (
-      <div className="min-h-[240px] rounded-lg bg-ink-raised" aria-hidden />
-    )
+  if (failed) {
+    return <MediaFallback label={fallbackLabel} />
   }
 
   return (
@@ -189,14 +157,16 @@ function SafeImage({
       height={height}
       className={className}
       loading="lazy"
+      sizes="(min-width: 1024px) 50vw, 100vw"
       unoptimized={unoptimized}
+      onError={() => setFailed(true)}
     />
   )
 }
 
 function ProjectIconBlock({ project }: { project: Project }) {
   const { icon } = project
-  const status = usePublicAsset(icon.type === 'image' ? icon.src : '')
+  const [failed, setFailed] = useState(false)
 
   return (
     <div className="rounded-xl border border-line bg-cream p-3">
@@ -205,21 +175,22 @@ function ProjectIconBlock({ project }: { project: Project }) {
           const LucideIcon = LUCIDE_ICONS[icon.name]
           return <LucideIcon className="h-14 w-14 text-ink" />
         })()
-      ) : status === 'ok' ? (
+      ) : failed ? (
+        <div className="flex h-14 w-14 items-center justify-center font-mono text-[10px] uppercase tracking-widest text-ink/50">
+          N/A
+        </div>
+      ) : (
         <Image
           src={icon.src}
           alt={icon.alt}
           width={56}
           height={56}
           loading="lazy"
+          onError={() => setFailed(true)}
           {...(icon.src.endsWith('.svg')
             ? {}
             : { placeholder: 'blur' as const, blurDataURL: ICON_BLUR_DATA_URL })}
         />
-      ) : (
-        <div className="flex h-14 w-14 items-center justify-center font-mono text-[10px] uppercase tracking-widest text-ink/50">
-          {status === 'failed' ? 'N/A' : ''}
-        </div>
       )}
     </div>
   )
@@ -284,30 +255,36 @@ export default function ProjectCard({ project }: { project: Project }) {
     : undefined
 
   const fallbackLabel = `${tString(`${base}.title`)} preview unavailable`
+  const mediaClassName = project.media.contain
+    ? `h-auto w-full rounded-lg ${project.media.maxWidthClass ?? 'max-w-[120px] opacity-90'}`
+    : 'h-auto w-full rounded-lg'
+  const mediaNode = project.media.video ? (
+    <DemoVideo
+      mp4={project.media.video.mp4}
+      webm={project.media.video.webm}
+      poster={project.media.src}
+      alt={project.media.alt}
+      className={mediaClassName}
+    />
+  ) : (
+    <SafeImage
+      src={project.media.src}
+      alt={project.media.alt}
+      width={project.media.width}
+      height={project.media.height}
+      className={mediaClassName}
+      unoptimized={project.media.unoptimized}
+      fallbackLabel={fallbackLabel}
+    />
+  )
   const media = (
     <ProjectFrame figure={project.figure} caption={tString(`${base}.demoLabel`)}>
       {project.media.contain ? (
         <div className="flex min-h-[240px] items-center justify-center rounded-lg bg-ink-raised p-4">
-          <SafeImage
-            src={project.media.src}
-            alt={project.media.alt}
-            width={project.media.width}
-            height={project.media.height}
-            className={`h-auto w-full rounded-lg ${project.media.maxWidthClass ?? 'max-w-[120px] opacity-90'}`}
-            unoptimized={project.media.unoptimized}
-            fallbackLabel={fallbackLabel}
-          />
+          {mediaNode}
         </div>
       ) : (
-        <SafeImage
-          src={project.media.src}
-          alt={project.media.alt}
-          width={project.media.width}
-          height={project.media.height}
-          className="h-auto w-full rounded-lg"
-          unoptimized={project.media.unoptimized}
-          fallbackLabel={fallbackLabel}
-        />
+        mediaNode
       )}
     </ProjectFrame>
   )

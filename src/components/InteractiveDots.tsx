@@ -99,8 +99,12 @@ export default function InteractiveDots() {
     window.addEventListener('touchend', handleTouchEnd)
     window.addEventListener('scroll', handleScroll, { passive: true })
 
-    // Animation loop
     const animate = () => {
+      if (document.hidden) {
+        animationFrameRef.current = requestAnimationFrame(animate)
+        return
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       
       const mouse = mouseRef.current
