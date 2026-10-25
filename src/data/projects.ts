@@ -542,6 +542,40 @@ export const projects: Project[] = [
       },
     ],
   },
+  {
+    id: 'glanceTv',
+    githubRepo: 'pradhul/glance-tv',
+    status: 'released',
+    release: {
+      tag: 'v43',
+      url: 'https://github.com/pradhul/glance-tv/releases/tag/v43',
+      publishedAt: '2026-10-25',
+    },
+    lastSyncedAt: '2026-10-25T03:25:00.000Z',
+    readmeHash: 'c9d87c49cc3b5475',
+    figure: 'Fig. 18',
+    icon: { type: 'image', src: '/glanceTv/icon.svg', alt: 'Glance TV Icon' },
+    media: {
+      src: '/glanceTv/demo.png',
+      alt: 'Glance TV home screen with Bing wallpaper, clock, and app tiles',
+      width: 1920,
+      height: 1080,
+    },
+    links: [
+      {
+        type: 'github',
+        href: 'https://github.com/pradhul/glance-tv',
+        labelKey: 'viewGitHub',
+        primary: true,
+      },
+      {
+        type: 'viewProject',
+        href: '/portfolio/glance-tv',
+        labelKey: 'viewProject',
+        internal: true,
+      },
+    ],
+  },
 ]
 
 export function findProjectByRepo(repo: string): Project | undefined {

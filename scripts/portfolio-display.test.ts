@@ -54,7 +54,7 @@ check('archive holds every other project — nothing is dropped', () => {
 check('weak / thin entries stay in the archive', () => {
   const { archive } = partitionProjects(projects)
   const archiveIds = archive.map((project) => project.id)
-  for (const id of ['splitit', 'geminiTutorial', 'pradhul']) {
+  for (const id of ['splitit', 'geminiTutorial', 'pradhul', 'smspend']) {
     assert.ok(archiveIds.includes(id), `${id} should be archived`)
   }
 })
@@ -65,6 +65,7 @@ check('maps English categories onto the four filter groups', () => {
   assert.equal(filterGroupFromCategory('WEB APP'), 'web')
   assert.equal(filterGroupFromCategory('PWA'), 'web')
   assert.equal(filterGroupFromCategory('MOBILE APP'), 'mobile')
+  assert.equal(filterGroupFromCategory('ANDROID TV'), 'mobile')
   assert.equal(filterGroupFromCategory('TELEGRAM BOT'), 'tools')
   assert.equal(filterGroupFromCategory('CLI TOOL'), 'tools')
   assert.equal(filterGroupFromCategory('LIBRARY'), 'tools')
@@ -91,7 +92,7 @@ check('filters return the expected featured ids', () => {
   )
   assert.deepEqual(
     featured.filter((project) => matchesFilter(project, 'mobile')).map((p) => p.id),
-    ['smspend']
+    ['glanceTv']
   )
   assert.deepEqual(
     featured.filter((project) => matchesFilter(project, 'tools')).map((p) => p.id),

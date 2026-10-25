@@ -78,6 +78,13 @@ export const pages = {
       'A VS Code extension that simplifies your Git workflow by squashing multiple commits before pushing to a remote repository.',
     eyebrow: 'VS CODE EXTENSION',
   },
+  glanceTv: {
+    path: '/portfolio/glance-tv',
+    title: 'Glance TV',
+    description:
+      'A lean Android TV home screen: daily Bing wallpaper, clock and weather, your apps, and a status line for the next holiday and upcoming orders—built in plain Java with no runtime dependencies.',
+    eyebrow: 'ANDROID TV',
+  },
 } as const satisfies Record<string, PageSeo>
 
 export const publicPages: PageSeo[] = Object.values(pages)

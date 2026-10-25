@@ -65,6 +65,7 @@ const CATEGORIES = [
   'CLI TOOL',
   'LIBRARY',
   'MOBILE APP',
+  'ANDROID TV',
 ]
 
 /** Existing cards double as few-shot examples so generated copy matches the site voice. */

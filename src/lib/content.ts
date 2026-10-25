@@ -314,6 +314,22 @@ export const content = {
       viewGitHub: 'View on GitHub',
       demoLabel: 'Icon Search',
     },
+    glanceTv: {
+      category: 'ANDROID TV',
+      title: 'Glance TV',
+      description:
+        'A lean Android TV home screen: daily Bing wallpaper, clock and weather, your apps, and a status line for the next holiday and upcoming orders. Sideload the APK and set it as the default Home app—built in plain Java with no runtime dependencies (minSdk 26).',
+      features: [
+        'Three launcher styles: Floating icons, Glass tiles, and Tall posters',
+        'Daily Bing wallpaper with clock, date, weather, and holiday countdown',
+        'Orders status line and a scrollable All apps orders column',
+        'Hidden apps, last-used pill, HDMI tiles, and Bluetooth battery icons',
+      ],
+      upcomingFeatures: [],
+      viewGitHub: 'View on GitHub',
+      viewProject: 'View Project',
+      demoLabel: 'Glance TV',
+    },
   },
   contact: {
     title: 'Get In Touch',
@@ -343,4 +359,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '8'
+export const CONTENT_VERSION = '9'
