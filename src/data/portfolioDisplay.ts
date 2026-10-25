@@ -6,12 +6,12 @@ import { content } from '../lib/content'
 import type { Project } from './projects'
 
 export const FEATURED_PROJECT_IDS = [
+  'glanceTv',
   'ionicMeasure',
   'squashPush',
   'vsColorCode',
   'linkShelf',
   'uploadSpec',
-  'smspend',
 ] as const
 
 export type ProjectFilter = 'all' | 'extensions' | 'web' | 'mobile' | 'tools'
@@ -33,7 +33,9 @@ export function getProjectCategory(projectId: string): string {
 export function filterGroupFromCategory(category: string): Exclude<ProjectFilter, 'all'> {
   const normalized = category.toUpperCase()
   if (normalized.includes('EXTENSION')) return 'extensions'
-  if (normalized.includes('MOBILE')) return 'mobile'
+  if (normalized.includes('MOBILE') || normalized.includes('ANDROID TV') || normalized.endsWith(' TV')) {
+    return 'mobile'
+  }
   if (normalized.includes('WEB') || normalized === 'PWA') return 'web'
   return 'tools'
 }

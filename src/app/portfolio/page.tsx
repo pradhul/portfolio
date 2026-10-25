@@ -4,6 +4,7 @@ import VSColorCodeSummary from "./squashpush/VSColorCodeSummary";
 import ChartStudioSummary from "./squashpush/ChartStudioSummary";
 import UploadSpecSummary from "./squashpush/UploadSpecSummary";
 import LinkShelfSummary from "./squashpush/LinkShelfSummary";
+import GlanceTvSummary from "./squashpush/GlanceTvSummary";
 import { createPageMetadata, pages } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata(pages.portfolio);
@@ -11,6 +12,11 @@ export const metadata: Metadata = createPageMetadata(pages.portfolio);
 export default function Portfolio() {
   return (
     <div className="divide-y-2 divide-gray-300">
+      <a href="./portfolio/glance-tv" className="block">
+        <div className="bg-gradient-to-r from-slate-800 to-sky-700 py-12 px-6 md:px-12 lg:px-24">
+          <GlanceTvSummary />
+        </div>
+      </a>
       <a href="./portfolio/squashpush">
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-12 px-6 md:px-12 lg:px-24 ">
           <SquashPushSummary />
