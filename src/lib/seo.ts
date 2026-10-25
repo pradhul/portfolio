@@ -33,7 +33,7 @@ export const pages = {
     path: '/contact',
     title: 'Contact',
     description:
-      'Get in touch with Pradhul Dev — email, phone, LinkedIn, GitHub, Stack Overflow, and Upwork.',
+      'Get in touch with Pradhul Dev — email, LinkedIn, GitHub, Stack Overflow, and Upwork.',
     eyebrow: 'CONTACT',
   },
   guestbook: {
@@ -120,7 +120,6 @@ export const personJsonLd = {
   url: SITE_URL,
   jobTitle: 'Web & Mobile Developer',
   email: 'mailto:pradhuldev.1990@gmail.com',
-  telephone: '+91-9986981757',
   sameAs: [
     'https://www.linkedin.com/in/pradhul-dev-30708814b/',
     'https://github.com/pradhul',

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
@@ -110,12 +111,101 @@ function FeatureList({ heading, items }: { heading: string; items: string[] }) {
   )
 }
 
+function MediaFallback({ label }: { label: string }) {
+  return (
+    <div
+      role="img"
+      aria-label={label}
+      className="flex min-h-[240px] items-center justify-center rounded-lg bg-ink-raised px-6 text-center"
+    >
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-cream-faint">
+        Preview unavailable
+      </p>
+    </div>
+  )
+}
+
+type ProbeStatus = 'checking' | 'ok' | 'failed'
+
+function usePublicAsset(src: string): ProbeStatus {
+  const [status, setStatus] = useState<ProbeStatus>('checking')
+
+  useEffect(() => {
+    if (!src) {
+      setStatus('failed')
+      return
+    }
+    let cancelled = false
+    const probe = new window.Image()
+    probe.onload = () => {
+      if (!cancelled) setStatus('ok')
+    }
+    probe.onerror = () => {
+      if (!cancelled) setStatus('failed')
+    }
+    probe.src = src
+    return () => {
+      cancelled = true
+      probe.onload = null
+      probe.onerror = null
+    }
+  }, [src])
+
+  return status
+}
+
+function SafeImage({
+  src,
+  alt,
+  width,
+  height,
+  className,
+  unoptimized,
+  fallbackLabel,
+}: {
+  src: string
+  alt: string
+  width: number
+  height: number
+  className?: string
+  unoptimized?: boolean
+  fallbackLabel: string
+}) {
+  const status = usePublicAsset(src)
+
+  if (status !== 'ok') {
+    return status === 'failed' ? (
+      <MediaFallback label={fallbackLabel} />
+    ) : (
+      <div className="min-h-[240px] rounded-lg bg-ink-raised" aria-hidden />
+    )
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      className={className}
+      loading="lazy"
+      unoptimized={unoptimized}
+    />
+  )
+}
+
 function ProjectIconBlock({ project }: { project: Project }) {
   const { icon } = project
+  const status = usePublicAsset(icon.type === 'image' ? icon.src : '')
 
   return (
     <div className="rounded-xl border border-line bg-cream p-3">
-      {icon.type === 'image' ? (
+      {icon.type === 'lucide' ? (
+        (() => {
+          const LucideIcon = LUCIDE_ICONS[icon.name]
+          return <LucideIcon className="h-14 w-14 text-ink" />
+        })()
+      ) : status === 'ok' ? (
         <Image
           src={icon.src}
           alt={icon.alt}
@@ -127,10 +217,9 @@ function ProjectIconBlock({ project }: { project: Project }) {
             : { placeholder: 'blur' as const, blurDataURL: ICON_BLUR_DATA_URL })}
         />
       ) : (
-        (() => {
-          const LucideIcon = LUCIDE_ICONS[icon.name]
-          return <LucideIcon className="h-14 w-14 text-ink" />
-        })()
+        <div className="flex h-14 w-14 items-center justify-center font-mono text-[10px] uppercase tracking-widest text-ink/50">
+          {status === 'failed' ? 'N/A' : ''}
+        </div>
       )}
     </div>
   )
@@ -194,29 +283,30 @@ export default function ProjectCard({ project }: { project: Project }) {
       }
     : undefined
 
+  const fallbackLabel = `${tString(`${base}.title`)} preview unavailable`
   const media = (
     <ProjectFrame figure={project.figure} caption={tString(`${base}.demoLabel`)}>
       {project.media.contain ? (
         <div className="flex min-h-[240px] items-center justify-center rounded-lg bg-ink-raised p-4">
-          <Image
+          <SafeImage
             src={project.media.src}
             alt={project.media.alt}
             width={project.media.width}
             height={project.media.height}
             className={`h-auto w-full rounded-lg ${project.media.maxWidthClass ?? 'max-w-[120px] opacity-90'}`}
-            loading="lazy"
             unoptimized={project.media.unoptimized}
+            fallbackLabel={fallbackLabel}
           />
         </div>
       ) : (
-        <Image
+        <SafeImage
           src={project.media.src}
           alt={project.media.alt}
           width={project.media.width}
           height={project.media.height}
           className="h-auto w-full rounded-lg"
-          loading="lazy"
           unoptimized={project.media.unoptimized}
+          fallbackLabel={fallbackLabel}
         />
       )}
     </ProjectFrame>
