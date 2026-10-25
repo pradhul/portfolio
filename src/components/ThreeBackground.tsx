@@ -4,9 +4,15 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Sphere } from '@react-three/drei'
 import * as THREE from 'three'
 
-function FloatingParticles({ count = 2000 }) {
+function FloatingParticles({ count = 420 }) {
   const mesh = useRef<THREE.InstancedMesh>(null)
   const light = useRef<THREE.PointLight>(null)
+  const scratch = useMemo(() => ({
+    matrix: new THREE.Matrix4(),
+    position: new THREE.Vector3(),
+    quaternion: new THREE.Quaternion(),
+    scale: new THREE.Vector3(0.2, 0.2, 0.2),
+  }), [])
 
   const particles = useMemo(() => {
     const temp = []
@@ -28,22 +34,17 @@ function FloatingParticles({ count = 2000 }) {
   useFrame((state) => {
     if (!mesh.current) return
     
+    const { matrix, position, quaternion, scale } = scratch
     particles.forEach((particle, i) => {
       const { factor, speed, x, y, z } = particle
       const t = particle.time + state.clock.elapsedTime * speed
-      
-      mesh.current!.setMatrixAt(
-        i,
-        new THREE.Matrix4().compose(
-          new THREE.Vector3(
-            x + Math.cos((t / 10) + factor) + (Math.sin(t * 1) / 10),
-            y + Math.sin((t / 10) + factor) + (Math.cos(t * 2) / 10),
-            z + Math.cos((t / 10) + factor)
-          ),
-          new THREE.Quaternion(),
-          new THREE.Vector3(0.2, 0.2, 0.2)
-        )
+      position.set(
+        x + Math.cos((t / 10) + factor) + (Math.sin(t * 1) / 10),
+        y + Math.sin((t / 10) + factor) + (Math.cos(t * 2) / 10),
+        z + Math.cos((t / 10) + factor)
       )
+      matrix.compose(position, quaternion, scale)
+      mesh.current!.setMatrixAt(i, matrix)
     })
     
     mesh.current.instanceMatrix.needsUpdate = true
@@ -137,12 +138,13 @@ export default function ThreeBackground() {
       <Canvas
         camera={{ position: [0, 0, 30], fov: 75 }}
         style={{ width: '100%', height: '100%' }}
-        gl={{ antialias: true, alpha: true }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       >
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={0.4} color="#d9a441" />
         <pointLight position={[-10, -10, 10]} intensity={0.4} color="#a89f8e" />
-        <FloatingParticles count={800} />
+        <FloatingParticles count={420} />
         <FloatingOrbs />
       </Canvas>
     </div>

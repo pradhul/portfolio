@@ -37,7 +37,7 @@ function FilterButton({
       className={`rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
         active
           ? 'border-brass/40 bg-brass/10 text-brass'
-          : 'border-line text-cream-faint hover:border-cream-muted hover:text-cream'
+          : 'border-line text-cream-muted hover:border-cream hover:text-cream'
       }`}
       style={
         active && festivalColor
@@ -110,19 +110,19 @@ export default function PortfolioSection() {
             className="group flex w-full items-center justify-between gap-4 text-left"
           >
             <div>
-              <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
+              <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-muted">
                 {tString('portfolio.archiveEyebrow')}
               </div>
               <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-cream md:text-3xl">
                 {tString('portfolio.archiveTitle')}
-                <span className="ml-3 font-mono text-sm font-normal text-cream-faint">
+                <span className="ml-3 font-mono text-sm font-normal text-cream-muted">
                   {visibleArchive.length}
                 </span>
               </h3>
             </div>
             <ChevronDown
               size={22}
-              className={`shrink-0 text-cream-faint transition-transform ${archiveExpanded ? 'rotate-180' : ''}`}
+              className={`shrink-0 text-cream-muted transition-transform ${archiveExpanded ? 'rotate-180' : ''}`}
             />
           </button>
 

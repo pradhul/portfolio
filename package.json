@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "tsx scripts/sync-portfolio.test.ts && tsx scripts/portfolio-display.test.ts && tsx scripts/perf-media.test.ts",
     "sync:portfolio": "tsx scripts/sync-portfolio-from-github.ts"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.7.2",
     "@google/generative-ai": "^0.24.1",
     "@opentelemetry/api": "^1.9.0",
     "@react-three/drei": "^10.7.7",
@@ -22,11 +22,8 @@
     "firebase-admin": "^13.6.0",
     "framer-motion": "^12.10.5",
     "google-translate-api-x": "^10.7.2",
-    "i": "^0.3.7",
     "lucide-react": "^0.509.0",
     "next": "15.1.9",
-    "npm": "^11.0.0",
-    "pdf-parse": "^2.4.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-github-calendar": "^5.0.3",

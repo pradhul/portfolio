@@ -1,26 +1,23 @@
 'use client'
-import { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import { motion } from 'framer-motion'
 import { FileText, ChevronDown, ArrowUpRight } from 'lucide-react'
 import PortfolioSection from '@/components/PortfolioSection'
+import ChatLauncher from '@/components/ChatLauncher'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
 import { LanguageLayout } from '@/components/LanguageLayout'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { runWhenIdle, shouldEnableHeavyVisuals } from '@/lib/runtimeCapabilities'
 import { FaLinkedin, FaGithubSquare } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
 import { SiStackoverflow } from 'react-icons/si'
 
-// Lazy load heavy components
-const ThreeBackground = lazy(() => import('@/components/ThreeBackground'))
-const InteractiveDots = lazy(() => import('@/components/InteractiveDots'))
-const ChatWidget = lazy(() => import('@/components/ChatWidget'))
-// Disable SSR for GitHubActivity to prevent hydration errors (fetches external API data)
+const ThreeBackground = dynamic(() => import('@/components/ThreeBackground'), { ssr: false })
+const InteractiveDots = dynamic(() => import('@/components/InteractiveDots'), { ssr: false })
 const GitHubActivity = dynamic(() => import('@/components/GitHubActivity'), {
   ssr: false,
   loading: () => (
@@ -109,12 +106,7 @@ function HomeContent() {
   return (
     <FestivalThemeProvider activeFestival={activeFestival}>
       <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-ink text-cream scroll-smooth">
-        <Analytics />
-        <SpeedInsights />
-        {/* Lazy load heavy background components after initial render */}
-        <Suspense fallback={null}>
-          <LazyBackgroundComponents />
-        </Suspense>
+        <LazyBackgroundComponents />
 
       {/* Navigation */}
       <motion.nav
@@ -505,25 +497,19 @@ function HomeContent() {
         </motion.p>
       </footer>
 
-      {/* Chat Widget - Lazy loaded */}
-      <Suspense fallback={null}>
-        <LazyChatWidget />
-      </Suspense>
+      <ChatLauncher />
       </div>
     </FestivalThemeProvider>
   )
 }
 
-// Component to lazy load background after initial render
 function LazyBackgroundComponents() {
   const [shouldLoad, setShouldLoad] = useState(false)
 
   useEffect(() => {
-    // Defer loading until after initial paint
-    const timer = setTimeout(() => {
-      setShouldLoad(true)
-    }, 100)
-    return () => clearTimeout(timer)
+    return runWhenIdle(() => {
+      setShouldLoad(shouldEnableHeavyVisuals())
+    }, 1800)
   }, [])
 
   if (!shouldLoad) return null
@@ -534,40 +520,6 @@ function LazyBackgroundComponents() {
       <InteractiveDots />
     </>
   )
-}
-
-// Component to lazy load chat widget on interaction
-function LazyChatWidget() {
-  const [shouldLoad, setShouldLoad] = useState(false)
-
-  useEffect(() => {
-    // Load chat widget after user interaction or 3 seconds
-    const loadOnInteraction = () => {
-      setShouldLoad(true)
-      document.removeEventListener('mousemove', loadOnInteraction)
-      document.removeEventListener('touchstart', loadOnInteraction)
-      document.removeEventListener('scroll', loadOnInteraction)
-    }
-
-    const timer = setTimeout(() => {
-      setShouldLoad(true)
-    }, 3000)
-
-    document.addEventListener('mousemove', loadOnInteraction, { once: true, passive: true })
-    document.addEventListener('touchstart', loadOnInteraction, { once: true, passive: true })
-    document.addEventListener('scroll', loadOnInteraction, { once: true, passive: true })
-
-    return () => {
-      clearTimeout(timer)
-      document.removeEventListener('mousemove', loadOnInteraction)
-      document.removeEventListener('touchstart', loadOnInteraction)
-      document.removeEventListener('scroll', loadOnInteraction)
-    }
-  }, [])
-
-  if (!shouldLoad) return null
-
-  return <ChatWidget />
 }
 
 export default function Home() {

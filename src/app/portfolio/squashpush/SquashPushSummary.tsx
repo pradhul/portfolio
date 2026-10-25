@@ -1,5 +1,7 @@
 'use client'
+import Image from "next/image";
 import { Github, Package } from "lucide-react";
+import DemoVideo from "@/components/DemoVideo";
 
 export default function SquashPushSummary() {
   return (
@@ -8,7 +10,7 @@ export default function SquashPushSummary() {
         <div className="flex-1">
           <div className="flex items-center mb-6">
             <div className="bg-white p-2 rounded-lg shadow-lg mr-4">
-              <img src="/squashPush/icon.png" alt="Squash-Push Icon" className="w-12 h-12" />
+              <Image src="/squashPush/icon.png" alt="Squash-Push Icon" width={48} height={48} />
             </div>
             <div>
               <div className="text-xs font-semibold text-indigo-200">VS CODE EXTENSION</div>
@@ -53,8 +55,10 @@ export default function SquashPushSummary() {
               <div className="text-xs font-mono text-gray-400">squash-push demo</div>
             </div>
             <div className="p-4">
-              <img
-                src="/squashPush/recording.gif"
+              <DemoVideo
+                mp4="/squashPush/recording.mp4"
+                webm="/squashPush/recording.webm"
+                poster="/squashPush/recording-poster.jpg"
                 alt="Squash-Push Demo"
                 className="w-full h-auto rounded shadow-lg"
               />
