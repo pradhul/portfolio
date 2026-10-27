@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import FirebaseAnalytics from "@/components/FirebaseAnalytics";
-import { SITE_NAME, SITE_URL, pages } from "@/lib/seo";
+import { SITE_NAME, SITE_URL, googleSiteVerification, pages } from "@/lib/seo";
 
 const bodyFont = IBM_Plex_Sans({
   variable: "--font-body",
@@ -51,6 +52,7 @@ export const metadata: Metadata = {
     title: pages.home.ogTitle,
     description: pages.home.description,
   },
+  verification: googleSiteVerification(),
 };
 
 export default function RootLayout({
@@ -65,6 +67,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <FirebaseAnalytics />
+        <Analytics />
         {children}
       </body>
     </html>

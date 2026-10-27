@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { Analytics } from '@vercel/analytics/react'
+import { track } from '@vercel/analytics'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { motion } from 'framer-motion'
 import { FileText, ChevronDown, ArrowUpRight } from 'lucide-react'
@@ -11,6 +11,7 @@ import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from 
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
 import { LanguageLayout } from '@/components/LanguageLayout'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import ContactForm from '@/components/ContactForm'
 import { FaLinkedin, FaGithubSquare } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
@@ -109,7 +110,6 @@ function HomeContent() {
   return (
     <FestivalThemeProvider activeFestival={activeFestival}>
       <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-ink text-cream scroll-smooth">
-        <Analytics />
         <SpeedInsights />
         {/* Lazy load heavy background components after initial render */}
         <Suspense fallback={null}>
@@ -233,6 +233,7 @@ function HomeContent() {
               style={activeFestival ? {
                 background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
               } : undefined}
+              onClick={() => track('hire_me_click')}
             >
               <IoMail size={18} />
               <span>{tString('hero.hireMe')}</span>
@@ -247,6 +248,7 @@ function HomeContent() {
                 borderColor: `${activeFestival.colors.primary}50`,
                 color: activeFestival.colors.primary,
               } : undefined}
+              onClick={() => track('upwork_click')}
             >
               <FaSquareUpwork size={18} />
               <span>{tString('hero.upwork')}</span>
@@ -455,9 +457,26 @@ function HomeContent() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="mt-14"
           >
+            <div className="mb-12 max-w-xl rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
+              <ContactForm
+                copy={{
+                  nameLabel: tString('contact.form.nameLabel'),
+                  emailLabel: tString('contact.form.emailLabel'),
+                  messageLabel: tString('contact.form.messageLabel'),
+                  submit: tString('contact.form.submit'),
+                  sending: tString('contact.form.sending'),
+                  success: tString('contact.form.success'),
+                  error: tString('contact.form.error'),
+                  unavailable: tString('contact.form.unavailable'),
+                  honeypotLabel: tString('contact.form.honeypotLabel'),
+                }}
+              />
+            </div>
+
             <a
               href="mailto:pradhuldev.1990@gmail.com"
               className="group flex items-baseline gap-4 border-t border-line py-7 transition-colors"
+              onClick={() => track('hire_me_click')}
             >
               <IoMail className="self-center text-xl text-cream-faint transition-colors group-hover:text-brass" />
               <span className="font-display text-2xl font-semibold tracking-tight text-cream transition-colors group-hover:text-brass md:text-4xl">
@@ -473,14 +492,15 @@ function HomeContent() {
                   { icon: FaLinkedin, href: 'https://www.linkedin.com/in/pradhul-dev-30708814b/', label: 'LinkedIn' },
                   { icon: FaGithubSquare, href: 'https://github.com/pradhul', label: 'GitHub' },
                   { icon: SiStackoverflow, href: 'https://stackoverflow.com/users/3309470/p-rad', label: 'Stack Overflow' },
-                  { icon: FaSquareUpwork, href: 'https://www.upwork.com/freelancers/~01a32f29fafd184f21', label: 'Upwork' },
-                ].map(({ icon: Icon, href, label }) => (
+                  { icon: FaSquareUpwork, href: 'https://www.upwork.com/freelancers/~01a32f29fafd184f21', label: 'Upwork', event: 'upwork_click' as const },
+                ].map(({ icon: Icon, href, label, event }) => (
                   <a
                     key={href}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group inline-flex items-center gap-2 text-cream-muted transition-colors hover:text-brass"
+                    onClick={event ? () => track(event) : undefined}
                   >
                     <Icon className="text-2xl" />
                     <span className="text-sm font-medium">{label}</span>

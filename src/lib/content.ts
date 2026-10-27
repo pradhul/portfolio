@@ -333,8 +333,19 @@ export const content = {
   },
   contact: {
     title: 'Get In Touch',
-    subtitle: "Available for hire — email me or reach out on Upwork.",
+    subtitle: "Available for hire — send a message, email me, or reach out on Upwork.",
     connectLabel: 'Connect with me on',
+    form: {
+      nameLabel: 'Name',
+      emailLabel: 'Email',
+      messageLabel: 'Message',
+      submit: 'Send message',
+      sending: 'Sending...',
+      success: 'Thanks — your message is on its way.',
+      error: 'Could not send your message. Please try again or email me directly.',
+      unavailable: 'The contact form is not configured yet. Please email me instead.',
+      honeypotLabel: 'Leave this field empty',
+    },
   },
   guestbook: {
     title: 'Guestbook',
@@ -359,4 +370,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '9'
+export const CONTENT_VERSION = '10'
