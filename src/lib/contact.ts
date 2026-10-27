@@ -1,9 +1,22 @@
-export const CONTACT_EMAIL = 'pradhuldev.1990@gmail.com'
-export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`
+import {
+  CONTACT_EMAIL,
+  CONTACT_MAILTO,
+  HONEYPOT_FIELD,
+  MAX_EMAIL_LENGTH,
+  MAX_MESSAGE_LENGTH,
+  MAX_NAME_LENGTH,
+} from './contactConstants'
+
+export {
+  CONTACT_EMAIL,
+  CONTACT_MAILTO,
+  HONEYPOT_FIELD,
+  MAX_EMAIL_LENGTH,
+  MAX_MESSAGE_LENGTH,
+  MAX_NAME_LENGTH,
+} from './contactConstants'
+
 export const RESEND_EMAILS_URL = 'https://api.resend.com/emails'
-export const MAX_NAME_LENGTH = 80
-export const MAX_EMAIL_LENGTH = 254
-export const MAX_MESSAGE_LENGTH = 2000
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -44,7 +57,7 @@ export function validateContactInput(input: unknown): ValidationResult {
       ? sanitizeWhitespace(stripHeaderBreaks(payload.email)).toLowerCase()
       : ''
   const message = typeof payload.message === 'string' ? payload.message.replace(/\r\n/g, '\n').trim() : ''
-  const honeypot = typeof payload.website === 'string' ? payload.website.trim() : ''
+  const honeypot = typeof payload[HONEYPOT_FIELD] === 'string' ? payload[HONEYPOT_FIELD].trim() : ''
 
   if (!name) {
     return { ok: false, error: 'Name is required.' }
@@ -145,13 +158,23 @@ function buildEmail(data: ValidatedContact) {
   }
 }
 
-export function getClientIp(headers: Headers): string {
-  const forwardedFor = headers.get('x-forwarded-for')
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0]?.trim() || 'unknown'
-  }
+function firstHeaderValue(value: string | null): string | undefined {
+  const part = value?.split(',')[0]?.trim()
+  return part || undefined
+}
 
-  return headers.get('x-real-ip')?.trim() || 'unknown'
+function lastHeaderValue(value: string | null): string | undefined {
+  const parts = value?.split(',').map((part) => part.trim()).filter(Boolean) ?? []
+  return parts.at(-1)
+}
+
+export function getClientIp(headers: Headers): string {
+  return (
+    firstHeaderValue(headers.get('x-vercel-forwarded-for')) ||
+    firstHeaderValue(headers.get('x-real-ip')) ||
+    lastHeaderValue(headers.get('x-forwarded-for')) ||
+    'unknown'
+  )
 }
 
 export async function submitContactMessage(

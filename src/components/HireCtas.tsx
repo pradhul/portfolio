@@ -4,7 +4,7 @@ import { track } from '@vercel/analytics'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
 import { content } from '@/lib/content'
-import { CONTACT_MAILTO } from '@/lib/contact'
+import { CONTACT_MAILTO } from '@/lib/contactConstants'
 
 const btnPrimary =
   'inline-flex items-center gap-2 rounded-full bg-brass px-7 py-3.5 font-semibold text-ink transition-colors hover:bg-brass-bright'

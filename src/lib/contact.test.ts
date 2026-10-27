@@ -8,7 +8,9 @@ import assert from 'node:assert/strict'
 import {
   CONTACT_EMAIL,
   CONTACT_MAILTO,
+  HONEYPOT_FIELD,
   MemoryRateLimiter,
+  getClientIp,
   submitContactMessage,
   validateContactInput,
 } from './contact'
@@ -32,7 +34,7 @@ const validInput = {
   name: 'Ada Lovelace',
   email: 'ada@example.com',
   message: 'I would like to hire you for a Next.js project.',
-  website: '',
+  [HONEYPOT_FIELD]: '',
 }
 
 async function run() {
@@ -43,7 +45,7 @@ async function run() {
       name: '  Ada  Lovelace  ',
       email: '  ada@example.com  ',
       message: '  Hello there.  ',
-      website: '   ',
+      [HONEYPOT_FIELD]: '   ',
     })
     assert.equal(result.ok, true)
     if (result.ok) {
@@ -79,7 +81,7 @@ async function run() {
   })
 
   await check('marks a filled honeypot without treating it as a validation error', () => {
-    const result = validateContactInput({ ...validInput, website: 'https://spam.test' })
+    const result = validateContactInput({ ...validInput, [HONEYPOT_FIELD]: 'https://spam.test' })
     assert.equal(result.ok, true)
     if (result.ok) assert.equal(result.data.honeypotFilled, true)
   })
@@ -132,7 +134,7 @@ async function run() {
   await check('silently succeeds for honeypot spam without sending email', async () => {
     const fetchCalls: unknown[] = []
     const result = await submitContactMessage(
-      { ...validInput, website: 'http://bots.example' },
+      { ...validInput, [HONEYPOT_FIELD]: 'http://bots.example' },
       '8.8.8.8',
       {
         apiKey: 're_test',
@@ -216,6 +218,33 @@ async function run() {
     assert.equal(result.status, 502)
     assert.equal(result.body.ok, false)
     assert.equal(JSON.stringify(result.body).includes('re_secret_should_not_leak'), false)
+  })
+
+  console.log('getClientIp')
+
+  await check('prefers the Vercel forwarded IP over spoofable x-forwarded-for', () => {
+    const ip = getClientIp(
+      new Headers({
+        'x-forwarded-for': '1.1.1.1, 8.8.8.8',
+        'x-vercel-forwarded-for': '9.9.9.9',
+      })
+    )
+    assert.equal(ip, '9.9.9.9')
+  })
+
+  await check('uses x-real-ip when the Vercel header is absent', () => {
+    const ip = getClientIp(
+      new Headers({
+        'x-real-ip': '7.7.7.7',
+        'x-forwarded-for': '1.1.1.1',
+      })
+    )
+    assert.equal(ip, '7.7.7.7')
+  })
+
+  await check('uses the last x-forwarded-for hop as a fallback', () => {
+    const ip = getClientIp(new Headers({ 'x-forwarded-for': '1.1.1.1, 2.2.2.2' }))
+    assert.equal(ip, '2.2.2.2')
   })
 
   if (failures > 0) {

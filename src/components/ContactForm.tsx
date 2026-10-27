@@ -4,7 +4,14 @@ import { FormEvent, useId, useState } from 'react'
 import { track } from '@vercel/analytics'
 import { Loader2, Send } from 'lucide-react'
 import { content } from '@/lib/content'
-import { CONTACT_EMAIL, CONTACT_MAILTO, MAX_EMAIL_LENGTH, MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH } from '@/lib/contact'
+import {
+  CONTACT_EMAIL,
+  CONTACT_MAILTO,
+  HONEYPOT_FIELD,
+  MAX_EMAIL_LENGTH,
+  MAX_MESSAGE_LENGTH,
+  MAX_NAME_LENGTH,
+} from '@/lib/contactConstants'
 
 type ContactFormCopy = typeof content.contact.form
 
@@ -42,7 +49,7 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
           name,
           email,
           message,
-          website,
+          [HONEYPOT_FIELD]: website,
         }),
       })
 
@@ -85,7 +92,7 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
         <label htmlFor={`${id}-website`}>{copy.honeypotLabel}</label>
         <input
           id={`${id}-website`}
-          name="website"
+          name={HONEYPOT_FIELD}
           type="text"
           tabIndex={-1}
           autoComplete="off"
