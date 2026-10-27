@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
+import { SITE_HOST } from '@/lib/seo'
 
 export const OG_SIZE = { width: 1200, height: 630 }
 export const OG_CONTENT_TYPE = 'image/png'
@@ -106,7 +107,7 @@ export function generateOgImage({
           }}
         >
           <div style={{ display: 'flex' }}>PRADHUL DEV</div>
-          <div style={{ display: 'flex' }}>www.pradhul.dev</div>
+          <div style={{ display: 'flex' }}>{SITE_HOST}</div>
         </div>
       </div>
     ),
