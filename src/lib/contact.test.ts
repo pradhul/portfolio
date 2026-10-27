@@ -91,6 +91,34 @@ async function run() {
     assert.equal(result.ok, false)
   })
 
+  await check('accepts optional project type and budget when they are on the allow-list', () => {
+    const result = validateContactInput({
+      ...validInput,
+      projectType: 'Android TV',
+      budget: '$5k – $15k',
+    })
+    assert.equal(result.ok, true)
+    if (result.ok) {
+      assert.equal(result.data.projectType, 'Android TV')
+      assert.equal(result.data.budget, '$5k – $15k')
+    }
+  })
+
+  await check('treats missing project type and budget as empty optional fields', () => {
+    const result = validateContactInput(validInput)
+    assert.equal(result.ok, true)
+    if (result.ok) {
+      assert.equal(result.data.projectType, '')
+      assert.equal(result.data.budget, '')
+    }
+  })
+
+  await check('rejects an unknown project type', () => {
+    const result = validateContactInput({ ...validInput, projectType: 'Spaceship' })
+    assert.equal(result.ok, false)
+    if (!result.ok) assert.match(result.error, /project type/i)
+  })
+
   console.log('MemoryRateLimiter')
 
   await check('allows requests under the limit and blocks after it', () => {
@@ -190,12 +218,35 @@ async function run() {
     assert.match(payload.text, /ada@example.com/)
     assert.match(payload.text, /Next\.js project/)
     assert.match(payload.html, /Ada Lovelace/)
+    assert.doesNotMatch(payload.text, /Project type/)
+    assert.doesNotMatch(payload.text, /Budget/)
     } finally {
       if (previousFrom === undefined) delete process.env.RESEND_FROM
       else process.env.RESEND_FROM = previousFrom
       if (previousTo === undefined) delete process.env.CONTACT_TO_EMAIL
       else process.env.CONTACT_TO_EMAIL = previousTo
     }
+  })
+
+  await check('includes optional project type and budget in the Resend payload', async () => {
+    const fetchCalls: Array<{ init: RequestInit }> = []
+    const result = await submitContactMessage(
+      { ...validInput, projectType: 'Web app', budget: 'Not sure yet' },
+      '4.4.4.5',
+      {
+        apiKey: 're_test_key',
+        fetchImpl: async (_input, init) => {
+          fetchCalls.push({ init: init ?? {} })
+          return new Response(JSON.stringify({ id: 'email_extras' }), { status: 200 })
+        },
+      }
+    )
+
+    assert.equal(result.status, 200)
+    const payload = JSON.parse(String(fetchCalls[0].init.body))
+    assert.match(payload.text, /Project type: Web app/)
+    assert.match(payload.text, /Budget: Not sure yet/)
+    assert.match(payload.html, /Project type/)
   })
 
   await check('uses CONTACT_TO_EMAIL when set without changing the public mailto', async () => {

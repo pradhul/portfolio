@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import {
   ArrowUpRight,
   BarChart3,
@@ -12,7 +11,6 @@ import {
   Package,
   UtensilsCrossed,
 } from 'lucide-react'
-import { useFestivalTheme } from '@/components/FestivalTheme'
 import { useLanguage } from '@/components/LanguageProvider'
 import {
   ICON_BLUR_DATA_URL,
@@ -20,11 +18,6 @@ import {
   type ProjectLink,
   type ProjectLinkType,
 } from '@/data/projects'
-
-const btnPrimarySm =
-  'inline-flex items-center gap-2 rounded-full bg-brass px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-brass-bright'
-const btnGhostSm =
-  'inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-cream-muted transition-colors hover:border-cream-muted hover:text-cream'
 
 const LUCIDE_ICONS = {
   BarChart3,
@@ -40,42 +33,15 @@ const LINK_ICONS: Record<ProjectLinkType, typeof Github> = {
   viewProject: ArrowUpRight,
 }
 
-function ProjectFrame({
-  caption,
-  figure,
-  children,
-}: {
-  caption: string
-  figure: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-line bg-ink-soft">
-      <div className="flex items-center justify-between border-b border-line px-5 py-3">
-        <span className="font-mono text-xs uppercase tracking-widest text-cream-faint">{figure}</span>
-        <span className="font-mono text-xs text-cream-faint">{caption}</span>
-      </div>
-      <div className="p-4">{children}</div>
-    </div>
-  )
-}
-
 function StatusBadge({ project, inProgressLabel }: { project: Project; inProgressLabel: string }) {
   if (project.status === 'in_progress' || !project.release) {
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-cream-faint">
-        <span className="h-1.5 w-1.5 rounded-full bg-brass" aria-hidden />
-        {inProgressLabel}
-      </span>
-    )
+    return <span className="tag">{inProgressLabel}</span>
   }
 
   const { tag, url } = project.release
-  const className =
-    'inline-flex items-center gap-1.5 rounded-full border border-brass/40 bg-brass/10 px-2.5 py-1 font-mono text-[11px] tracking-widest text-brass'
 
   if (!url) {
-    return <span className={className}>{tag}</span>
+    return <span className="tag text-lime">{tag}</span>
   }
 
   return (
@@ -83,10 +49,9 @@ function StatusBadge({ project, inProgressLabel }: { project: Project; inProgres
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`${className} transition-colors hover:border-brass hover:bg-brass/20`}
+      className="tag text-lime no-underline hover:bg-[rgba(234,255,82,0.12)]"
     >
-      {tag}
-      <ArrowUpRight size={12} />
+      {tag} ↗
     </a>
   )
 }
@@ -96,14 +61,11 @@ function FeatureList({ heading, items }: { heading: string; items: string[] }) {
 
   return (
     <div className="mb-6">
-      <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.25em] text-cream-faint">
-        {heading}
-      </div>
-      <ul className="space-y-1.5">
+      <div className="mb-2 font-mono text-[13px] tracking-[0.04em] text-lime">{heading}</div>
+      <ul className="ml-[18px] list-disc text-cream-muted">
         {items.map((item) => (
-          <li key={item} className="flex gap-2.5 text-sm leading-relaxed text-cream-muted">
-            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-brass" aria-hidden />
-            <span>{item}</span>
+          <li key={item} className="my-1">
+            {item}
           </li>
         ))}
       </ul>
@@ -116,9 +78,9 @@ function MediaFallback({ label }: { label: string }) {
     <div
       role="img"
       aria-label={label}
-      className="flex min-h-[240px] items-center justify-center rounded-lg bg-ink-raised px-6 text-center"
+      className="flex min-h-[240px] items-center justify-center bg-ink-raised px-6 text-center"
     >
-      <p className="font-mono text-xs uppercase tracking-[0.2em] text-cream-faint">
+      <p className="font-mono text-[13px] uppercase tracking-[0.2em] text-cream-muted">
         Preview unavailable
       </p>
     </div>
@@ -177,7 +139,7 @@ function SafeImage({
     return status === 'failed' ? (
       <MediaFallback label={fallbackLabel} />
     ) : (
-      <div className="min-h-[240px] rounded-lg bg-ink-raised" aria-hidden />
+      <div className="min-h-[240px] bg-ink-raised" aria-hidden />
     )
   }
 
@@ -199,7 +161,7 @@ function ProjectIconBlock({ project }: { project: Project }) {
   const status = usePublicAsset(icon.type === 'image' ? icon.src : '')
 
   return (
-    <div className="rounded-xl border border-line bg-cream p-3">
+    <div className="border border-line bg-cream p-3">
       {icon.type === 'lucide' ? (
         (() => {
           const LucideIcon = LUCIDE_ICONS[icon.name]
@@ -225,17 +187,9 @@ function ProjectIconBlock({ project }: { project: Project }) {
   )
 }
 
-function ProjectButton({
-  link,
-  label,
-  festivalStyle,
-}: {
-  link: ProjectLink
-  label: string
-  festivalStyle?: React.CSSProperties
-}) {
+function ProjectButton({ link, label }: { link: ProjectLink; label: string }) {
   const Icon = LINK_ICONS[link.type]
-  const className = link.primary ? btnPrimarySm : btnGhostSm
+  const className = link.primary ? 'btn btn-primary' : 'btn btn-outline'
   const trailingIcon = link.type === 'viewProject'
 
   const inner = (
@@ -248,27 +202,20 @@ function ProjectButton({
 
   if (link.internal) {
     return (
-      <a href={link.href} className={className} style={link.primary ? festivalStyle : undefined}>
+      <a href={link.href} className={className}>
         {inner}
       </a>
     )
   }
 
   return (
-    <a
-      href={link.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={className}
-      style={link.primary ? festivalStyle : undefined}
-    >
+    <a href={link.href} target="_blank" rel="noopener noreferrer" className={className}>
       {inner}
     </a>
   )
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
-  const { activeFestival } = useFestivalTheme()
   const { t, tString } = useLanguage()
 
   const base = `portfolio.${project.id}`
@@ -277,55 +224,49 @@ export default function ProjectCard({ project }: { project: Project }) {
     return Array.isArray(value) ? value : []
   }
 
-  const festivalStyle = activeFestival
-    ? {
-        background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-      }
-    : undefined
-
   const fallbackLabel = `${tString(`${base}.title`)} preview unavailable`
   const media = (
-    <ProjectFrame figure={project.figure} caption={tString(`${base}.demoLabel`)}>
-      {project.media.contain ? (
-        <div className="flex min-h-[240px] items-center justify-center rounded-lg bg-ink-raised p-4">
+    <div className="overflow-hidden border border-line bg-ink-raised">
+      <div className="flex items-center justify-between border-b border-line px-5 py-3">
+        <span className="font-mono text-[13px] tracking-[0.04em] text-lime">{project.figure}</span>
+        <span className="font-mono text-[13px] text-cream-muted">{tString(`${base}.demoLabel`)}</span>
+      </div>
+      <div className="p-4">
+        {project.media.contain ? (
+          <div className="flex min-h-[240px] items-center justify-center bg-ink p-4">
+            <SafeImage
+              src={project.media.src}
+              alt={project.media.alt}
+              width={project.media.width}
+              height={project.media.height}
+              className={`h-auto w-full ${project.media.maxWidthClass ?? 'max-w-[120px] opacity-90'}`}
+              unoptimized={project.media.unoptimized}
+              fallbackLabel={fallbackLabel}
+            />
+          </div>
+        ) : (
           <SafeImage
             src={project.media.src}
             alt={project.media.alt}
             width={project.media.width}
             height={project.media.height}
-            className={`h-auto w-full rounded-lg ${project.media.maxWidthClass ?? 'max-w-[120px] opacity-90'}`}
+            className="h-auto w-full"
             unoptimized={project.media.unoptimized}
             fallbackLabel={fallbackLabel}
           />
-        </div>
-      ) : (
-        <SafeImage
-          src={project.media.src}
-          alt={project.media.alt}
-          width={project.media.width}
-          height={project.media.height}
-          className="h-auto w-full rounded-lg"
-          unoptimized={project.media.unoptimized}
-          fallbackLabel={fallbackLabel}
-        />
-      )}
-    </ProjectFrame>
+        )}
+      </div>
+    </div>
   )
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: 0.7 }}
-      className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
-    >
+    <article className="frame grid items-center gap-8 p-6 lg:grid-cols-2 lg:gap-12 lg:p-8">
       <div className={project.reverseLayout ? 'lg:order-2' : undefined}>
         <div className="mb-6 flex items-center gap-5">
           <ProjectIconBlock project={project} />
           <div>
             <div className="mb-1 flex flex-wrap items-center gap-2.5">
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-brass">
+              <span className="font-mono text-[13px] tracking-[0.04em] text-lime">
                 {tString(`${base}.category`)}
               </span>
               <StatusBadge
@@ -358,13 +299,12 @@ export default function ProjectCard({ project }: { project: Project }) {
               key={link.href}
               link={link}
               label={tString(`${base}.${link.labelKey}`)}
-              festivalStyle={festivalStyle}
             />
           ))}
         </div>
       </div>
 
       <div className={project.reverseLayout ? 'lg:order-1' : undefined}>{media}</div>
-    </motion.div>
+    </article>
   )
 }

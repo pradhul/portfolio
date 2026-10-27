@@ -85,7 +85,7 @@ export default function ChatWidget() {
         className={`fixed bottom-6 right-6 z-50 grid h-14 w-14 place-items-center rounded-full shadow-lg transition-colors ${
           isChristmas
             ? 'text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-red-600/50'
-            : 'text-ink bg-brass hover:bg-brass-bright shadow-black/40'
+            : 'bg-lime text-[#0a0f00] hover:bg-lime-bright shadow-black/40'
         } ${isTranslating ? 'cursor-progress' : ''}`}
         aria-label={isTranslating ? 'Translating page…' : 'Open chat'}
         aria-busy={isTranslating}
@@ -175,12 +175,12 @@ export default function ChatWidget() {
                 : 'border-line'
             }`}>
               <div className="flex items-center gap-3">
-                <MessageCircle className={isChristmas ? 'text-red-400' : 'text-brass'} size={20} />
+                <MessageCircle className={isChristmas ? 'text-red-400' : 'text-lime'} size={20} />
                 <h3 className="text-lg font-semibold text-cream">Ask About Me</h3>
               </div>
               <button
                 onClick={handleClose}
-                className="text-cream-faint hover:text-cream transition-colors p-1 rounded-full hover:bg-white/10"
+                className="p-1 text-cream-muted transition-colors hover:bg-white/10 hover:text-cream"
                 aria-label="Close chat"
               >
                 <X size={20} />
@@ -196,7 +196,7 @@ export default function ChatWidget() {
                   className={`mb-4 p-4 border rounded-lg ${
                     isChristmas
                       ? 'bg-red-500/10 border-red-500/20'
-                      : 'bg-brass/10 border-line'
+                      : 'border-line bg-lime/10'
                   }`}
                 >
                   <p className="text-cream-muted text-sm leading-relaxed whitespace-pre-wrap">
@@ -217,14 +217,14 @@ export default function ChatWidget() {
 
               {isLoading && (
                 <div className="flex items-center justify-center py-8">
-                  <Loader2 className={`${isChristmas ? 'text-red-400' : 'text-brass'} animate-spin`} size={24} />
-                  <span className="ml-3 text-cream-faint text-sm">Thinking...</span>
+                  <Loader2 className={`${isChristmas ? 'text-red-400' : 'text-lime'} animate-spin`} size={24} />
+                  <span className="ml-3 text-sm text-cream-muted">Thinking...</span>
                 </div>
               )}
 
               {!answer && !error && !isLoading && (
                 <div className="text-center py-8">
-                  <p className="text-cream-faint text-sm">
+                  <p className="text-sm text-cream-muted">
                     Ask me anything about my experience, skills, or background!
                   </p>
                 </div>
@@ -242,7 +242,7 @@ export default function ChatWidget() {
                   onChange={(e) => setQuestion(e.target.value)}
                   placeholder="Ask anything about me..."
                   disabled={isLoading}
-                  className={`flex-1 bg-ink/60 border rounded-lg px-4 py-2 text-cream placeholder-cream-faint focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`flex-1 border bg-ink px-4 py-2 text-cream placeholder-cream-muted focus:outline-none focus:ring-2 focus:ring-lime disabled:cursor-not-allowed disabled:opacity-50 ${
                     isChristmas
                       ? 'border-red-500/30 focus:border-red-400 focus:ring-red-500/50'
                       : 'border-line focus:border-brass focus:ring-brass/40'
@@ -256,7 +256,7 @@ export default function ChatWidget() {
                   className={`p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
                     isChristmas
                       ? 'text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400'
-                      : 'text-ink bg-brass hover:bg-brass-bright'
+                      : 'bg-lime text-[#0a0f00] hover:bg-lime-bright'
                   }`}
                   aria-label="Send message"
                 >

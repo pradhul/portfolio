@@ -1,8 +1,6 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { motion } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
 import ProjectCard from '@/components/ProjectCard'
 import { projects } from '@/data/projects'
 import {
@@ -12,7 +10,6 @@ import {
   type ProjectFilter,
 } from '@/data/portfolioDisplay'
 import { useLanguage } from '@/components/LanguageProvider'
-import { useFestivalTheme } from '@/components/FestivalTheme'
 import type { Project } from '@/data/projects'
 
 function FilterButton({
@@ -20,13 +17,11 @@ function FilterButton({
   label,
   active,
   onSelect,
-  festivalColor,
 }: {
   id: ProjectFilter
   label: string
   active: boolean
   onSelect: (id: ProjectFilter) => void
-  festivalColor?: string
 }) {
   return (
     <button
@@ -34,16 +29,9 @@ function FilterButton({
       role="tab"
       aria-selected={active}
       onClick={() => onSelect(id)}
-      className={`rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
-        active
-          ? 'border-brass/40 bg-brass/10 text-brass'
-          : 'border-line text-cream-faint hover:border-cream-muted hover:text-cream'
+      className={`border px-4 py-2 font-mono text-[13px] uppercase tracking-[0.08em] ${
+        active ? 'border-lime bg-[rgba(234,255,82,0.12)] text-lime' : 'border-line text-cream-muted hover:text-cream'
       }`}
-      style={
-        active && festivalColor
-          ? { borderColor: `${festivalColor}66`, color: festivalColor, backgroundColor: `${festivalColor}1a` }
-          : undefined
-      }
     >
       {label}
     </button>
@@ -52,7 +40,7 @@ function FilterButton({
 
 function ProjectList({ items }: { items: Project[] }) {
   return (
-    <div className="space-y-24">
+    <div className="grid gap-6">
       {items.map((project, index) => (
         <ProjectCard
           key={project.id}
@@ -65,7 +53,6 @@ function ProjectList({ items }: { items: Project[] }) {
 
 export default function PortfolioSection() {
   const { tString } = useLanguage()
-  const { activeFestival } = useFestivalTheme()
   const [filter, setFilter] = useState<ProjectFilter>('all')
   const [archiveOpen, setArchiveOpen] = useState(false)
 
@@ -79,7 +66,7 @@ export default function PortfolioSection() {
       <div
         role="tablist"
         aria-label={tString('portfolio.filtersLabel')}
-        className="mt-12 flex flex-wrap gap-2"
+        className="mt-8 flex flex-wrap gap-2"
       >
         {PROJECT_FILTERS.map((id) => (
           <FilterButton
@@ -88,12 +75,11 @@ export default function PortfolioSection() {
             label={tString(`portfolio.filters.${id}`)}
             active={filter === id}
             onSelect={setFilter}
-            festivalColor={activeFestival?.colors.primary}
           />
         ))}
       </div>
 
-      <div className="mt-16">
+      <div className="mt-10">
         {visibleFeatured.length > 0 ? (
           <ProjectList items={visibleFeatured} />
         ) : (
@@ -102,7 +88,7 @@ export default function PortfolioSection() {
       </div>
 
       {visibleArchive.length > 0 && (
-        <div className="mt-20 border-t border-line pt-10">
+        <div className="mt-16 border-t border-line pt-10">
           <button
             type="button"
             aria-expanded={archiveExpanded}
@@ -110,32 +96,24 @@ export default function PortfolioSection() {
             className="group flex w-full items-center justify-between gap-4 text-left"
           >
             <div>
-              <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
+              <div className="font-mono text-[13px] tracking-[0.04em] text-lime">
                 {tString('portfolio.archiveEyebrow')}
               </div>
               <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-cream md:text-3xl">
                 {tString('portfolio.archiveTitle')}
-                <span className="ml-3 font-mono text-sm font-normal text-cream-faint">
+                <span className="ml-3 font-mono text-sm font-normal text-cream-muted">
                   {visibleArchive.length}
                 </span>
               </h3>
             </div>
-            <ChevronDown
-              size={22}
-              className={`shrink-0 text-cream-faint transition-transform ${archiveExpanded ? 'rotate-180' : ''}`}
-            />
+            <span className="font-mono text-lime">{archiveExpanded ? '−' : '+'}</span>
           </button>
 
-          {archiveExpanded && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="mt-12"
-            >
+          {archiveExpanded ? (
+            <div className="mt-10">
               <ProjectList items={visibleArchive} />
-            </motion.div>
-          )}
+            </div>
+          ) : null}
         </div>
       )}
     </div>

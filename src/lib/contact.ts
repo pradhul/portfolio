@@ -1,18 +1,26 @@
 import {
+  BUDGET_RANGES,
   CONTACT_MAILTO,
   HONEYPOT_FIELD,
+  MAX_BUDGET_LENGTH,
   MAX_EMAIL_LENGTH,
   MAX_MESSAGE_LENGTH,
   MAX_NAME_LENGTH,
+  MAX_PROJECT_TYPE_LENGTH,
+  PROJECT_TYPES,
 } from './contactConstants'
 
 export {
+  BUDGET_RANGES,
   CONTACT_EMAIL,
   CONTACT_MAILTO,
   HONEYPOT_FIELD,
+  MAX_BUDGET_LENGTH,
   MAX_EMAIL_LENGTH,
   MAX_MESSAGE_LENGTH,
   MAX_NAME_LENGTH,
+  MAX_PROJECT_TYPE_LENGTH,
+  PROJECT_TYPES,
 } from './contactConstants'
 
 export const RESEND_EMAILS_URL = 'https://api.resend.com/emails'
@@ -25,6 +33,8 @@ export type ValidatedContact = {
   name: string
   email: string
   message: string
+  projectType: string
+  budget: string
   honeypotFilled: boolean
 }
 
@@ -58,6 +68,12 @@ export function validateContactInput(input: unknown): ValidationResult {
       ? sanitizeWhitespace(stripHeaderBreaks(payload.email)).toLowerCase()
       : ''
   const message = typeof payload.message === 'string' ? payload.message.replace(/\r\n/g, '\n').trim() : ''
+  const projectType =
+    typeof payload.projectType === 'string'
+      ? sanitizeWhitespace(stripHeaderBreaks(payload.projectType))
+      : ''
+  const budget =
+    typeof payload.budget === 'string' ? sanitizeWhitespace(stripHeaderBreaks(payload.budget)) : ''
   const honeypot = typeof payload[HONEYPOT_FIELD] === 'string' ? payload[HONEYPOT_FIELD].trim() : ''
 
   if (!name) {
@@ -84,12 +100,30 @@ export function validateContactInput(input: unknown): ValidationResult {
     return { ok: false, error: `Message is too long (max ${MAX_MESSAGE_LENGTH} characters).` }
   }
 
+  if (projectType && !PROJECT_TYPES.includes(projectType as (typeof PROJECT_TYPES)[number])) {
+    return { ok: false, error: 'Please choose a valid project type.' }
+  }
+
+  if (projectType.length > MAX_PROJECT_TYPE_LENGTH) {
+    return { ok: false, error: `Project type is too long (max ${MAX_PROJECT_TYPE_LENGTH} characters).` }
+  }
+
+  if (budget && !BUDGET_RANGES.includes(budget as (typeof BUDGET_RANGES)[number])) {
+    return { ok: false, error: 'Please choose a valid budget range.' }
+  }
+
+  if (budget.length > MAX_BUDGET_LENGTH) {
+    return { ok: false, error: `Budget is too long (max ${MAX_BUDGET_LENGTH} characters).` }
+  }
+
   return {
     ok: true,
     data: {
       name,
       email,
       message,
+      projectType,
+      budget,
       honeypotFilled: honeypot.length > 0,
     },
   }
@@ -152,10 +186,20 @@ export function resolveContactToEmail(to?: string): string {
 }
 
 function buildEmail(data: ValidatedContact, from?: string, to?: string) {
-  const text = [`Name: ${data.name}`, `Email: ${data.email}`, '', data.message].join('\n')
+  const extraLines = [
+    data.projectType ? `Project type: ${data.projectType}` : '',
+    data.budget ? `Budget: ${data.budget}` : '',
+  ].filter(Boolean)
+  const text = [`Name: ${data.name}`, `Email: ${data.email}`, ...extraLines, '', data.message].join(
+    '\n'
+  )
   const html = [
     `<p><strong>Name:</strong> ${escapeHtml(data.name)}</p>`,
     `<p><strong>Email:</strong> ${escapeHtml(data.email)}</p>`,
+    data.projectType
+      ? `<p><strong>Project type:</strong> ${escapeHtml(data.projectType)}</p>`
+      : '',
+    data.budget ? `<p><strong>Budget:</strong> ${escapeHtml(data.budget)}</p>` : '',
     `<p>${escapeHtml(data.message).replace(/\n/g, '<br />')}</p>`,
   ].join('')
 

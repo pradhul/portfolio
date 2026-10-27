@@ -1,34 +1,19 @@
-'use client'
-
-import { useFestivalTheme } from '@/components/FestivalTheme'
-
 export default function SectionHeading({
   index,
   title,
-  activeFestival,
   as: Tag = 'h2',
+  kicker,
 }: {
-  index: string
+  index?: string
   title: React.ReactNode
-  activeFestival: ReturnType<typeof useFestivalTheme>['activeFestival']
+  activeFestival?: unknown
   as?: 'h1' | 'h2'
+  kicker?: string
 }) {
   return (
-    <div className="flex items-baseline gap-5 border-t border-line pt-8">
-      <span className="font-mono text-sm text-brass">{index}</span>
-      <Tag
-        className="font-display text-4xl md:text-6xl font-semibold tracking-tight text-cream"
-        style={
-          activeFestival
-            ? {
-                backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }
-            : undefined
-        }
-      >
+    <div className="sh mb-9">
+      <div className="font-mono text-[13px] tracking-[0.04em] text-lime">{kicker ?? (index ? `Section ${index}` : null)}</div>
+      <Tag className="mt-2 font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold tracking-tight text-cream">
         {title}
       </Tag>
     </div>

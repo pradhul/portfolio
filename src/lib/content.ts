@@ -4,26 +4,69 @@ export const content = {
   nav: {
     home: 'Home',
     about: 'About',
-    portfolio: 'Portfolio',
+    portfolio: 'Work',
+    work: 'Work',
+    experience: 'Experience',
     contact: 'Contact',
     guestbook: 'Guestbook',
   },
   hero: {
-    title: 'Pradhul Dev',
-    subtitle: 'Web & Mobile Developer — 8+ years',
+    title: 'I build fast, dependable apps — and the tools developers use every day.',
+    subtitle: 'Fig. 00 — Web, mobile & Android TV engineer · Bangalore',
+    lead:
+      '8+ years shipping Android, React Native, React and Angular products. Software Engineering Master at HashedIn by Deloitte (2015–2023) on Kaiser Permanente, Buzztime, GroupNexus, Hiway and Sotera. Now independent, building apps and publishing VS Code and Chrome extensions.',
     downloadResume: 'Resume',
-    viewPortfolio: 'View Portfolio',
-    hireMe: 'Hire me',
+    viewPortfolio: 'See the work',
+    hireMe: 'Start a project',
     upwork: 'Upwork',
+    titleBlock: {
+      heading: 'Title block',
+      drawing: 'DWG. PD-2026',
+      drawnBy: 'Drawn by',
+      role: 'Role',
+      based: 'Based',
+      experience: 'Experience',
+      status: 'Status',
+      stack: 'Stack',
+      name: 'Pradhul Dev',
+      roleValue: 'Senior web & mobile engineer',
+      basedValue: 'Bangalore · IST (UTC+5:30)',
+      experienceValue: '2014 – present',
+      statusValue: 'Open for freelance & contracts',
+      stackValue: 'React · Next.js · Android/Kotlin · React Native · Node.js',
+    },
   },
   about: {
-    title: 'About Me',
+    title: 'Off the clock',
     pageSubtitle:
-      'Web and mobile developer, VS Code extension author, and former Software Engineering Master at HashedIn by Deloitte — available for hire.',
+      'Engineer by day. The rest of the time: MMA, beatboxing, and Raspberry Pi tinkering.',
+    fighterLabel: 'Fighter card',
+    fighterName: 'Pradhul Dev',
+    fighterIntro: 'Engineer by day. The rest of the time:',
+    interests: [
+      {
+        label: '01 · Combat',
+        title: 'MMA',
+        body: 'I train mixed martial arts. It keeps me calm when production is on fire.',
+      },
+      {
+        label: '02 · Rhythm',
+        title: 'Beatboxing',
+        body: 'Kick, snare and bass at the same time — good practice for juggling parallel work.',
+      },
+      {
+        label: '03 · Hardware',
+        title: 'Raspberry Pi',
+        body: 'I tinker with GPIO, sensors and small home automation builds.',
+      },
+    ],
     githubActivity: 'GitHub Activity',
     skillsLabel: 'Skills',
     experienceLabel: 'Experience',
     educationLabel: 'Education',
+    sectionLabel: 'Section 02 — About',
+    experienceSectionLabel: 'Section 03 — Experience',
+    experienceTitle: "Where I've worked",
     paragraphs: [
       "Hi, I'm Pradhul, a web and mobile developer with 8+ years of experience, and the author of VS Code extensions on the Marketplace.",
       'I was a Software Engineering Master at HashedIn Technologies (HashedIn by Deloitte) from May 2015 to June 2023, leading teams of up to four on Android, React Native, React, and Angular projects — including Hiway, Sotera, GroupNexus, Buzztime, and Kaiser Permanente. Before that I was a software developer at Brainistic Technologies (July 2014 – May 2015), where I built HealEz as a Joomla component and QuizByte as a native Android app.',
@@ -32,16 +75,23 @@ export const content = {
     ],
     experience: [
       {
+        role: 'Independent engineer',
+        company: 'Freelance and own products',
+        dates: '2023 – now',
+        summary:
+          'Building Glance TV, Link Shelf and UploadSpec; publishing Ionic Measure, Squash-Push and vsColorCode. Taking freelance and contract work.',
+      },
+      {
         role: 'Software Engineering Master',
         company: 'HashedIn Technologies (HashedIn by Deloitte)',
-        dates: 'May 2015 – June 2023',
+        dates: '2015 – 2023',
         summary:
           'Led teams of up to four on Android, React Native, React, and Angular projects — including Hiway, Sotera, GroupNexus, Buzztime, and Kaiser Permanente. Architected GCP-hosted apps, introduced CI/CD and automated testing, and mentored junior developers.',
       },
       {
         role: 'Software Developer',
         company: 'Brainistic Technologies',
-        dates: 'July 2014 – May 2015',
+        dates: '2014 – 2015',
         summary:
           'Built HealEz as a Joomla component with PHP and MySQL, and QuizByte as a native Android app.',
       },
@@ -77,9 +127,10 @@ export const content = {
     ],
   },
   portfolio: {
-    title: 'Portfolio',
+    title: 'Things I\'ve built and shipped',
     pageSubtitle:
       'Selected apps, Chrome and VS Code extensions, and developer tools — the same curated featured set as the homepage, plus the archive.',
+    sectionLabel: 'Section 01 — Work',
     labels: {
       inProgress: 'In Progress',
       features: 'Features',
@@ -366,19 +417,38 @@ export const content = {
     },
   },
   contact: {
-    title: 'Get In Touch',
-    subtitle: "Available for hire — send a message, email me, or reach out on Upwork.",
-    connectLabel: 'Connect with me on',
+    title: 'Tell me about your project',
+    subtitle: "A few lines is enough. I'll reply with next steps.",
+    sectionLabel: 'Section 04 — Contact',
+    connectLabel: 'Prefer another channel?',
+    locationNote: 'Bangalore · IST (UTC+5:30)',
     form: {
       nameLabel: 'Name',
       emailLabel: 'Email',
-      messageLabel: 'Message',
-      submit: 'Send message',
+      projectTypeLabel: 'Project type',
+      budgetLabel: 'Budget',
+      messageLabel: 'What are you building?',
+      messagePlaceholder: 'Goal, current state, timeline…',
+      submit: 'Send project brief →',
       sending: 'Sending...',
       success: 'Thanks — your message is on its way.',
       error: 'Could not send your message. Please try again or email me directly.',
       unavailable: 'The contact form is not configured yet. Please email me instead.',
       honeypotLabel: 'Leave this field empty',
+      projectTypes: [
+        'Web app',
+        'Mobile app',
+        'Android TV',
+        'VS Code / Chrome extension',
+        'Other',
+      ],
+      budgets: [
+        'Not sure yet',
+        'Under $2k',
+        '$2k – $5k',
+        '$5k – $15k',
+        '$15k+',
+      ],
     },
   },
   guestbook: {
@@ -404,4 +474,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '11'
+export const CONTENT_VERSION = '12'

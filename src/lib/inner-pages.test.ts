@@ -148,12 +148,26 @@ check('SitePage nav uses real routes (not in-page hashes) that exist', () => {
   }
 })
 
-check('SitePage skips heavy 3D on mobile via shouldLoadThreeBackground', () => {
+check('SitePage uses the CSS schematic grid instead of a 3D background', () => {
   const shell = read('src/components/SitePage.tsx')
   const background = read('src/components/SiteBackground.tsx')
   assert.match(shell, /SiteBackground/)
-  assert.match(background, /shouldLoadThreeBackground/)
-  assert.match(background, /ThreeBackground/)
+  assert.match(background, /schematic-grid/)
+  assert.doesNotMatch(background, /ThreeBackground/)
+})
+
+check('keeps invented Stitch stats out of the shipped UI', () => {
+  const sources = [
+    'src/lib/content.ts',
+    'src/components/HomePage.tsx',
+    'src/components/AboutContent.tsx',
+    'src/components/ContactForm.tsx',
+  ].map(read).join('\n')
+  assert.doesNotMatch(sources, /0 runtime crashes/i)
+  assert.doesNotMatch(sources, /Heap utilization/i)
+  assert.doesNotMatch(sources, /Sarah Connor/i)
+  assert.doesNotMatch(sources, /10\+\s*years/)
+  assert.doesNotMatch(sources, /Tolerance:\s*production stable/i)
 })
 
 if (failures > 0) {
