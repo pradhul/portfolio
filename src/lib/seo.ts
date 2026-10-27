@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
-export const SITE_URL = 'https://www.pradhul.dev'
+export const SITE_URL = 'https://pradhul.dev'
+export const SITE_HOST = new URL(SITE_URL).hostname
 export const SITE_NAME = 'Pradhul Dev'
 
 export type PageSeo = {
