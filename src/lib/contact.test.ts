@@ -151,7 +151,10 @@ async function run() {
   })
 
   await check('sends via the Resend API and sets reply-to to the visitor', async () => {
+    const previous = process.env.RESEND_FROM
+    delete process.env.RESEND_FROM
     const fetchCalls: Array<{ url: string; init: RequestInit }> = []
+    try {
     const result = await submitContactMessage(validInput, '4.4.4.4', {
       apiKey: 're_test_key',
       fetchImpl: async (input, init) => {
@@ -170,11 +173,60 @@ async function run() {
 
     const payload = JSON.parse(String(fetchCalls[0].init.body))
     assert.deepEqual(payload.to, [CONTACT_EMAIL])
+    assert.equal(payload.from, 'Pradhul Dev Portfolio <onboarding@resend.dev>')
+    assert.doesNotMatch(payload.from, /hello@pradhul\.dev/)
     assert.equal(payload.reply_to, validInput.email)
     assert.match(payload.subject, /Ada Lovelace/)
     assert.match(payload.text, /ada@example.com/)
     assert.match(payload.text, /Next\.js project/)
     assert.match(payload.html, /Ada Lovelace/)
+    } finally {
+      if (previous === undefined) delete process.env.RESEND_FROM
+      else process.env.RESEND_FROM = previous
+    }
+  })
+
+  await check('uses RESEND_FROM when set and still replies to the visitor', async () => {
+    const previous = process.env.RESEND_FROM
+    process.env.RESEND_FROM = 'Pradhul Dev <contact@pradhul.dev>'
+    try {
+      const fetchCalls: Array<{ init: RequestInit }> = []
+      const result = await submitContactMessage(validInput, '6.6.6.6', {
+        apiKey: 're_test_key',
+        fetchImpl: async (_input, init) => {
+          fetchCalls.push({ init: init ?? {} })
+          return new Response(JSON.stringify({ id: 'email_456' }), { status: 200 })
+        },
+      })
+
+      assert.equal(result.status, 200)
+      const payload = JSON.parse(String(fetchCalls[0].init.body))
+      assert.equal(payload.from, 'Pradhul Dev <contact@pradhul.dev>')
+      assert.equal(payload.reply_to, validInput.email)
+    } finally {
+      if (previous === undefined) delete process.env.RESEND_FROM
+      else process.env.RESEND_FROM = previous
+    }
+  })
+
+  await check('treats a blank RESEND_FROM as the Resend onboarding default', async () => {
+    const previous = process.env.RESEND_FROM
+    process.env.RESEND_FROM = '   '
+    try {
+      const fetchCalls: Array<{ init: RequestInit }> = []
+      await submitContactMessage(validInput, '3.3.3.3', {
+        apiKey: 're_test_key',
+        fetchImpl: async (_input, init) => {
+          fetchCalls.push({ init: init ?? {} })
+          return new Response(JSON.stringify({ id: 'email_789' }), { status: 200 })
+        },
+      })
+      const payload = JSON.parse(String(fetchCalls[0].init.body))
+      assert.equal(payload.from, 'Pradhul Dev Portfolio <onboarding@resend.dev>')
+    } finally {
+      if (previous === undefined) delete process.env.RESEND_FROM
+      else process.env.RESEND_FROM = previous
+    }
   })
 
   await check('rate limits repeated submissions from the same IP', async () => {

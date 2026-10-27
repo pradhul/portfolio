@@ -17,6 +17,7 @@ export {
 } from './contactConstants'
 
 export const RESEND_EMAILS_URL = 'https://api.resend.com/emails'
+export const DEFAULT_RESEND_FROM = 'Pradhul Dev Portfolio <onboarding@resend.dev>'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -140,7 +141,12 @@ function escapeHtml(value: string): string {
     .replace(/"/g, '&quot;')
 }
 
-function buildEmail(data: ValidatedContact) {
+export function resolveResendFrom(from?: string): string {
+  const configured = from?.trim() || process.env.RESEND_FROM?.trim()
+  return configured || DEFAULT_RESEND_FROM
+}
+
+function buildEmail(data: ValidatedContact, from?: string) {
   const text = [`Name: ${data.name}`, `Email: ${data.email}`, '', data.message].join('\n')
   const html = [
     `<p><strong>Name:</strong> ${escapeHtml(data.name)}</p>`,
@@ -149,7 +155,7 @@ function buildEmail(data: ValidatedContact) {
   ].join('')
 
   return {
-    from: 'Pradhul Dev Portfolio <beth.t@example.com>',
+    from: resolveResendFrom(from),
     to: [CONTACT_EMAIL],
     reply_to: data.email,
     subject: `Portfolio contact from ${data.name}`,
@@ -182,6 +188,7 @@ export async function submitContactMessage(
   ip: string,
   deps: {
     apiKey?: string
+    from?: string
     fetchImpl?: typeof fetch
     limiter?: MemoryRateLimiter
   } = {}
@@ -234,7 +241,7 @@ export async function submitContactMessage(
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(buildEmail(validated.data)),
+      body: JSON.stringify(buildEmail(validated.data, deps.from)),
     })
 
     if (!response.ok) {
