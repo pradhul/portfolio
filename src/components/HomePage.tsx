@@ -1,75 +1,35 @@
 'use client'
-import { useState, useEffect, useRef, lazy, Suspense } from 'react'
-import dynamic from 'next/dynamic'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import Link from 'next/link'
 import { track } from '@vercel/analytics'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { motion } from 'framer-motion'
 import { FileText, ChevronDown, ArrowUpRight } from 'lucide-react'
+import AboutContent from '@/components/AboutContent'
+import ContactForm from '@/components/ContactForm'
+import LazyChatWidget from '@/components/LazyChatWidget'
 import PortfolioSection from '@/components/PortfolioSection'
+import SectionHeading from '@/components/SectionHeading'
+import SiteBackground from '@/components/SiteBackground'
 import { useFestivalTheme, FestivalThemeProvider, FestivalTextDecoration } from '@/components/FestivalTheme'
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
 import { LanguageLayout } from '@/components/LanguageLayout'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import ContactForm from '@/components/ContactForm'
 import { FaLinkedin, FaGithubSquare } from 'react-icons/fa'
 import { FaSquareUpwork } from 'react-icons/fa6'
 import { IoMail } from 'react-icons/io5'
 import { SiStackoverflow } from 'react-icons/si'
 
-// Lazy load heavy components
-const ThreeBackground = lazy(() => import('@/components/ThreeBackground'))
-const InteractiveDots = lazy(() => import('@/components/InteractiveDots'))
-const ChatWidget = lazy(() => import('@/components/ChatWidget'))
-// Disable SSR for GitHubActivity to prevent hydration errors (fetches external API data)
-const GitHubActivity = dynamic(() => import('@/components/GitHubActivity'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full overflow-x-auto">
-      <div className="inline-block min-w-full">
-        <div className="text-cream-faint text-center py-8">Loading activity...</div>
-      </div>
-    </div>
-  ),
-})
-
-// Shared button styles
 const btnPrimary =
   'inline-flex items-center gap-2 rounded-full bg-brass px-7 py-3.5 font-semibold text-ink transition-colors hover:bg-brass-bright'
 const btnGhost =
   'inline-flex items-center gap-2 rounded-full border border-line px-7 py-3.5 font-medium text-cream-muted transition-colors hover:border-cream-muted hover:text-cream'
-function SectionHeading({
-  index,
-  title,
-  activeFestival,
-}: {
-  index: string
-  title: React.ReactNode
-  activeFestival: ReturnType<typeof useFestivalTheme>['activeFestival']
-}) {
-  return (
-    <div className="flex items-baseline gap-5 border-t border-line pt-8">
-      <span className="font-mono text-sm text-brass">{index}</span>
-      <h2
-        className="font-display text-4xl md:text-6xl font-semibold tracking-tight text-cream"
-        style={activeFestival ? {
-          backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-        } : undefined}
-      >
-        {title}
-      </h2>
-    </div>
-  )
-}
 
 function HomeContent() {
   const [activeSection, setActiveSection] = useState('hero')
   const containerRef = useRef<HTMLDivElement>(null)
   const { activeFestival } = useFestivalTheme()
-  const { t, tString } = useLanguage()
+  const { tString } = useLanguage()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -111,10 +71,7 @@ function HomeContent() {
     <FestivalThemeProvider activeFestival={activeFestival}>
       <div ref={containerRef} className="relative min-h-screen overflow-y-auto bg-ink text-cream scroll-smooth">
         <SpeedInsights />
-        {/* Lazy load heavy background components after initial render */}
-        <Suspense fallback={null}>
-          <LazyBackgroundComponents />
-        </Suspense>
+        <SiteBackground />
 
       {/* Navigation */}
       <motion.nav
@@ -323,79 +280,7 @@ function HomeContent() {
             />
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="mt-14 grid gap-10 md:grid-cols-[1fr_2fr]"
-          >
-            <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
-              {tString('nav.about')}
-            </div>
-            <div className="max-w-prose">
-              {(() => {
-                const paragraphs = t('about.paragraphs')
-                if (Array.isArray(paragraphs)) {
-                  return paragraphs.map((para: string, index: number) => {
-                    // For the first paragraph, highlight "Pradhul" with styled span
-                    if (index === 0 && para.includes('Pradhul')) {
-                      const parts = para.split('Pradhul')
-                      return (
-                        <p key={index} className="mb-6 text-2xl font-medium leading-snug text-cream md:text-3xl last:mb-0">
-                          {parts[0]}
-                          <span className="text-brass" style={activeFestival ? { color: activeFestival.colors.primary } : undefined}>Pradhul</span>
-                          {parts[1]}
-                        </p>
-                      )
-                    }
-                    return (
-                      <p key={index} className="mb-6 text-base leading-relaxed text-cream-muted md:text-lg last:mb-0">
-                        {para}
-                      </p>
-                    )
-                  })
-                }
-                return null
-              })()}
-              {(() => {
-                const skills = t('about.skills')
-                if (!Array.isArray(skills) || skills.length === 0) return null
-                return (
-                  <div className="mt-10">
-                    <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.25em] text-cream-faint">
-                      {tString('about.skillsLabel')}
-                    </div>
-                    <ul className="flex flex-wrap gap-2">
-                      {skills.map((skill) => (
-                        <li
-                          key={skill}
-                          className="rounded-full border border-line px-3 py-1.5 text-sm text-cream-muted"
-                        >
-                          {skill}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )
-              })()}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.7, delay: 0.25 }}
-            className="mt-20 grid gap-10 md:grid-cols-[1fr_2fr]"
-          >
-            <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
-              {tString('about.githubActivity')}
-            </div>
-            <div className="overflow-hidden rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
-              <GitHubActivity username="pradhul" />
-            </div>
-          </motion.div>
+          <AboutContent />
         </div>
       </section>
 
@@ -525,69 +410,12 @@ function HomeContent() {
         </motion.p>
       </footer>
 
-      {/* Chat Widget - Lazy loaded */}
       <Suspense fallback={null}>
         <LazyChatWidget />
       </Suspense>
       </div>
     </FestivalThemeProvider>
   )
-}
-
-// Component to lazy load background after initial render
-function LazyBackgroundComponents() {
-  const [shouldLoad, setShouldLoad] = useState(false)
-
-  useEffect(() => {
-    // Defer loading until after initial paint
-    const timer = setTimeout(() => {
-      setShouldLoad(true)
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (!shouldLoad) return null
-
-  return (
-    <>
-      <ThreeBackground />
-      <InteractiveDots />
-    </>
-  )
-}
-
-// Component to lazy load chat widget on interaction
-function LazyChatWidget() {
-  const [shouldLoad, setShouldLoad] = useState(false)
-
-  useEffect(() => {
-    // Load chat widget after user interaction or 3 seconds
-    const loadOnInteraction = () => {
-      setShouldLoad(true)
-      document.removeEventListener('mousemove', loadOnInteraction)
-      document.removeEventListener('touchstart', loadOnInteraction)
-      document.removeEventListener('scroll', loadOnInteraction)
-    }
-
-    const timer = setTimeout(() => {
-      setShouldLoad(true)
-    }, 3000)
-
-    document.addEventListener('mousemove', loadOnInteraction, { once: true, passive: true })
-    document.addEventListener('touchstart', loadOnInteraction, { once: true, passive: true })
-    document.addEventListener('scroll', loadOnInteraction, { once: true, passive: true })
-
-    return () => {
-      clearTimeout(timer)
-      document.removeEventListener('mousemove', loadOnInteraction)
-      document.removeEventListener('touchstart', loadOnInteraction)
-      document.removeEventListener('scroll', loadOnInteraction)
-    }
-  }, [])
-
-  if (!shouldLoad) return null
-
-  return <ChatWidget />
 }
 
 export default function Home() {
