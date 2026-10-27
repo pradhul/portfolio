@@ -1,47 +1,9 @@
-import type { Metadata } from "next";
-import SquashPushSummary from "./squashpush/SquashPushSummary";
-import VSColorCodeSummary from "./squashpush/VSColorCodeSummary";
-import ChartStudioSummary from "./squashpush/ChartStudioSummary";
-import UploadSpecSummary from "./squashpush/UploadSpecSummary";
-import LinkShelfSummary from "./squashpush/LinkShelfSummary";
-import GlanceTvSummary from "./squashpush/GlanceTvSummary";
-import { createPageMetadata, pages } from "@/lib/seo";
+import type { Metadata } from 'next'
+import PortfolioPage from '@/components/PortfolioPage'
+import { createPageMetadata, pages } from '@/lib/seo'
 
-export const metadata: Metadata = createPageMetadata(pages.portfolio);
+export const metadata: Metadata = createPageMetadata(pages.portfolio)
 
 export default function Portfolio() {
-  return (
-    <div className="divide-y-2 divide-gray-300">
-      <a href="./portfolio/glance-tv" className="block">
-        <div className="bg-gradient-to-r from-slate-800 to-sky-700 py-12 px-6 md:px-12 lg:px-24">
-          <GlanceTvSummary />
-        </div>
-      </a>
-      <a href="./portfolio/squashpush">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-12 px-6 md:px-12 lg:px-24 ">
-          <SquashPushSummary />
-        </div>
-      </a>
-      <a className="block">
-        <div className="bg-gradient-to-r to-indigo-600 from-purple-600 py-12 px-6 md:px-12 lg:px-24 ">
-          <VSColorCodeSummary />
-        </div>
-      </a>
-      <a href="./portfolio/chartstudio" className="block">
-        <div className="bg-gradient-to-r from-teal-600 to-cyan-600 py-12 px-6 md:px-12 lg:px-24 ">
-          <ChartStudioSummary />
-        </div>
-      </a>
-      <a href="./portfolio/uploadspec" className="block">
-        <div className="bg-gradient-to-r from-emerald-800 to-teal-600 py-12 px-6 md:px-12 lg:px-24 ">
-          <UploadSpecSummary />
-        </div>
-      </a>
-      <a href="./portfolio/linkshelf" className="block">
-        <div className="bg-gradient-to-r from-violet-700 to-fuchsia-600 py-12 px-6 md:px-12 lg:px-24 ">
-          <LinkShelfSummary />
-        </div>
-      </a>
-    </div>
-  );
+  return <PortfolioPage />
 }

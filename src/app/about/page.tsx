@@ -1,13 +1,17 @@
-import type { Metadata } from "next";
-import { createPageMetadata, pages } from "@/lib/seo";
+import type { Metadata } from 'next'
+import AboutPage from '@/components/AboutPage'
+import { createPageMetadata, pages, personJsonLd } from '@/lib/seo'
 
-export const metadata: Metadata = createPageMetadata(pages.about);
+export const metadata: Metadata = createPageMetadata(pages.about)
 
 export default function About() {
   return (
-    <div>
-      <h1>About Me</h1>
-      <p>Hi, I&apos;m Pradhul, a Web and Mobile Developer with 8+ years of experience...</p>
-    </div>
-  );
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
+      <AboutPage />
+    </>
+  )
 }

@@ -18,13 +18,45 @@ export const content = {
   },
   about: {
     title: 'About Me',
+    pageSubtitle:
+      'Web and mobile developer, VS Code extension author, and former Software Engineering Master at HashedIn by Deloitte — available for hire.',
     githubActivity: 'GitHub Activity',
     skillsLabel: 'Skills',
+    experienceLabel: 'Experience',
+    educationLabel: 'Education',
     paragraphs: [
       "Hi, I'm Pradhul, a web and mobile developer with 8+ years of experience, and the author of VS Code extensions on the Marketplace.",
       'I was a Software Engineering Master at HashedIn Technologies (HashedIn by Deloitte) from May 2015 to June 2023, leading teams of up to four on Android, React Native, React, and Angular projects — including Hiway, Sotera, GroupNexus, Buzztime, and Kaiser Permanente. Before that I was a software developer at Brainistic Technologies (July 2014 – May 2015), where I built HealEz as a Joomla component and QuizByte as a native Android app.',
       'I also ship my own tools: Ionic Measure on the Chrome Web Store, Squash-Push and vsColorCode on the VS Code Marketplace, plus apps such as Link Shelf, UploadSpec, and SMSpend.',
       "Off the clock I beatbox, train MMA, and tinker with a Raspberry Pi.",
+    ],
+    experience: [
+      {
+        role: 'Software Engineering Master',
+        company: 'HashedIn Technologies (HashedIn by Deloitte)',
+        dates: 'May 2015 – June 2023',
+        summary:
+          'Led teams of up to four on Android, React Native, React, and Angular projects — including Hiway, Sotera, GroupNexus, Buzztime, and Kaiser Permanente. Architected GCP-hosted apps, introduced CI/CD and automated testing, and mentored junior developers.',
+      },
+      {
+        role: 'Software Developer',
+        company: 'Brainistic Technologies',
+        dates: 'July 2014 – May 2015',
+        summary:
+          'Built HealEz as a Joomla component with PHP and MySQL, and QuizByte as a native Android app.',
+      },
+    ],
+    education: [
+      {
+        credential: 'B.E, Computer Science',
+        school: 'Annamalai University',
+        dates: 'June 2013',
+      },
+      {
+        credential: 'Diploma, Computer Science',
+        school: 'Department of Technical Education, Kerala',
+        dates: 'May 2010',
+      },
     ],
     skills: [
       'React',
@@ -46,6 +78,8 @@ export const content = {
   },
   portfolio: {
     title: 'Portfolio',
+    pageSubtitle:
+      'Selected apps, Chrome and VS Code extensions, and developer tools — the same curated featured set as the homepage, plus the archive.',
     labels: {
       inProgress: 'In Progress',
       features: 'Features',
@@ -370,4 +404,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '10'
+export const CONTENT_VERSION = '11'
