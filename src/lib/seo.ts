@@ -33,7 +33,7 @@ export const pages = {
     path: '/contact',
     title: 'Contact',
     description:
-      'Get in touch with Pradhul Dev — email, LinkedIn, GitHub, Stack Overflow, and Upwork.',
+      'Get in touch with Pradhul Dev — send a message, or reach out by email, LinkedIn, GitHub, Stack Overflow, and Upwork.',
     eyebrow: 'CONTACT',
   },
   guestbook: {
@@ -92,6 +92,14 @@ export const publicPages: PageSeo[] = Object.values(pages)
 export function pageUrl(path: string): string {
   if (path === '/') return SITE_URL
   return `${SITE_URL}${path}`
+}
+
+export function googleSiteVerification(
+  value: string | undefined = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+): Metadata['verification'] | undefined {
+  const token = value?.trim()
+  if (!token) return undefined
+  return { google: token }
 }
 
 export function createPageMetadata(page: PageSeo): Metadata {
