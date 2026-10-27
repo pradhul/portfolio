@@ -1,5 +1,4 @@
 import {
-  CONTACT_EMAIL,
   CONTACT_MAILTO,
   HONEYPOT_FIELD,
   MAX_EMAIL_LENGTH,
@@ -18,6 +17,7 @@ export {
 
 export const RESEND_EMAILS_URL = 'https://api.resend.com/emails'
 export const DEFAULT_RESEND_FROM = 'Pradhul Dev Portfolio <onboarding@resend.dev>'
+export const DEFAULT_CONTACT_TO_EMAIL = 'pradhul.dev1990@gmail.com'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -146,7 +146,12 @@ export function resolveResendFrom(from?: string): string {
   return configured || DEFAULT_RESEND_FROM
 }
 
-function buildEmail(data: ValidatedContact, from?: string) {
+export function resolveContactToEmail(to?: string): string {
+  const configured = to?.trim() || process.env.CONTACT_TO_EMAIL?.trim()
+  return configured || DEFAULT_CONTACT_TO_EMAIL
+}
+
+function buildEmail(data: ValidatedContact, from?: string, to?: string) {
   const text = [`Name: ${data.name}`, `Email: ${data.email}`, '', data.message].join('\n')
   const html = [
     `<p><strong>Name:</strong> ${escapeHtml(data.name)}</p>`,
@@ -156,7 +161,7 @@ function buildEmail(data: ValidatedContact, from?: string) {
 
   return {
     from: resolveResendFrom(from),
-    to: [CONTACT_EMAIL],
+    to: [resolveContactToEmail(to)],
     reply_to: data.email,
     subject: `Portfolio contact from ${data.name}`,
     text,
@@ -189,6 +194,7 @@ export async function submitContactMessage(
   deps: {
     apiKey?: string
     from?: string
+    to?: string
     fetchImpl?: typeof fetch
     limiter?: MemoryRateLimiter
   } = {}
@@ -241,7 +247,7 @@ export async function submitContactMessage(
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(buildEmail(validated.data, deps.from)),
+      body: JSON.stringify(buildEmail(validated.data, deps.from, deps.to)),
     })
 
     if (!response.ok) {

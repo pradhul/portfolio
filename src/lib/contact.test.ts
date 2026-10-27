@@ -150,9 +150,18 @@ async function run() {
     assert.equal(fetchCalls.length, 0)
   })
 
+  await check('keeps the public mailto on the Resend-unavailable fallback', async () => {
+    const result = await submitContactMessage(validInput, '1.1.1.1', { apiKey: '' })
+    assert.equal(result.body.mailto, CONTACT_MAILTO)
+    assert.match(CONTACT_MAILTO, /pradhuldev\.1990@gmail\.com/)
+    assert.doesNotMatch(CONTACT_MAILTO, /pradhul\.dev1990@gmail\.com/)
+  })
+
   await check('sends via the Resend API and sets reply-to to the visitor', async () => {
-    const previous = process.env.RESEND_FROM
+    const previousFrom = process.env.RESEND_FROM
+    const previousTo = process.env.CONTACT_TO_EMAIL
     delete process.env.RESEND_FROM
+    delete process.env.CONTACT_TO_EMAIL
     const fetchCalls: Array<{ url: string; init: RequestInit }> = []
     try {
     const result = await submitContactMessage(validInput, '4.4.4.4', {
@@ -172,7 +181,8 @@ async function run() {
     assert.equal(headers.get('Authorization'), 'Bearer re_test_key')
 
     const payload = JSON.parse(String(fetchCalls[0].init.body))
-    assert.deepEqual(payload.to, [CONTACT_EMAIL])
+    assert.deepEqual(payload.to, ['pradhul.dev1990@gmail.com'])
+    assert.notEqual(payload.to[0], CONTACT_EMAIL)
     assert.equal(payload.from, 'Pradhul Dev Portfolio <onboarding@resend.dev>')
     assert.doesNotMatch(payload.from, /hello@pradhul\.dev/)
     assert.equal(payload.reply_to, validInput.email)
@@ -181,8 +191,54 @@ async function run() {
     assert.match(payload.text, /Next\.js project/)
     assert.match(payload.html, /Ada Lovelace/)
     } finally {
-      if (previous === undefined) delete process.env.RESEND_FROM
-      else process.env.RESEND_FROM = previous
+      if (previousFrom === undefined) delete process.env.RESEND_FROM
+      else process.env.RESEND_FROM = previousFrom
+      if (previousTo === undefined) delete process.env.CONTACT_TO_EMAIL
+      else process.env.CONTACT_TO_EMAIL = previousTo
+    }
+  })
+
+  await check('uses CONTACT_TO_EMAIL when set without changing the public mailto', async () => {
+    const previous = process.env.CONTACT_TO_EMAIL
+    process.env.CONTACT_TO_EMAIL = 'inbox@example.com'
+    try {
+      const fetchCalls: Array<{ init: RequestInit }> = []
+      const result = await submitContactMessage(validInput, '2.2.2.2', {
+        apiKey: 're_test_key',
+        fetchImpl: async (_input, init) => {
+          fetchCalls.push({ init: init ?? {} })
+          return new Response(JSON.stringify({ id: 'email_to' }), { status: 200 })
+        },
+      })
+
+      assert.equal(result.status, 200)
+      const payload = JSON.parse(String(fetchCalls[0].init.body))
+      assert.deepEqual(payload.to, ['inbox@example.com'])
+      assert.equal(CONTACT_EMAIL, 'pradhuldev.1990@gmail.com')
+      assert.equal(CONTACT_MAILTO, 'mailto:pradhuldev.1990@gmail.com')
+    } finally {
+      if (previous === undefined) delete process.env.CONTACT_TO_EMAIL
+      else process.env.CONTACT_TO_EMAIL = previous
+    }
+  })
+
+  await check('treats a blank CONTACT_TO_EMAIL as the Resend account inbox', async () => {
+    const previous = process.env.CONTACT_TO_EMAIL
+    process.env.CONTACT_TO_EMAIL = '   '
+    try {
+      const fetchCalls: Array<{ init: RequestInit }> = []
+      await submitContactMessage(validInput, '9.9.9.9', {
+        apiKey: 're_test_key',
+        fetchImpl: async (_input, init) => {
+          fetchCalls.push({ init: init ?? {} })
+          return new Response(JSON.stringify({ id: 'email_blank_to' }), { status: 200 })
+        },
+      })
+      const payload = JSON.parse(String(fetchCalls[0].init.body))
+      assert.deepEqual(payload.to, ['pradhul.dev1990@gmail.com'])
+    } finally {
+      if (previous === undefined) delete process.env.CONTACT_TO_EMAIL
+      else process.env.CONTACT_TO_EMAIL = previous
     }
   })
 
