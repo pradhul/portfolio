@@ -1,8 +1,9 @@
 'use client'
 
 import { FormEvent, PointerEvent as ReactPointerEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
 import { Loader2, PenTool } from 'lucide-react'
+import { useLanguage } from '@/components/LanguageProvider'
+import { content } from '@/lib/content'
 import {
   normalizeStrokes,
   scaleStrokesToFit,
@@ -33,7 +34,7 @@ function drawStrokes(
   ctx.clearRect(0, 0, width, height)
   ctx.lineJoin = 'round'
   ctx.lineCap = 'round'
-  ctx.strokeStyle = '#d9a441'
+  ctx.strokeStyle = '#eaff52'
   ctx.lineWidth = lineWidth
 
   for (const stroke of strokes) {
@@ -71,7 +72,7 @@ function SignaturePreview({ strokes }: { strokes: SignatureStroke[] }) {
       ref={previewRef}
       width={PREVIEW_WIDTH}
       height={PREVIEW_HEIGHT}
-      className="w-full rounded-lg border border-line bg-ink/60"
+      className="w-full border border-line bg-ink"
       aria-label="Submitted signature preview"
     />
   )
@@ -94,6 +95,7 @@ export default function GuestbookClient({
   const [submitError, setSubmitError] = useState('')
   const [loadError, setLoadError] = useState('')
   const [success, setSuccess] = useState('')
+  const { tString } = useLanguage()
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const activeStrokeRef = useRef<SignatureStroke>([])
@@ -108,12 +110,12 @@ export default function GuestbookClient({
         const response = await fetch('/api/guestbook')
         const data = await response.json()
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to load entries.')
+          throw new Error(data.error || content.guestbook.states.loadError)
         }
         setEntries(data.entries || [])
       } catch (err) {
         if (initialEntries.length === 0) {
-          setLoadError(err instanceof Error ? err.message : 'Failed to load entries.')
+          setLoadError(err instanceof Error ? err.message : content.guestbook.states.loadError)
         }
       } finally {
         setLoadingEntries(false)
@@ -200,12 +202,12 @@ export default function GuestbookClient({
     const trimmedName = name.trim()
 
     if (!trimmedMessage) {
-      setSubmitError('Please write a message before submitting.')
+      setSubmitError(tString('guestbook.form.messageRequired'))
       return
     }
 
     if (!hasSignature) {
-      setSubmitError('Please add your signature before submitting.')
+      setSubmitError(tString('guestbook.form.signatureRequired'))
       return
     }
 
@@ -228,14 +230,14 @@ export default function GuestbookClient({
 
       const data = await response.json()
       if (!response.ok) {
-        throw new Error(data.error || 'Could not submit your entry.')
+        throw new Error(data.error || tString('guestbook.form.submitError'))
       }
 
       setEntries((previous) => [data.entry, ...previous].slice(0, 20))
       setName('')
       setMessage('')
       setStrokes([])
-      setSuccess('Thanks! Your message was posted.')
+      setSuccess(tString('guestbook.states.success'))
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Could not submit your entry.')
     } finally {
@@ -244,14 +246,14 @@ export default function GuestbookClient({
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <section className="rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
+    <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <section className="frame p-6 md:p-8">
         <div className="mb-6">{children}</div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="guest-name" className="mb-2 block text-sm font-medium text-cream">
-              Name (optional)
+            <label htmlFor="guest-name" className="schematic-label">
+              {tString('guestbook.form.nameLabel')}
             </label>
             <input
               id="guest-name"
@@ -259,14 +261,14 @@ export default function GuestbookClient({
               value={name}
               onChange={(event) => setName(event.target.value)}
               maxLength={80}
-              placeholder="Your name"
-              className="w-full rounded-lg border border-line bg-ink/60 px-4 py-3 text-cream placeholder:text-cream-faint focus:outline-none focus:ring-2 focus:ring-brass/40"
+              placeholder={tString('guestbook.form.namePlaceholder')}
+              className="schematic-field"
             />
           </div>
 
           <div>
-            <label htmlFor="guest-message" className="mb-2 block text-sm font-medium text-cream">
-              Message
+            <label htmlFor="guest-message" className="schematic-label">
+              {tString('guestbook.form.messageLabel')}
             </label>
             <textarea
               id="guest-message"
@@ -275,24 +277,24 @@ export default function GuestbookClient({
               maxLength={500}
               required
               rows={5}
-              placeholder="Write a short message..."
-              className="w-full rounded-lg border border-line bg-ink/60 px-4 py-3 text-cream placeholder:text-cream-faint focus:outline-none focus:ring-2 focus:ring-brass/40"
+              placeholder={tString('guestbook.form.messagePlaceholder')}
+              className="schematic-field"
             />
-            <p className="mt-1 text-xs text-cream-faint">{message.length}/500</p>
+            <p className="mt-1 font-mono text-[13px] text-cream-muted">{message.length}/500</p>
           </div>
 
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <label className="block text-sm font-medium text-cream">Signature</label>
+              <label className="schematic-label mb-0">{tString('guestbook.form.signatureLabel')}</label>
               <button
                 type="button"
                 onClick={clearSignature}
-                className="text-sm text-brass hover:text-brass-bright transition-colors"
+                className="font-mono text-[13px] text-lime hover:underline"
               >
-                Clear signature
+                {tString('guestbook.form.clearSignature')}
               </button>
             </div>
-            <div className="rounded-xl border border-line bg-ink/60 p-2">
+            <div className="border border-line bg-ink p-2">
               <canvas
                 ref={canvasRef}
                 width={SIGNATURE_PAD_WIDTH}
@@ -301,52 +303,45 @@ export default function GuestbookClient({
                 onPointerMove={continueStroke}
                 onPointerUp={finishStroke}
                 onPointerLeave={finishStroke}
-                className="h-[220px] w-full touch-none rounded-lg bg-ink/40"
+                className="h-[220px] w-full touch-none bg-ink"
                 aria-label="Signature pad"
               />
             </div>
           </div>
 
-          {submitError && <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{submitError}</p>}
-          {success && <p className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">{success}</p>}
+          {submitError && <p className="border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">{submitError}</p>}
+          {success && <p className="border border-signal/40 bg-signal/10 px-4 py-3 text-sm text-signal">{success}</p>}
 
-          <motion.button
-            type="submit"
-            disabled={submitting}
-            whileHover={{ scale: submitting ? 1 : 1.01 }}
-            whileTap={{ scale: submitting ? 1 : 0.99 }}
-            className="inline-flex items-center gap-2 rounded-full bg-brass px-6 py-3 font-semibold text-ink transition-colors hover:bg-brass-bright disabled:cursor-not-allowed disabled:opacity-60"
-          >
+          <button type="submit" disabled={submitting} className="btn btn-primary">
             {submitting ? <Loader2 size={18} className="animate-spin" /> : <PenTool size={18} />}
-            {submitting ? 'Posting...' : 'Post to guestbook'}
-          </motion.button>
+            {submitting ? tString('guestbook.form.posting') : tString('guestbook.form.submit')}
+          </button>
         </form>
       </section>
 
-      <section className="rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
-        <h2 className="mb-6 font-display text-2xl font-semibold tracking-tight text-cream">Recent messages</h2>
+      <section className="frame p-6 md:p-8">
+        <h2 className="mb-6 font-display text-2xl font-semibold tracking-tight text-cream">
+          {tString('guestbook.recentTitle')}
+        </h2>
 
         {loadingEntries ? (
-          <div className="flex items-center gap-2 text-cream-faint">
+          <div className="flex items-center gap-2 text-cream-muted">
             <Loader2 size={18} className="animate-spin" />
-            Loading entries...
+            {tString('guestbook.states.loading')}
           </div>
         ) : loadError ? (
-          <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          <p className="border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
             {loadError}
           </p>
         ) : entries.length === 0 ? (
-          <p className="text-cream-faint">No entries yet. Be the first to leave a message.</p>
+          <p className="text-cream-muted">{tString('guestbook.states.empty')}</p>
         ) : (
           <div className="space-y-4">
             {entries.map((entry) => (
-              <article
-                key={entry.id}
-                className="rounded-xl border border-line bg-ink/50 p-4"
-              >
+              <article key={entry.id} className="border border-line bg-ink p-4">
                 <div className="mb-2 flex items-center justify-between gap-3">
-                  <p className="font-semibold text-cream">{entry.name || 'Anonymous'}</p>
-                  <time className="text-xs text-cream-faint">
+                  <p className="font-semibold text-cream">{entry.name || tString('guestbook.anonymous')}</p>
+                  <time className="font-mono text-[13px] text-cream-muted">
                     {new Date(entry.createdAt).toLocaleString()}
                   </time>
                 </div>

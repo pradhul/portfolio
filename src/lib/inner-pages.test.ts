@@ -83,6 +83,72 @@ check('homepage About section reuses AboutContent instead of duplicating copy', 
   assert.match(source, /<AboutContent/)
 })
 
+check('homepage work uses real project cards, not the Glance TV mock', () => {
+  const source = read('src/components/HomePage.tsx')
+  assert.match(source, /from ['"]@\/components\/PortfolioSection['"]/)
+  assert.match(source, /<PortfolioSection/)
+  assert.doesNotMatch(source, /GlanceTvMock/)
+  assert.doesNotMatch(source, /HOME_CARD_IDS/)
+})
+
+check('homepage compact About still shows skills and GitHub activity', () => {
+  const source = read('src/components/AboutContent.tsx')
+  assert.match(source, /about\.skillsLabel/)
+  assert.match(source, /GitHubActivity/)
+  assert.doesNotMatch(source, /variant === 'full' && \(\s*<GitHubActivity/)
+})
+
+check('hire CTAs keep Hire me and Upwork', () => {
+  const source = read('src/components/HireCtas.tsx')
+  assert.match(source, /upwork_click/)
+  assert.match(source, /hire_me_click/)
+  assert.match(source, /FaSquareUpwork/)
+})
+
+check('contact page uses translated copy, socials, and Back to home', () => {
+  const page = read('src/app/contact/page.tsx')
+  const source = read('src/components/ContactPage.tsx')
+  assert.match(page, /from ['"]@\/components\/ContactPage['"]/)
+  assert.match(source, /tString\('contact\.backToHome'\)/)
+  assert.match(source, /tString\('contact\.title'\)/)
+  assert.doesNotMatch(source, /content\.contact\.title/)
+  const channels = read('src/components/ContactChannels.tsx')
+  assert.match(channels, /stackOverflow/)
+  assert.match(channels, /upwork_click/)
+})
+
+check('project pages restore About copy, icons, Live Demo, and the v43 release label', () => {
+  const glance = read('src/app/portfolio/glance-tv/GlanceTvContent.tsx')
+  const chart = read('src/app/portfolio/chartstudio/ChartStudioContent.tsx')
+  const shelf = read('src/app/portfolio/linkshelf/LinkShelfContent.tsx')
+  assert.match(glance, /copy\.aboutLabel/)
+  assert.match(glance, /copy\.releaseLabel/)
+  assert.match(glance, /icon=\{glance\?\.icon\}/)
+  assert.match(chart, /copy\.aboutLabel/)
+  assert.match(chart, /copy\.liveDemo/)
+  assert.match(shelf, /copy\.aboutLabel/)
+  assert.match(shelf, /copy\.liveDemo/)
+})
+
+check('festival theme is wired into schematic chrome', () => {
+  const heading = read('src/components/SectionHeading.tsx')
+  const header = read('src/components/SiteHeader.tsx')
+  const card = read('src/components/ProjectCard.tsx')
+  const home = read('src/components/HomePage.tsx')
+  const about = read('src/components/AboutPage.tsx')
+  const site = read('src/components/SitePage.tsx')
+  const css = read('src/app/globals.css')
+  assert.match(heading, /useFestivalTheme/)
+  assert.match(heading, /FestivalTextDecoration/)
+  assert.match(header, /useFestivalTheme/)
+  assert.match(card, /useFestivalTheme/)
+  assert.match(home, /FestivalThemeProvider/)
+  assert.match(about, /useFestivalTheme/)
+  assert.match(site, /FestivalThemeProvider/)
+  assert.match(css, /\.festival-theme \.btn-primary/)
+  assert.match(css, /\.festival-theme \.frame::before/)
+})
+
 console.log('portfolio page wiring')
 
 check('portfolio route keeps per-page metadata and does not use the old summaries', () => {
@@ -148,12 +214,112 @@ check('SitePage nav uses real routes (not in-page hashes) that exist', () => {
   }
 })
 
-check('SitePage skips heavy 3D on mobile via shouldLoadThreeBackground', () => {
+check('SitePage uses the CSS schematic grid instead of a 3D background', () => {
   const shell = read('src/components/SitePage.tsx')
   const background = read('src/components/SiteBackground.tsx')
   assert.match(shell, /SiteBackground/)
-  assert.match(background, /shouldLoadThreeBackground/)
-  assert.match(background, /ThreeBackground/)
+  assert.match(background, /schematic-grid/)
+  assert.doesNotMatch(background, /ThreeBackground/)
+})
+
+check('homepage filters keep All / Android TV / Extensions / In progress / Archive', () => {
+  assert.deepEqual(Object.keys(content.portfolio.filters), [
+    'all',
+    'androidTv',
+    'extensions',
+    'inProgress',
+    'archive',
+  ])
+  assert.equal(content.portfolio.filters.androidTv, 'Android TV')
+  assert.equal(content.portfolio.archiveTitle, 'More projects')
+  assert.equal(content.hero.hireMe, 'Hire me')
+  assert.equal(content.hero.startProject, 'Start a project')
+  assert.equal(content.contact.backToHome, 'Back to home')
+})
+
+check('India visitors default to English while other countries still auto-detect', () => {
+  const source = read('src/lib/countryToLanguage.ts')
+  assert.match(source, /IN:\s*'en'/)
+  assert.doesNotMatch(source, /IN:\s*'hi'/)
+})
+
+check('guestbook restores Back to home and translated copy', () => {
+  const page = read('src/app/guestbook/GuestbookPage.tsx')
+  assert.match(page, /contact\.backToHome/)
+  const client = read('src/app/guestbook/GuestbookClient.tsx')
+  assert.match(client, /guestbook\.form\.nameLabel/)
+})
+
+check('footer uses the reserved rights line', () => {
+  const footer = read('src/components/SiteFooter.tsx')
+  assert.match(footer, /footer\.copyright/)
+  assert.match(footer, /© \{year\}/)
+  assert.equal(content.footer.copyright, 'Pradhul Dev. All rights reserved.')
+})
+
+check('squash-push page restores overview, usage, limitations, and future plans', () => {
+  const source = read('src/app/portfolio/squashpush/SquashPushContent.tsx')
+  assert.match(source, /copy\.overview/)
+  assert.match(source, /copy\.usageGuide/)
+  assert.match(source, /copy\.knownLimitations/)
+  assert.match(source, /copy\.futurePlans/)
+  assert.match(source, /copy\.vscodeRequirement/)
+  assert.match(source, /icon=\{squashPush\?\.icon\}/)
+})
+
+check('homepage and portfolio cards keep the requested release badges', () => {
+  const ionic = projects.find((project) => project.id === 'ionicMeasure')
+  const shelf = projects.find((project) => project.id === 'linkShelf')
+  const glance = projects.find((project) => project.id === 'glanceTv')
+  assert.equal(ionic?.release?.tag, 'v0.1.1')
+  assert.equal(shelf?.release?.tag, 'v1.1.0')
+  assert.equal(glance?.release?.tag, 'v43')
+  assert.equal(content.portfolio.glanceTv.releaseLabel, 'v43 release')
+  const card = read('src/components/ProjectCard.tsx')
+  assert.match(card, /data-release-tag/)
+})
+
+check('archive cards do not point at missing public images', () => {
+  const source = read('src/data/projects.ts')
+  for (const missing of [
+    '/iconsearch/demo.png',
+    '/pradhul/demo.png',
+    '/prism/demo.png',
+    '/smspend/demo.png',
+    '/splitit/demo.png',
+    '/unfear/demo.png',
+    '/writings/demo.png',
+    '/yaga/demo.png',
+  ]) {
+    assert.doesNotMatch(source, new RegExp(missing.replace('/', '\\/')))
+  }
+
+  const missingFiles: string[] = []
+  for (const project of projects) {
+    if (project.media.src) {
+      const mediaFile = join(process.cwd(), 'public', project.media.src.replace(/^\//, ''))
+      if (!existsSync(mediaFile)) missingFiles.push(`${project.id} -> ${project.media.src}`)
+    }
+    if (project.icon.type === 'image') {
+      const iconFile = join(process.cwd(), 'public', project.icon.src.replace(/^\//, ''))
+      if (!existsSync(iconFile)) missingFiles.push(`${project.id} icon -> ${project.icon.src}`)
+    }
+  }
+  assert.deepEqual(missingFiles, [])
+})
+
+check('keeps invented Stitch stats out of the shipped UI', () => {
+  const sources = [
+    'src/lib/content.ts',
+    'src/components/HomePage.tsx',
+    'src/components/AboutContent.tsx',
+    'src/components/ContactForm.tsx',
+  ].map(read).join('\n')
+  assert.doesNotMatch(sources, /0 runtime crashes/i)
+  assert.doesNotMatch(sources, /Heap utilization/i)
+  assert.doesNotMatch(sources, /Sarah Connor/i)
+  assert.doesNotMatch(sources, /10\+\s*years/)
+  assert.doesNotMatch(sources, /Tolerance:\s*production stable/i)
 })
 
 if (failures > 0) {

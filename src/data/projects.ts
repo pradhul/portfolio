@@ -317,7 +317,7 @@ export const projects: Project[] = [
     figure: 'Fig. 08',
     icon: { type: 'lucide', name: 'Bookmark' },
     media: {
-      src: '/smspend/demo.png',
+      src: '',
       alt: 'SMSpend',
       width: 800,
       height: 600,
@@ -340,7 +340,7 @@ export const projects: Project[] = [
     figure: 'Fig. 09',
     icon: { type: 'lucide', name: 'Bookmark' },
     media: {
-      src: '/prism/demo.png',
+      src: '',
       alt: 'Prism',
       width: 800,
       height: 600,
@@ -363,7 +363,7 @@ export const projects: Project[] = [
     figure: 'Fig. 10',
     icon: { type: 'lucide', name: 'Bookmark' },
     media: {
-      src: '/unfear/demo.png',
+      src: '',
       alt: 'Unfear',
       width: 800,
       height: 600,
@@ -409,7 +409,7 @@ export const projects: Project[] = [
     figure: 'Fig. 12',
     icon: { type: 'image', src: '/pradhul/icon.svg', alt: 'Developer Profile Icon' },
     media: {
-      src: '/pradhul/demo.png',
+      src: '',
       alt: 'Developer Profile',
       width: 800,
       height: 600,
@@ -432,7 +432,7 @@ export const projects: Project[] = [
     figure: 'Fig. 13',
     icon: { type: 'lucide', name: 'Bookmark' },
     media: {
-      src: '/splitit/demo.png',
+      src: '',
       alt: 'Splitit',
       width: 800,
       height: 600,
@@ -482,7 +482,7 @@ export const projects: Project[] = [
     figure: 'Fig. 15',
     icon: { type: 'image', src: '/yaga/icon.png', alt: 'YAGA Icon' },
     media: {
-      src: '/yaga/demo.png',
+      src: '',
       alt: 'YAGA',
       width: 800,
       height: 600,
@@ -505,7 +505,7 @@ export const projects: Project[] = [
     figure: 'Fig. 16',
     icon: { type: 'lucide', name: 'Bookmark' },
     media: {
-      src: '/writings/demo.png',
+      src: '',
       alt: 'Writing Showcase',
       width: 800,
       height: 600,
@@ -528,7 +528,7 @@ export const projects: Project[] = [
     figure: 'Fig. 17',
     icon: { type: 'lucide', name: 'Bookmark' },
     media: {
-      src: '/iconsearch/demo.png',
+      src: '',
       alt: 'Icon Search',
       width: 800,
       height: 600,

@@ -1,7 +1,6 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { motion } from 'framer-motion'
 import { content } from '@/lib/content'
 import { useFestivalTheme } from '@/components/FestivalTheme'
 import { useLanguage } from '@/components/LanguageProvider'
@@ -11,13 +10,14 @@ const GitHubActivity = dynamic(() => import('@/components/GitHubActivity'), {
   loading: () => (
     <div className="w-full overflow-x-auto">
       <div className="inline-block min-w-full">
-        <div className="text-cream-faint text-center py-8">Loading activity...</div>
+        <div className="py-8 text-center text-cream-muted">Loading activity...</div>
       </div>
     </div>
   ),
 })
 
 type AboutSource = typeof content.about
+type AboutInterest = AboutSource['interests'][number]
 
 function asStringList(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
@@ -33,141 +33,127 @@ export default function AboutContent({ variant = 'compact' }: { variant?: 'compa
       (translatedContent?.about as AboutSource | undefined)?.experience ?? content.about.experience,
     education:
       (translatedContent?.about as AboutSource | undefined)?.education ?? content.about.education,
+    interests:
+      (translatedContent?.about as AboutSource | undefined)?.interests ?? content.about.interests,
   }
 
   const paragraphs = asStringList(t('about.paragraphs'))
   const skills = asStringList(t('about.skills'))
+  const interests = about.interests as AboutInterest[]
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.7, delay: 0.15 }}
-        className="mt-14 grid gap-10 md:grid-cols-[1fr_2fr]"
-      >
-        <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
-          {tString('nav.about')}
+      <div className="frame grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <div className="border-b border-line bg-ink-raised p-[26px] md:col-span-2 lg:col-span-1 lg:border-b-0 lg:border-r">
+          <span
+            className="font-mono text-[13px] tracking-[0.04em] text-lime"
+            style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+          >
+            {tString('about.fighterLabel')}
+          </span>
+          <h3 className="mt-1.5 font-display text-xl font-semibold text-cream">
+            {tString('about.fighterName')}
+          </h3>
+          <p className="mt-1.5 text-cream-muted">{tString('about.fighterIntro')}</p>
         </div>
-        <div className="max-w-prose">
-          {paragraphs.map((para, index) => {
-            if (index === 0 && para.includes('Pradhul')) {
-              const parts = para.split('Pradhul')
-              return (
-                <p
-                  key={index}
-                  className="mb-6 text-2xl font-medium leading-snug text-cream md:text-3xl last:mb-0"
-                >
-                  {parts[0]}
-                  <span
-                    className="text-brass"
-                    style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
-                  >
-                    Pradhul
-                  </span>
-                  {parts[1]}
-                </p>
-              )
-            }
-            return (
-              <p
-                key={index}
-                className="mb-6 text-base leading-relaxed text-cream-muted md:text-lg last:mb-0"
-              >
-                {para}
-              </p>
-            )
-          })}
-          {skills.length > 0 && (
-            <div className="mt-10">
-              <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.25em] text-cream-faint">
-                {tString('about.skillsLabel')}
-              </div>
-              <ul className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <li
-                    key={skill}
-                    className="rounded-full border border-line px-3 py-1.5 text-sm text-cream-muted"
-                  >
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        {interests.map((interest, index) => (
+          <div
+            key={interest.title}
+            className={`border-line p-[26px] ${
+              index < interests.length - 1 ? 'border-b md:border-b lg:border-b-0 lg:border-r' : ''
+            } ${index === 0 ? 'md:border-r' : ''} ${index === 1 ? 'md:border-t-0 md:border-b-0' : ''}`}
+          >
+            <span className="font-mono text-[13px] tracking-[0.04em] text-brass">{interest.label}</span>
+            <h3 className="mt-1.5 font-display text-xl font-semibold text-cream">{interest.title}</h3>
+            <p className="mt-1.5 text-cream-muted">{interest.body}</p>
+          </div>
+        ))}
+      </div>
+
+      {variant === 'full' && (
+        <div className="mt-16 max-w-prose">
+          {paragraphs.map((para) => (
+            <p key={para} className="mb-5 text-base leading-relaxed text-cream-muted last:mb-0 md:text-lg">
+              {para}
+            </p>
+          ))}
         </div>
-      </motion.div>
+      )}
+
+      {skills.length > 0 && (
+        <div className="mt-12">
+          <div
+            className="mb-4 font-mono text-[13px] tracking-[0.04em] text-lime"
+            style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+          >
+            {tString('about.skillsLabel')}
+          </div>
+          <ul className="flex flex-wrap gap-2">
+            {skills.map((skill) => (
+              <li key={skill} className="tag">
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {variant === 'full' && (
         <>
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-20 grid gap-10 md:grid-cols-[1fr_2fr]"
-          >
-            <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
+          <div className="mt-16">
+            <div
+              className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime"
+              style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+            >
               {tString('about.experienceLabel')}
             </div>
-            <ol className="space-y-10">
+            <ol className="grid gap-4">
               {about.experience.map((item) => (
-                <li key={`${item.company}-${item.dates}`}>
-                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-brass">
-                    {item.dates}
+                <li key={`${item.company}-${item.dates}`} className="frame grid gap-1.5 p-[22px] md:grid-cols-[180px_1fr] md:gap-6">
+                  <div className="font-mono text-[13px] tracking-[0.04em] text-brass">{item.dates}</div>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-cream">{item.role}</h3>
+                    <div className="mt-1 text-cream-muted">{item.company}</div>
+                    <p className="mt-1.5 text-cream-muted">{item.summary}</p>
                   </div>
-                  <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-cream">
-                    {item.role}
-                  </h3>
-                  <div className="mt-1 text-cream-muted">{item.company}</div>
-                  <p className="mt-3 max-w-prose leading-relaxed text-cream-muted">{item.summary}</p>
                 </li>
               ))}
             </ol>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.7, delay: 0.25 }}
-            className="mt-20 grid gap-10 md:grid-cols-[1fr_2fr]"
-          >
-            <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
+          <div className="mt-16">
+            <div
+              className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime"
+              style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+            >
               {tString('about.educationLabel')}
             </div>
-            <ul className="space-y-8">
+            <ul className="grid gap-4">
               {about.education.map((item) => (
-                <li key={`${item.school}-${item.dates}`}>
-                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-brass">
-                    {item.dates}
+                <li key={`${item.school}-${item.dates}`} className="frame grid gap-1.5 p-[22px] md:grid-cols-[180px_1fr] md:gap-6">
+                  <div className="font-mono text-[13px] tracking-[0.04em] text-brass">{item.dates}</div>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-cream">{item.credential}</h3>
+                    <div className="mt-1 text-cream-muted">{item.school}</div>
                   </div>
-                  <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-cream">
-                    {item.credential}
-                  </h3>
-                  <div className="mt-1 text-cream-muted">{item.school}</div>
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
         </>
       )}
 
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.7, delay: 0.25 }}
-        className="mt-20 grid gap-10 md:grid-cols-[1fr_2fr]"
-      >
-        <div className="font-mono text-xs uppercase tracking-[0.25em] text-cream-faint">
+      <div className="mt-16">
+        <div
+          className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime"
+          style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+        >
           {tString('about.githubActivity')}
         </div>
-        <div className="overflow-hidden rounded-2xl border border-line bg-ink-soft p-6 md:p-8">
+        <div className="frame overflow-hidden p-6 md:p-8">
           <GitHubActivity username="pradhul" />
         </div>
-      </motion.div>
+      </div>
     </>
   )
 }

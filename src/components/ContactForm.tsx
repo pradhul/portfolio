@@ -2,27 +2,32 @@
 
 import { FormEvent, useId, useState } from 'react'
 import { track } from '@vercel/analytics'
-import { Loader2, Send } from 'lucide-react'
 import { content } from '@/lib/content'
 import {
+  BUDGET_RANGES,
   CONTACT_EMAIL,
   CONTACT_MAILTO,
   HONEYPOT_FIELD,
   MAX_EMAIL_LENGTH,
   MAX_MESSAGE_LENGTH,
   MAX_NAME_LENGTH,
+  PROJECT_TYPES,
 } from '@/lib/contactConstants'
 
 type ContactFormCopy = typeof content.contact.form
 
-const fieldClassName =
-  'w-full rounded-lg border border-line bg-ink/60 px-4 py-3 text-cream placeholder:text-cream-faint focus:outline-none focus:ring-2 focus:ring-brass/40'
-const labelClassName = 'mb-2 block text-sm font-medium text-cream'
-
-export default function ContactForm({ copy = content.contact.form }: { copy?: ContactFormCopy }) {
+export default function ContactForm({
+  copy = content.contact.form,
+  locationNote = content.contact.locationNote,
+}: {
+  copy?: ContactFormCopy
+  locationNote?: string
+}) {
   const id = useId()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [projectType, setProjectType] = useState<string>(PROJECT_TYPES[0])
+  const [budget, setBudget] = useState<string>(BUDGET_RANGES[0])
   const [message, setMessage] = useState('')
   const [website, setWebsite] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -49,6 +54,8 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
           name,
           email,
           message,
+          projectType,
+          budget,
           [HONEYPOT_FIELD]: website,
         }),
       })
@@ -74,6 +81,8 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
 
       setName('')
       setEmail('')
+      setProjectType(PROJECT_TYPES[0])
+      setBudget(BUDGET_RANGES[0])
       setMessage('')
       setWebsite('')
       setSuccess(copy.success)
@@ -86,8 +95,11 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
     }
   }
 
+  const projectTypes = copy.projectTypes?.length ? copy.projectTypes : [...PROJECT_TYPES]
+  const budgets = copy.budgets?.length ? copy.budgets : [...BUDGET_RANGES]
+
   return (
-    <form onSubmit={handleSubmit} className="relative space-y-5" noValidate>
+    <form onSubmit={handleSubmit} className="frame grid grid-cols-1 gap-[18px] p-[30px] sm:grid-cols-2" noValidate>
       <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
         <label htmlFor={`${id}-website`}>{copy.honeypotLabel}</label>
         <input
@@ -102,7 +114,7 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
       </div>
 
       <div>
-        <label htmlFor={`${id}-name`} className={labelClassName}>
+        <label htmlFor={`${id}-name`} className="schematic-label">
           {copy.nameLabel}
         </label>
         <input
@@ -114,12 +126,12 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
           maxLength={MAX_NAME_LENGTH}
           value={name}
           onChange={(event) => setName(event.target.value)}
-          className={fieldClassName}
+          className="schematic-field"
         />
       </div>
 
       <div>
-        <label htmlFor={`${id}-email`} className={labelClassName}>
+        <label htmlFor={`${id}-email`} className="schematic-label">
           {copy.emailLabel}
         </label>
         <input
@@ -131,34 +143,70 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
           maxLength={MAX_EMAIL_LENGTH}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className={fieldClassName}
+          className="schematic-field"
         />
       </div>
 
       <div>
-        <label htmlFor={`${id}-message`} className={labelClassName}>
+        <label htmlFor={`${id}-type`} className="schematic-label">
+          {copy.projectTypeLabel}
+        </label>
+        <select
+          id={`${id}-type`}
+          name="projectType"
+          value={projectType}
+          onChange={(event) => setProjectType(event.target.value)}
+          className="schematic-select"
+        >
+          {projectTypes.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label htmlFor={`${id}-budget`} className="schematic-label">
+          {copy.budgetLabel}
+        </label>
+        <select
+          id={`${id}-budget`}
+          name="budget"
+          value={budget}
+          onChange={(event) => setBudget(event.target.value)}
+          className="schematic-select"
+        >
+          {budgets.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="sm:col-span-2">
+        <label htmlFor={`${id}-message`} className="schematic-label">
           {copy.messageLabel}
         </label>
         <textarea
           id={`${id}-message`}
           name="message"
           required
-          rows={6}
+          rows={5}
           maxLength={MAX_MESSAGE_LENGTH}
           value={message}
           onChange={(event) => setMessage(event.target.value)}
-          className={fieldClassName}
+          placeholder={copy.messagePlaceholder}
+          className="schematic-field"
         />
-        <p className="mt-1 text-xs text-cream-faint">
-          {message.length}/{MAX_MESSAGE_LENGTH}
-        </p>
       </div>
 
       {error ? (
-        <p role="alert" className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <p role="alert" className="sm:col-span-2 border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
           {error}{' '}
           {mailto ? (
-            <a href={mailto} className="font-medium text-brass underline underline-offset-2 hover:text-brass-bright">
+            <a href={mailto} className="font-medium text-lime underline underline-offset-2">
               {CONTACT_EMAIL}
             </a>
           ) : null}
@@ -166,22 +214,17 @@ export default function ContactForm({ copy = content.contact.form }: { copy?: Co
       ) : null}
 
       {success ? (
-        <p
-          role="status"
-          className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
-        >
+        <p role="status" className="sm:col-span-2 border border-signal/40 bg-signal/10 px-4 py-3 text-sm text-signal">
           {success}
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="inline-flex items-center gap-2 rounded-full bg-brass px-6 py-3 font-semibold text-ink transition-colors hover:bg-brass-bright disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {submitting ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
-        {submitting ? copy.sending : copy.submit}
-      </button>
+      <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
+        <button type="submit" disabled={submitting} className="btn btn-primary">
+          {submitting ? copy.sending : copy.submit}
+        </button>
+        <span className="font-mono text-[13px] tracking-[0.04em] text-cream-muted">{locationNote}</span>
+      </div>
     </form>
   )
 }

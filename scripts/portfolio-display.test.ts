@@ -81,23 +81,26 @@ check('every live card has a category and a known filter group', () => {
 })
 
 check('filters return the expected featured ids', () => {
-  const { featured } = partitionProjects(projects)
+  const { featured, archive } = partitionProjects(projects)
   assert.deepEqual(
     featured.filter((project) => matchesFilter(project, 'extensions')).map((p) => p.id),
     ['ionicMeasure', 'squashPush', 'vsColorCode']
   )
   assert.deepEqual(
-    featured.filter((project) => matchesFilter(project, 'web')).map((p) => p.id),
-    ['linkShelf', 'uploadSpec']
-  )
-  assert.deepEqual(
-    featured.filter((project) => matchesFilter(project, 'mobile')).map((p) => p.id),
+    featured.filter((project) => matchesFilter(project, 'androidTv')).map((p) => p.id),
     ['glanceTv']
   )
   assert.deepEqual(
-    featured.filter((project) => matchesFilter(project, 'tools')).map((p) => p.id),
+    featured.filter((project) => matchesFilter(project, 'inProgress')).map((p) => p.id),
+    ['squashPush', 'vsColorCode']
+  )
+  assert.deepEqual(
+    featured.filter((project) => matchesFilter(project, 'archive')).map((p) => p.id),
     []
   )
+  assert.ok(archive.every((project) => matchesFilter(project, 'archive', 'archive')))
+  assert.ok(archive.some((project) => project.id === 'chartStudio'))
+  assert.ok(featured.some((project) => project.id === 'uploadSpec'))
 })
 
 check('a project missing from the featured list is archived (sync-safe)', () => {

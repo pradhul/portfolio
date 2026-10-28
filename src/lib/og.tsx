@@ -36,9 +36,10 @@ export function generateOgImage({
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          backgroundColor: '#0f0d0b',
+          backgroundColor: '#050b14',
           backgroundImage:
-            'radial-gradient(circle at 12% 20%, rgba(217, 164, 65, 0.16), transparent 42%), radial-gradient(circle at 88% 80%, rgba(236, 229, 216, 0.08), transparent 36%)',
+            'linear-gradient(rgba(90, 130, 200, 0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(90, 130, 200, 0.10) 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
           padding: '72px 80px',
           fontFamily: 'IBM Plex Sans',
         }}
@@ -54,7 +55,7 @@ export function generateOgImage({
             style={{
               display: 'flex',
               flexDirection: 'column',
-              color: '#d9a441',
+              color: '#eaff52',
               fontSize: 20,
               fontWeight: 400,
             }}
@@ -65,7 +66,7 @@ export function generateOgImage({
             style={{
               display: 'flex',
               flexDirection: 'column',
-              color: '#ece5d8',
+              color: '#e6edf7',
               fontSize: titleSize,
               fontWeight: 400,
               marginTop: 24,
@@ -79,7 +80,7 @@ export function generateOgImage({
               display: 'flex',
               width: 80,
               height: 3,
-              backgroundColor: '#d9a441',
+              backgroundColor: '#eaff52',
               marginTop: 28,
             }}
           />
@@ -87,7 +88,7 @@ export function generateOgImage({
             style={{
               display: 'flex',
               flexDirection: 'column',
-              color: '#a89f8e',
+              color: '#b5ccf2',
               fontSize: 26,
               fontWeight: 400,
               marginTop: 32,
@@ -101,12 +102,12 @@ export function generateOgImage({
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            color: '#6e675b',
+            color: '#8fb0e0',
             fontSize: 20,
             fontWeight: 400,
           }}
         >
-          <div style={{ display: 'flex' }}>PRADHUL DEV</div>
+          <div style={{ display: 'flex' }}>PRADHUL DEV · PD-2026</div>
           <div style={{ display: 'flex' }}>{SITE_HOST}</div>
         </div>
       </div>

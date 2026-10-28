@@ -8,6 +8,7 @@ type ContentType = typeof content
 
 interface LanguageContextType {
   language: string
+  renderedLanguage: string
   setLanguage: (lang: string) => void
   t: (key: string) => string | string[] | Record<string, unknown>
   tString: (key: string) => string // Helper for string-only translations
@@ -49,6 +50,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         const response = await fetch('/api/detect-country')
         if (response.ok) {
           const data = await response.json()
+          if (typeof data.country === 'string' && data.country.toUpperCase() === 'IN') {
+            setLanguageState('en')
+            setIsInitialized(true)
+            return
+          }
           if (data.language && supportedLanguages.includes(data.language)) {
             setLanguageState(data.language)
             setIsInitialized(true)
@@ -154,23 +160,30 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Translation function - gets value from nested keys like 'hero.title'
-  const t = (key: string): string | string[] | Record<string, unknown> => {
-    const currentContent = translatedContent || content
-    const keys = key.split('.')
-    let value: unknown = currentContent
-
+  const lookup = (source: unknown, keys: string[]): unknown => {
+    let value: unknown = source
     for (const k of keys) {
       if (value && typeof value === 'object' && value !== null && k in value) {
         value = (value as Record<string, unknown>)[k]
       } else {
-        // Key not found, return the key itself as fallback
-        console.warn(`Translation key not found: ${key}`)
-        return key
+        return undefined
       }
     }
+    return value
+  }
 
-    // Return the value as-is (could be string, array, or object)
+  // Translation function - gets value from nested keys like 'hero.title'.
+  // Missing translated keys fall back to English so locale stays consistent
+  // instead of leaking raw keys or mixing untranslated server copy.
+  const t = (key: string): string | string[] | Record<string, unknown> => {
+    const keys = key.split('.')
+    const value = (translatedContent ? lookup(translatedContent, keys) : undefined) ?? lookup(content, keys)
+
+    if (value === undefined) {
+      console.warn(`Translation key not found: ${key}`)
+      return key
+    }
+
     if (typeof value === 'string') {
       return value
     }
@@ -195,10 +208,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return JSON.stringify(result)
   }
 
+  const renderedLanguage = language !== 'en' && translatedContent ? language : 'en'
+
   return (
     <LanguageContext.Provider
       value={{
         language,
+        renderedLanguage,
         setLanguage,
         t,
         tString,

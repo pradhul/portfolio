@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx src/lib/contact.test.ts && tsx src/lib/seo.test.ts && tsx scripts/sync-portfolio.test.ts && tsx scripts/portfolio-display.test.ts && tsx src/lib/motionPreference.test.ts && tsx src/lib/inner-pages.test.ts",
+    "test": "tsx src/lib/contact.test.ts && tsx src/lib/seo.test.ts && tsx scripts/sync-portfolio.test.ts && tsx scripts/portfolio-display.test.ts && tsx src/lib/motionPreference.test.ts && tsx src/lib/inner-pages.test.ts && tsx src/lib/countryToLanguage.test.ts",
     "sync:portfolio": "tsx scripts/sync-portfolio-from-github.ts"
   },
   "dependencies": {

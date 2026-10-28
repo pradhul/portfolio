@@ -4,12 +4,12 @@ import { useEffect } from 'react'
 import { useLanguage } from './LanguageProvider'
 
 export function LanguageLayout({ children }: { children: React.ReactNode }) {
-  const { language } = useLanguage()
+  const { renderedLanguage } = useLanguage()
 
   useEffect(() => {
-    // Update HTML lang attribute
-    document.documentElement.lang = language
-  }, [language])
+    // Match the document language to the copy that is actually on screen.
+    document.documentElement.lang = renderedLanguage
+  }, [renderedLanguage])
 
   return <>{children}</>
 }

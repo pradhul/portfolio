@@ -1,23 +1,34 @@
 'use client'
 
-import { useFestivalTheme } from '@/components/FestivalTheme'
+import type { ReactNode } from 'react'
+import { FestivalTextDecoration, useFestivalTheme } from '@/components/FestivalTheme'
 
 export default function SectionHeading({
   index,
   title,
-  activeFestival,
+  activeFestival: activeFestivalProp,
   as: Tag = 'h2',
+  kicker,
 }: {
-  index: string
-  title: React.ReactNode
-  activeFestival: ReturnType<typeof useFestivalTheme>['activeFestival']
+  index?: string
+  title: ReactNode
+  activeFestival?: ReturnType<typeof useFestivalTheme>['activeFestival']
   as?: 'h1' | 'h2'
+  kicker?: string
 }) {
+  const { activeFestival: fetchedFestival } = useFestivalTheme()
+  const activeFestival = activeFestivalProp ?? fetchedFestival
+
   return (
-    <div className="flex items-baseline gap-5 border-t border-line pt-8">
-      <span className="font-mono text-sm text-brass">{index}</span>
+    <div className="sh mb-9">
+      <div
+        className="font-mono text-[13px] tracking-[0.04em] text-lime"
+        style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+      >
+        {kicker ?? (index ? `Section ${index}` : null)}
+      </div>
       <Tag
-        className="font-display text-4xl md:text-6xl font-semibold tracking-tight text-cream"
+        className="mt-2 font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold tracking-tight text-cream"
         style={
           activeFestival
             ? {
@@ -29,7 +40,11 @@ export default function SectionHeading({
             : undefined
         }
       >
-        {title}
+        {activeFestival ? (
+          <FestivalTextDecoration festival={activeFestival}>{title}</FestivalTextDecoration>
+        ) : (
+          title
+        )}
       </Tag>
     </div>
   )
