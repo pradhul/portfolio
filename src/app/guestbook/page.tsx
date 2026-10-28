@@ -2,10 +2,9 @@ import type { Metadata } from 'next'
 import { fromStoredStrokes } from '@/lib/guestbookSignature'
 import { isGuestbookStorageAvailable, listGuestbookEntries } from '@/lib/guestbookStore'
 import { createPageMetadata, pages } from '@/lib/seo'
-import { content } from '@/lib/content'
 import SitePage from '@/components/SitePage'
-import SectionHeading from '@/components/SectionHeading'
-import GuestbookClient, { type GuestbookEntry } from './GuestbookClient'
+import GuestbookPage from './GuestbookPage'
+import type { GuestbookEntry } from './GuestbookClient'
 
 export const metadata: Metadata = createPageMetadata(pages.guestbook)
 export const revalidate = 60
@@ -27,15 +26,12 @@ async function loadInitialEntries(): Promise<GuestbookEntry[]> {
   }
 }
 
-export default async function GuestbookPage() {
+export default async function GuestbookRoute() {
   const initialEntries = await loadInitialEntries()
 
   return (
     <SitePage current="guestbook">
-      <GuestbookClient initialEntries={initialEntries}>
-        <SectionHeading as="h1" kicker="Section — Guestbook" title={content.guestbook.title} />
-        <p className="text-cream-muted">{content.guestbook.subtitle}</p>
-      </GuestbookClient>
+      <GuestbookPage initialEntries={initialEntries} />
     </SitePage>
   )
 }

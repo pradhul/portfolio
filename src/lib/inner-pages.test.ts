@@ -113,21 +113,21 @@ check('contact page uses translated copy, socials, and Back to home', () => {
   assert.match(source, /tString\('contact\.title'\)/)
   assert.doesNotMatch(source, /content\.contact\.title/)
   const channels = read('src/components/ContactChannels.tsx')
-  assert.match(channels, /Stack Overflow/)
+  assert.match(channels, /stackOverflow/)
   assert.match(channels, /upwork_click/)
 })
 
 check('project pages restore About copy, icons, Live Demo, and the v43 release label', () => {
-  const glance = read('src/app/portfolio/glance-tv/page.tsx')
-  const chart = read('src/app/portfolio/chartstudio/page.tsx')
-  const shelf = read('src/app/portfolio/linkshelf/page.tsx')
-  assert.match(glance, /About Glance TV/)
-  assert.match(glance, /v43 release/)
+  const glance = read('src/app/portfolio/glance-tv/GlanceTvContent.tsx')
+  const chart = read('src/app/portfolio/chartstudio/ChartStudioContent.tsx')
+  const shelf = read('src/app/portfolio/linkshelf/LinkShelfContent.tsx')
+  assert.match(glance, /copy\.aboutLabel/)
+  assert.match(glance, /copy\.releaseLabel/)
   assert.match(glance, /icon=\{glance\?\.icon\}/)
-  assert.match(chart, /About Chart Studio/)
-  assert.match(chart, /Live Demo/)
-  assert.match(shelf, /About Link Shelf/)
-  assert.match(shelf, /Live Demo/)
+  assert.match(chart, /copy\.aboutLabel/)
+  assert.match(chart, /copy\.liveDemo/)
+  assert.match(shelf, /copy\.aboutLabel/)
+  assert.match(shelf, /copy\.liveDemo/)
 })
 
 check('festival theme is wired into schematic chrome', () => {
@@ -235,6 +235,77 @@ check('homepage filters keep All / Android TV / Extensions / In progress / Archi
   assert.equal(content.hero.hireMe, 'Hire me')
   assert.equal(content.hero.startProject, 'Start a project')
   assert.equal(content.contact.backToHome, 'Back to home')
+})
+
+check('India visitors default to English while other countries still auto-detect', () => {
+  const source = read('src/lib/countryToLanguage.ts')
+  assert.match(source, /IN:\s*'en'/)
+  assert.doesNotMatch(source, /IN:\s*'hi'/)
+})
+
+check('guestbook restores Back to home and translated copy', () => {
+  const page = read('src/app/guestbook/GuestbookPage.tsx')
+  assert.match(page, /contact\.backToHome/)
+  const client = read('src/app/guestbook/GuestbookClient.tsx')
+  assert.match(client, /guestbook\.form\.nameLabel/)
+})
+
+check('footer uses the reserved rights line', () => {
+  const footer = read('src/components/SiteFooter.tsx')
+  assert.match(footer, /footer\.copyright/)
+  assert.match(footer, /© \{year\}/)
+  assert.equal(content.footer.copyright, 'Pradhul Dev. All rights reserved.')
+})
+
+check('squash-push page restores overview, usage, limitations, and future plans', () => {
+  const source = read('src/app/portfolio/squashpush/SquashPushContent.tsx')
+  assert.match(source, /copy\.overview/)
+  assert.match(source, /copy\.usageGuide/)
+  assert.match(source, /copy\.knownLimitations/)
+  assert.match(source, /copy\.futurePlans/)
+  assert.match(source, /copy\.vscodeRequirement/)
+  assert.match(source, /icon=\{squashPush\?\.icon\}/)
+})
+
+check('homepage and portfolio cards keep the requested release badges', () => {
+  const ionic = projects.find((project) => project.id === 'ionicMeasure')
+  const shelf = projects.find((project) => project.id === 'linkShelf')
+  const glance = projects.find((project) => project.id === 'glanceTv')
+  assert.equal(ionic?.release?.tag, 'v0.1.1')
+  assert.equal(shelf?.release?.tag, 'v1.1.0')
+  assert.equal(glance?.release?.tag, 'v43')
+  assert.equal(content.portfolio.glanceTv.releaseLabel, 'v43 release')
+  const card = read('src/components/ProjectCard.tsx')
+  assert.match(card, /data-release-tag/)
+})
+
+check('archive cards do not point at missing public images', () => {
+  const source = read('src/data/projects.ts')
+  for (const missing of [
+    '/iconsearch/demo.png',
+    '/pradhul/demo.png',
+    '/prism/demo.png',
+    '/smspend/demo.png',
+    '/splitit/demo.png',
+    '/unfear/demo.png',
+    '/writings/demo.png',
+    '/yaga/demo.png',
+  ]) {
+    assert.doesNotMatch(source, new RegExp(missing.replace('/', '\\/')))
+  }
+
+  const missingFiles: string[] = []
+  for (const project of projects) {
+    if (project.media.src) {
+      const mediaFile = join(process.cwd(), 'public', project.media.src.replace(/^\//, ''))
+      if (!existsSync(mediaFile)) missingFiles.push(`${project.id} -> ${project.media.src}`)
+    }
+    if (project.icon.type === 'image') {
+      const iconFile = join(process.cwd(), 'public', project.icon.src.replace(/^\//, ''))
+      if (!existsSync(iconFile)) missingFiles.push(`${project.id} icon -> ${project.icon.src}`)
+    }
+  }
+  assert.deepEqual(missingFiles, [])
 })
 
 check('keeps invented Stitch stats out of the shipped UI', () => {

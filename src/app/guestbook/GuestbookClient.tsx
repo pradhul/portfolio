@@ -2,6 +2,7 @@
 
 import { FormEvent, PointerEvent as ReactPointerEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { Loader2, PenTool } from 'lucide-react'
+import { useLanguage } from '@/components/LanguageProvider'
 import {
   normalizeStrokes,
   scaleStrokesToFit,
@@ -93,6 +94,7 @@ export default function GuestbookClient({
   const [submitError, setSubmitError] = useState('')
   const [loadError, setLoadError] = useState('')
   const [success, setSuccess] = useState('')
+  const { tString } = useLanguage()
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const activeStrokeRef = useRef<SignatureStroke>([])
@@ -107,12 +109,12 @@ export default function GuestbookClient({
         const response = await fetch('/api/guestbook')
         const data = await response.json()
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to load entries.')
+          throw new Error(data.error || tString('guestbook.states.loadError'))
         }
         setEntries(data.entries || [])
       } catch (err) {
         if (initialEntries.length === 0) {
-          setLoadError(err instanceof Error ? err.message : 'Failed to load entries.')
+          setLoadError(err instanceof Error ? err.message : tString('guestbook.states.loadError'))
         }
       } finally {
         setLoadingEntries(false)
@@ -199,12 +201,12 @@ export default function GuestbookClient({
     const trimmedName = name.trim()
 
     if (!trimmedMessage) {
-      setSubmitError('Please write a message before submitting.')
+      setSubmitError(tString('guestbook.form.messageRequired'))
       return
     }
 
     if (!hasSignature) {
-      setSubmitError('Please add your signature before submitting.')
+      setSubmitError(tString('guestbook.form.signatureRequired'))
       return
     }
 
@@ -227,14 +229,14 @@ export default function GuestbookClient({
 
       const data = await response.json()
       if (!response.ok) {
-        throw new Error(data.error || 'Could not submit your entry.')
+        throw new Error(data.error || tString('guestbook.form.submitError'))
       }
 
       setEntries((previous) => [data.entry, ...previous].slice(0, 20))
       setName('')
       setMessage('')
       setStrokes([])
-      setSuccess('Thanks! Your message was posted.')
+      setSuccess(tString('guestbook.states.success'))
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Could not submit your entry.')
     } finally {
@@ -250,7 +252,7 @@ export default function GuestbookClient({
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label htmlFor="guest-name" className="schematic-label">
-              Name (optional)
+              {tString('guestbook.form.nameLabel')}
             </label>
             <input
               id="guest-name"
@@ -258,14 +260,14 @@ export default function GuestbookClient({
               value={name}
               onChange={(event) => setName(event.target.value)}
               maxLength={80}
-              placeholder="Your name"
+              placeholder={tString('guestbook.form.namePlaceholder')}
               className="schematic-field"
             />
           </div>
 
           <div>
             <label htmlFor="guest-message" className="schematic-label">
-              Message
+              {tString('guestbook.form.messageLabel')}
             </label>
             <textarea
               id="guest-message"
@@ -274,7 +276,7 @@ export default function GuestbookClient({
               maxLength={500}
               required
               rows={5}
-              placeholder="Write a short message..."
+              placeholder={tString('guestbook.form.messagePlaceholder')}
               className="schematic-field"
             />
             <p className="mt-1 font-mono text-[13px] text-cream-muted">{message.length}/500</p>
@@ -282,13 +284,13 @@ export default function GuestbookClient({
 
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <label className="schematic-label mb-0">Signature</label>
+              <label className="schematic-label mb-0">{tString('guestbook.form.signatureLabel')}</label>
               <button
                 type="button"
                 onClick={clearSignature}
                 className="font-mono text-[13px] text-lime hover:underline"
               >
-                Clear signature
+                {tString('guestbook.form.clearSignature')}
               </button>
             </div>
             <div className="border border-line bg-ink p-2">
@@ -311,31 +313,33 @@ export default function GuestbookClient({
 
           <button type="submit" disabled={submitting} className="btn btn-primary">
             {submitting ? <Loader2 size={18} className="animate-spin" /> : <PenTool size={18} />}
-            {submitting ? 'Posting...' : 'Post to guestbook'}
+            {submitting ? tString('guestbook.form.posting') : tString('guestbook.form.submit')}
           </button>
         </form>
       </section>
 
       <section className="frame p-6 md:p-8">
-        <h2 className="mb-6 font-display text-2xl font-semibold tracking-tight text-cream">Recent messages</h2>
+        <h2 className="mb-6 font-display text-2xl font-semibold tracking-tight text-cream">
+          {tString('guestbook.recentTitle')}
+        </h2>
 
         {loadingEntries ? (
           <div className="flex items-center gap-2 text-cream-muted">
             <Loader2 size={18} className="animate-spin" />
-            Loading entries...
+            {tString('guestbook.states.loading')}
           </div>
         ) : loadError ? (
           <p className="border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
             {loadError}
           </p>
         ) : entries.length === 0 ? (
-          <p className="text-cream-muted">No entries yet. Be the first to leave a message.</p>
+          <p className="text-cream-muted">{tString('guestbook.states.empty')}</p>
         ) : (
           <div className="space-y-4">
             {entries.map((entry) => (
               <article key={entry.id} className="border border-line bg-ink p-4">
                 <div className="mb-2 flex items-center justify-between gap-3">
-                  <p className="font-semibold text-cream">{entry.name || 'Anonymous'}</p>
+                  <p className="font-semibold text-cream">{entry.name || tString('guestbook.anonymous')}</p>
                   <time className="font-mono text-[13px] text-cream-muted">
                     {new Date(entry.createdAt).toLocaleString()}
                   </time>

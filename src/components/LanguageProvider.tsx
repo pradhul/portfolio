@@ -8,6 +8,7 @@ type ContentType = typeof content
 
 interface LanguageContextType {
   language: string
+  renderedLanguage: string
   setLanguage: (lang: string) => void
   t: (key: string) => string | string[] | Record<string, unknown>
   tString: (key: string) => string // Helper for string-only translations
@@ -49,6 +50,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         const response = await fetch('/api/detect-country')
         if (response.ok) {
           const data = await response.json()
+          if (typeof data.country === 'string' && data.country.toUpperCase() === 'IN') {
+            setLanguageState('en')
+            setIsInitialized(true)
+            return
+          }
           if (data.language && supportedLanguages.includes(data.language)) {
             setLanguageState(data.language)
             setIsInitialized(true)
@@ -202,10 +208,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return JSON.stringify(result)
   }
 
+  const renderedLanguage = language !== 'en' && translatedContent ? language : 'en'
+
   return (
     <LanguageContext.Provider
       value={{
         language,
+        renderedLanguage,
         setLanguage,
         t,
         tString,

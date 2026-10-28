@@ -1,7 +1,7 @@
 // Country code to language code mapping
 export const countryToLanguage: Record<string, string> = {
   // Major countries and their primary languages
-  IN: 'hi', // India - Hindi
+  IN: 'en', // India defaults to English; Hindi is available from the language switcher
   PK: 'ur', // Pakistan - Urdu
   BD: 'bn', // Bangladesh - Bengali
   US: 'en', // United States - English
@@ -74,15 +74,18 @@ export function getLanguageFromCountry(countryCode: string): string {
 
 // Get language from browser language
 export function getLanguageFromBrowser(browserLang: string): string {
-  // Extract language code from browser language (e.g., 'en-US' -> 'en', 'hi-IN' -> 'hi')
-  const langCode = browserLang.split('-')[0].toLowerCase()
-  
-  // Check if we support this language
-  if (languageInfo[langCode]) {
-    return langCode
+  const [langCode, region] = browserLang.split('-')
+  // India visitors default to English even when the browser locale is hi-IN.
+  if (region?.toUpperCase() === 'IN') {
+    return 'en'
   }
-  
-  return 'en' // Default to English
+
+  const normalized = (langCode || 'en').toLowerCase()
+  if (languageInfo[normalized]) {
+    return normalized
+  }
+
+  return 'en'
 }
 
 // Supported languages list

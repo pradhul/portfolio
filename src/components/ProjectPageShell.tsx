@@ -80,9 +80,8 @@ export function ProjectHero({
           {icon ? <ProjectAppIcon icon={icon} /> : null}
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-[13px] tracking-[0.04em] text-lime">
-                {figure} · {category}
-              </span>
+              <span className="font-mono text-[13px] tracking-[0.04em] text-cream-muted">{figure}</span>
+              <span className="tag border-lime text-lime">{category}</span>
               {badge}
             </div>
             <h1 className="mt-2 font-display text-[clamp(2rem,4vw,3rem)] font-semibold text-cream">{title}</h1>

@@ -7,10 +7,9 @@ export async function GET(request: NextRequest) {
     const vercelCountry = request.headers.get('x-vercel-ip-country')
     
     if (vercelCountry) {
-      const language = getLanguageFromCountry(vercelCountry)
       return NextResponse.json({
         country: vercelCountry,
-        language,
+        language: getLanguageFromCountry(vercelCountry),
         source: 'vercel-header',
       })
     }

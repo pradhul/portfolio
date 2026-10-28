@@ -7,10 +7,13 @@ import HireCtas from '@/components/HireCtas'
 import SectionHeading from '@/components/SectionHeading'
 import SitePage from '@/components/SitePage'
 import { useLanguage } from '@/components/LanguageProvider'
-import { content } from '@/lib/content'
 
 function ContactInner() {
-  const { tString } = useLanguage()
+  const { t, tString } = useLanguage()
+  const asList = (key: string): string[] => {
+    const value = t(key)
+    return Array.isArray(value) ? value : []
+  }
 
   return (
     <>
@@ -37,8 +40,8 @@ function ContactInner() {
             error: tString('contact.form.error'),
             unavailable: tString('contact.form.unavailable'),
             honeypotLabel: tString('contact.form.honeypotLabel'),
-            projectTypes: content.contact.form.projectTypes,
-            budgets: content.contact.form.budgets,
+            projectTypes: asList('contact.form.projectTypes'),
+            budgets: asList('contact.form.budgets'),
           }}
           locationNote={tString('contact.locationNote')}
         />

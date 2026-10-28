@@ -66,7 +66,11 @@ function TitleBlock() {
 
 function HomeContent() {
   const { activeFestival } = useFestivalTheme()
-  const { tString } = useLanguage()
+  const { t, tString } = useLanguage()
+  const asList = (key: string): string[] => {
+    const value = t(key)
+    return Array.isArray(value) ? value : []
+  }
 
   const navItems: HeaderLink[] = [
     { href: '#work', label: tString('nav.work') },
@@ -198,8 +202,8 @@ function HomeContent() {
                   error: tString('contact.form.error'),
                   unavailable: tString('contact.form.unavailable'),
                   honeypotLabel: tString('contact.form.honeypotLabel'),
-                  projectTypes: content.contact.form.projectTypes,
-                  budgets: content.contact.form.budgets,
+                  projectTypes: asList('contact.form.projectTypes'),
+                  budgets: asList('contact.form.budgets'),
                 }}
                 locationNote={tString('contact.locationNote')}
               />

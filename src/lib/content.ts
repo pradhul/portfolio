@@ -137,6 +137,8 @@ export const content = {
       inProgress: 'In Progress',
       features: 'Features',
       upcoming: 'Upcoming',
+      about: 'About',
+      screenshots: 'Screenshots',
     },
     filtersLabel: 'Filter projects',
     filters: {
@@ -177,6 +179,84 @@ export const content = {
       marketplace: 'VS Code Marketplace',
       viewGitHub: 'View on GitHub',
       demoLabel: 'squash-push demo',
+      about: [
+        'Squash-Push is a Visual Studio Code extension I developed to address a common pain point in Git workflows. It simplifies the process of squashing multiple commits before pushing to a remote repository, making commit history cleaner and more organized without requiring complex Git command sequences.',
+      ],
+      highlights: ['Version 0.1.0', 'VS Code 1.60+', 'Git Workflow', 'Developer Productivity'],
+      overview: 'Overview',
+      usageGuide: 'Usage guide',
+      knownLimitations: 'Known limitations',
+      futurePlans: 'Future plans',
+      versionLabel: 'Version 0.1.0',
+      vscodeRequirement: 'VS Code 1.60+',
+      limitationMerge: 'May encounter issues with merge commits',
+      capabilityTitles: [
+        'Branch detection',
+        'Commit listing',
+        'Interactive UI',
+        'One-step operation',
+      ],
+      capabilityBodies: [
+        'Automatically identifies your current Git branch and its configuration',
+        'Lists local commits that have not been pushed yet',
+        'Clean interface to select a base commit for squashing',
+        'Performs the squash operation with a single command',
+      ],
+      usageSteps: [
+        'Open a Git repository in VS Code',
+        'Open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P)',
+        'Type “Squash Local Commits” or “Squash-Push: Squash Local Commits” and select the command',
+        'Select the oldest commit you want to keep as the base for squashing',
+        'The extension will squash your commits and open the commit message editor',
+        'Save your new commit message and push your changes',
+      ],
+      commandLabel: 'Command',
+      commandName: 'Squash-Push: Squash Local Commits',
+      requirementsHeading: 'Requirements',
+      gitRequirement: 'Git must be installed and available in your PATH',
+      futureIntro:
+        'Squash-Push is under active development, with several planned enhancements to make Git workflow management even more efficient.',
+      futureUxHeading: 'User experience',
+      futureUx: [
+        'Custom commit message templates',
+        'Auto-push option after squashing',
+        'Undo squash operation',
+      ],
+      futureTechHeading: 'Technical enhancements',
+      futureTech: [
+        'Support for multiple workspace folders',
+        'Interactive rebase option',
+        'Branch protection rules',
+      ],
+      installationHeading: 'Installation',
+      installationSteps: [
+        'Launch VS Code',
+        'Go to Extensions view (Ctrl+Shift+X / Cmd+Shift+X)',
+        'Search for “Squash-Push”',
+        'Click Install',
+      ],
+      technicalHeading: 'Technical details',
+      technicalIntro:
+        'Squash-Push is built using the VS Code Extension API and implements Git operations through utility functions that integrate with VS Code UI components.',
+      coreFunctionsHeading: 'Core functions',
+      coreFunctionNames: [
+        'execGitCommand',
+        'getCurrentBranch',
+        'getCurrentUpStreamBranch',
+        'getLocalCommits',
+        'hasParent',
+        'showCommitSelections',
+        'getCommitID',
+      ],
+      coreFunctionDetails: [
+        'Executes Git commands and returns results as promises',
+        'Gets the name of the current Git branch',
+        'Determines the upstream branch for the current branch',
+        'Retrieves a list of local commits',
+        'Checks if a commit has a parent commit',
+        'Displays UI for selecting commits',
+        'Extracts and validates the selected commit ID',
+      ],
     },
     vsColorCode: {
       category: 'VS CODE EXTENSION',
@@ -206,6 +286,12 @@ export const content = {
       liveDemo: 'Live Demo',
       viewProject: 'View Project',
       demoLabel: 'Chart Studio',
+      about: [
+        'Chart Studio is a web app that lets you create bar and pie charts from your data in minutes. Upload Excel (.xlsx, .xls) or CSV files, or paste values directly from a spreadsheet. Edit cells in the data preview and see your chart update in real time. Customize the chart title, axis labels, colors, legend, and grid, then export as PNG or PDF.',
+      ],
+      highlights: ['Bar & Pie Charts', 'Excel & CSV', 'Customizable', 'PNG / PDF Export'],
+      screenshot1Alt: 'Chart Studio - Data and chart',
+      screenshot2Alt: 'Chart Studio - Customization',
     },
     uploadSpec: {
       category: 'WEB APP',
@@ -222,6 +308,10 @@ export const content = {
       liveDemo: 'Visit site',
       viewProject: 'View Project',
       demoLabel: 'UploadSpec',
+      about: [
+        'UploadSpec is a static Astro site with a React tool island that helps users prepare photos and signatures for Indian government and exam portals. Each tool page targets a specific upload specification—exact pixel dimensions, JPEG size ranges, and filenames—verified against official portal rules. All image processing runs in the browser using Canvas; nothing is uploaded to a server.',
+      ],
+      highlights: ['Exam photo specs', 'KB compression', 'Browser-only privacy', 'UPSC / SSC / Bank tools'],
     },
     linkShelf: {
       category: 'PWA',
@@ -239,6 +329,18 @@ export const content = {
       viewProject: 'View Project',
       viewGitHub: 'View on GitHub',
       demoLabel: 'Link Shelf',
+      about: [
+        'Link Shelf is a household link library for the links you share and forget—Instagram reels, YouTube videos, recipes, tools, and more. Save from a Telegram bot in the moment, or manage everything later in the installable web app.',
+        'Drop one URL or a handful at once. The bot extracts titles and metadata, prompts for tags and subtags (or skips), and can auto-categorize multi-link drops with Gemini. Daily digests pull related saves into readable summaries—like “Today\'s eats” for cooking links.',
+      ],
+      highlights: ['Telegram bot', 'Hierarchical tags', 'Gemini auto-tag', 'Installable PWA'],
+      telegramTitle: 'Telegram bot in action',
+      telegramIntro:
+        'Save and organize links from chat—tag hierarchies, bulk analysis, and dated digests without leaving Telegram.',
+      telegramTagCaption:
+        'Hierarchical tags, skip/type-new prompts, and bulk link analysis with metadata enrichment',
+      telegramDigestCaption:
+        'Save confirmations with tags, plus dated digests that group related links',
     },
     quickPlate: {
       category: 'TELEGRAM BOT',
@@ -416,6 +518,21 @@ export const content = {
       viewGitHub: 'View on GitHub',
       viewProject: 'View Project',
       demoLabel: 'Glance TV',
+      about: [
+        'Glance TV is a lean Android TV home screen: daily Bing wallpaper, clock and weather, your apps, and a single status line for what\'s coming up. Download the APK from GitHub Releases, install it over ADB, and set Glance TV as the default Home app.',
+        'The launcher is written in plain Java against the Android SDK (minSdk 26, JDK 17) with no runtime dependencies, so it stays small and starts quickly on slow TVs. Latest release is v43.',
+      ],
+      highlights: [
+        'Android TV launcher',
+        'Daily Bing wallpaper',
+        'Clock, weather, orders',
+        'Plain Java, no runtime deps',
+      ],
+      releaseLabel: 'v43 release',
+      homeScreenTitle: 'Home screen',
+      homeScreenIntro:
+        'Screenshots from the Glance TV repository: the home screen, glass-tile layout, and the orders status line.',
+      ordersCaption: 'Status line with the next holiday and upcoming orders',
     },
   },
   contact: {
@@ -425,6 +542,14 @@ export const content = {
     connectLabel: 'Prefer another channel?',
     backToHome: 'Back to home',
     locationNote: 'Bangalore · IST (UTC+5:30)',
+    channels: {
+      email: 'Email',
+      upwork: 'Upwork',
+      resume: 'Resume',
+      linkedin: 'LinkedIn',
+      github: 'GitHub',
+      stackOverflow: 'Stack Overflow',
+    },
     form: {
       nameLabel: 'Name',
       emailLabel: 'Email',
@@ -457,17 +582,26 @@ export const content = {
   guestbook: {
     title: 'Guestbook',
     subtitle: 'Drop a note, add your signature, and leave a little good vibe behind.',
+    sectionLabel: 'Section — Guestbook',
+    recentTitle: 'Recent messages',
+    anonymous: 'Anonymous',
     form: {
       nameLabel: 'Name (optional)',
+      namePlaceholder: 'Your name',
       messageLabel: 'Message',
+      messagePlaceholder: 'Write a short message...',
       signatureLabel: 'Signature',
       clearSignature: 'Clear signature',
       submit: 'Post to guestbook',
       posting: 'Posting...',
+      messageRequired: 'Please write a message before submitting.',
+      signatureRequired: 'Please add your signature before submitting.',
+      submitError: 'Could not submit your entry.',
     },
     states: {
       empty: 'No entries yet. Be the first to leave a message.',
       loading: 'Loading entries...',
+      loadError: 'Failed to load entries.',
       success: 'Thanks! Your message was posted.',
     },
   },
@@ -477,4 +611,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '13'
+export const CONTENT_VERSION = '15'

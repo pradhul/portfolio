@@ -40,9 +40,14 @@ function StatusBadge({ project, inProgressLabel }: { project: Project; inProgres
   }
 
   const { tag, url } = project.release
+  const className = 'tag border-lime text-lime'
 
   if (!url) {
-    return <span className="tag text-lime">{tag}</span>
+    return (
+      <span className={className} data-release-tag={tag}>
+        {tag}
+      </span>
+    )
   }
 
   return (
@@ -50,7 +55,8 @@ function StatusBadge({ project, inProgressLabel }: { project: Project; inProgres
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="tag text-lime no-underline hover:bg-[rgba(234,255,82,0.12)]"
+      data-release-tag={tag}
+      className={`${className} no-underline hover:bg-[rgba(234,255,82,0.12)]`}
     >
       {tag} ↗
     </a>
@@ -235,7 +241,9 @@ export default function ProjectCard({ project }: { project: Project }) {
         <span className="font-mono text-[13px] text-cream-muted">{tString(`${base}.demoLabel`)}</span>
       </div>
       <div className="p-4">
-        {project.media.contain ? (
+        {!project.media.src ? (
+          <MediaFallback label={fallbackLabel} />
+        ) : project.media.contain ? (
           <div className="flex min-h-[240px] items-center justify-center bg-ink p-4">
             <SafeImage
               src={project.media.src}
