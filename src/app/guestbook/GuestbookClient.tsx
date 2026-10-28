@@ -3,6 +3,7 @@
 import { FormEvent, PointerEvent as ReactPointerEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { Loader2, PenTool } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
+import { content } from '@/lib/content'
 import {
   normalizeStrokes,
   scaleStrokesToFit,
@@ -109,12 +110,12 @@ export default function GuestbookClient({
         const response = await fetch('/api/guestbook')
         const data = await response.json()
         if (!response.ok) {
-          throw new Error(data.error || tString('guestbook.states.loadError'))
+          throw new Error(data.error || content.guestbook.states.loadError)
         }
         setEntries(data.entries || [])
       } catch (err) {
         if (initialEntries.length === 0) {
-          setLoadError(err instanceof Error ? err.message : tString('guestbook.states.loadError'))
+          setLoadError(err instanceof Error ? err.message : content.guestbook.states.loadError)
         }
       } finally {
         setLoadingEntries(false)

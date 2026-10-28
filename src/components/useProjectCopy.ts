@@ -1,62 +1,78 @@
 import { useLanguage } from '@/components/LanguageProvider'
+import { content } from '@/lib/content'
+
+function hasContentKey(key: string): boolean {
+  const parts = key.split('.')
+  let value: unknown = content
+  for (const part of parts) {
+    if (value && typeof value === 'object' && value !== null && part in value) {
+      value = (value as Record<string, unknown>)[part]
+    } else {
+      return false
+    }
+  }
+  return true
+}
 
 export function useProjectCopy(id: string) {
   const { t, tString } = useLanguage()
   const asList = (key: string): string[] => {
+    if (!hasContentKey(key)) return []
     const value = t(key)
     return Array.isArray(value) ? value : []
   }
+  const optionalString = (key: string): string => (hasContentKey(key) ? tString(key) : '')
 
   const base = `portfolio.${id}`
   return {
-    category: tString(`${base}.category`),
-    title: tString(`${base}.title`),
-    description: tString(`${base}.description`),
+    category: optionalString(`${base}.category`),
+    title: optionalString(`${base}.title`),
+    description: optionalString(`${base}.description`),
     about: asList(`${base}.about`),
     highlights: asList(`${base}.highlights`),
     features: asList(`${base}.features`),
-    viewGitHub: tString(`${base}.viewGitHub`),
-    viewProject: tString(`${base}.viewProject`),
-    liveDemo: tString(`${base}.liveDemo`),
-    marketplace: tString(`${base}.marketplace`),
-    releaseLabel: tString(`${base}.releaseLabel`),
-    overview: tString(`${base}.overview`),
-    usageGuide: tString(`${base}.usageGuide`),
-    knownLimitations: tString(`${base}.knownLimitations`),
-    futurePlans: tString(`${base}.futurePlans`),
-    versionLabel: tString(`${base}.versionLabel`),
-    vscodeRequirement: tString(`${base}.vscodeRequirement`),
-    limitationMerge: tString(`${base}.limitationMerge`),
+    viewGitHub: optionalString(`${base}.viewGitHub`),
+    viewProject: optionalString(`${base}.viewProject`),
+    liveDemo: optionalString(`${base}.liveDemo`),
+    marketplace: optionalString(`${base}.marketplace`),
+    releaseLabel: optionalString(`${base}.releaseLabel`),
+    overview: optionalString(`${base}.overview`),
+    usageGuide: optionalString(`${base}.usageGuide`),
+    knownLimitations: optionalString(`${base}.knownLimitations`),
+    futurePlans: optionalString(`${base}.futurePlans`),
+    versionLabel: optionalString(`${base}.versionLabel`),
+    vscodeRequirement: optionalString(`${base}.vscodeRequirement`),
+    limitationMerge: optionalString(`${base}.limitationMerge`),
     aboutLabel: tString('portfolio.labels.about'),
     featuresLabel: tString('portfolio.labels.features'),
     screenshotsLabel: tString('portfolio.labels.screenshots'),
     capabilityTitles: asList(`${base}.capabilityTitles`),
     capabilityBodies: asList(`${base}.capabilityBodies`),
     usageSteps: asList(`${base}.usageSteps`),
-    commandLabel: tString(`${base}.commandLabel`),
-    commandName: tString(`${base}.commandName`),
-    requirementsHeading: tString(`${base}.requirementsHeading`),
-    gitRequirement: tString(`${base}.gitRequirement`),
-    futureIntro: tString(`${base}.futureIntro`),
-    futureUxHeading: tString(`${base}.futureUxHeading`),
+    commandLabel: optionalString(`${base}.commandLabel`),
+    commandName: optionalString(`${base}.commandName`),
+    requirementsHeading: optionalString(`${base}.requirementsHeading`),
+    gitRequirement: optionalString(`${base}.gitRequirement`),
+    futureIntro: optionalString(`${base}.futureIntro`),
+    futureUxHeading: optionalString(`${base}.futureUxHeading`),
     futureUx: asList(`${base}.futureUx`),
-    futureTechHeading: tString(`${base}.futureTechHeading`),
+    futureTechHeading: optionalString(`${base}.futureTechHeading`),
     futureTech: asList(`${base}.futureTech`),
-    installationHeading: tString(`${base}.installationHeading`),
+    installationHeading: optionalString(`${base}.installationHeading`),
     installationSteps: asList(`${base}.installationSteps`),
-    technicalHeading: tString(`${base}.technicalHeading`),
-    technicalIntro: tString(`${base}.technicalIntro`),
-    coreFunctionsHeading: tString(`${base}.coreFunctionsHeading`),
+    technicalHeading: optionalString(`${base}.technicalHeading`),
+    technicalIntro: optionalString(`${base}.technicalIntro`),
+    coreFunctionsHeading: optionalString(`${base}.coreFunctionsHeading`),
     coreFunctionNames: asList(`${base}.coreFunctionNames`),
     coreFunctionDetails: asList(`${base}.coreFunctionDetails`),
-    screenshot1Alt: tString(`${base}.screenshot1Alt`),
-    screenshot2Alt: tString(`${base}.screenshot2Alt`),
-    telegramTitle: tString(`${base}.telegramTitle`),
-    telegramIntro: tString(`${base}.telegramIntro`),
-    telegramTagCaption: tString(`${base}.telegramTagCaption`),
-    telegramDigestCaption: tString(`${base}.telegramDigestCaption`),
-    homeScreenTitle: tString(`${base}.homeScreenTitle`),
-    homeScreenIntro: tString(`${base}.homeScreenIntro`),
-    ordersCaption: tString(`${base}.ordersCaption`),
+    screenshot1Alt: optionalString(`${base}.screenshot1Alt`),
+    screenshot2Alt: optionalString(`${base}.screenshot2Alt`),
+    telegramTitle: optionalString(`${base}.telegramTitle`),
+    telegramIntro: optionalString(`${base}.telegramIntro`),
+    telegramTagCaption: optionalString(`${base}.telegramTagCaption`),
+    telegramDigestCaption: optionalString(`${base}.telegramDigestCaption`),
+    homeScreenTitle: optionalString(`${base}.homeScreenTitle`),
+    homeScreenIntro: optionalString(`${base}.homeScreenIntro`),
+    ordersCaption: optionalString(`${base}.ordersCaption`),
   }
 }
