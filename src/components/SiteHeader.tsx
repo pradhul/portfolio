@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { track } from '@vercel/analytics'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { useFestivalTheme } from '@/components/FestivalTheme'
 import { content } from '@/lib/content'
 
 export type SitePageCurrent = 'home' | 'about' | 'portfolio' | 'contact' | 'guestbook'
@@ -26,17 +27,39 @@ export default function SiteHeader({
   ctaLabel?: string
   onCtaClick?: () => void
 }) {
+  const { activeFestival } = useFestivalTheme()
+
   const handleCta = () => {
     track('hire_me_click')
     onCtaClick?.()
   }
 
+  const festivalStyle = activeFestival
+    ? {
+        backgroundImage: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary}, ${activeFestival.colors.accent})`,
+        WebkitBackgroundClip: 'text' as const,
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text' as const,
+      }
+    : undefined
+
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-[rgba(5,11,20,0.92)] backdrop-blur-md">
       <div className="schematic-wrap flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-2.5 no-underline">
-          <b className="border border-lime px-1.5 py-1 font-mono text-[13px] font-semibold text-lime">PD</b>
-          <span className="hidden font-semibold text-cream sm:inline">Pradhul Dev</span>
+          <b
+            className="border border-lime px-1.5 py-1 font-mono text-[13px] font-semibold text-lime"
+            style={
+              activeFestival
+                ? { borderColor: activeFestival.colors.primary, color: activeFestival.colors.primary }
+                : undefined
+            }
+          >
+            PD
+          </b>
+          <span className="hidden font-semibold text-cream sm:inline" style={festivalStyle}>
+            Pradhul Dev
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
@@ -80,7 +103,19 @@ export default function SiteHeader({
               </div>
             </div>
           </details>
-          <Link href={ctaHref} className="btn btn-primary" onClick={handleCta}>
+          <Link
+            href={ctaHref}
+            className="btn btn-primary"
+            onClick={handleCta}
+            style={
+              activeFestival
+                ? {
+                    background: `linear-gradient(to right, ${activeFestival.colors.primary}, ${activeFestival.colors.secondary})`,
+                    borderColor: activeFestival.colors.primary,
+                  }
+                : undefined
+            }
+          >
             {ctaLabel}
           </Link>
         </div>

@@ -1,9 +1,11 @@
 import Image from 'next/image'
-import ProjectPageShell, { ProjectHero } from '@/components/ProjectPageShell'
+import ProjectPageShell, { FeatureHighlights, ProjectHero } from '@/components/ProjectPageShell'
 import { content } from '@/lib/content'
+import { projects } from '@/data/projects'
 
 const MARKETPLACE = 'https://marketplace.visualstudio.com/items?itemName=PradhulDev.squash-push'
 const GITHUB = 'https://github.com/pradhul/squash-push'
+const squashPush = projects.find((project) => project.id === 'squashPush')
 
 export default function SquashPushPortfolio() {
   return (
@@ -13,6 +15,7 @@ export default function SquashPushPortfolio() {
         category={content.portfolio.squashPush.category}
         title={content.portfolio.squashPush.title}
         description={content.portfolio.squashPush.description}
+        icon={squashPush?.icon}
         actions={
           <>
             <a href={MARKETPLACE} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
@@ -34,6 +37,17 @@ export default function SquashPushPortfolio() {
           />
         }
       />
+
+      <FeatureHighlights
+        items={['Branch detection', 'Commit listing', 'Interactive UI', 'One-step operation']}
+      />
+
+      <section className="mt-12">
+        <h2 className="mb-4 font-display text-2xl font-semibold text-cream">About Squash-Push</h2>
+        <p className="max-w-3xl text-lg leading-relaxed text-cream-muted">
+          {content.portfolio.squashPush.description}
+        </p>
+      </section>
 
       <section className="mt-12">
         <h2 className="mb-4 font-display text-2xl font-semibold text-cream">Key features</h2>

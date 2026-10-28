@@ -1,13 +1,15 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import ProjectPageShell, { ProjectHero } from '@/components/ProjectPageShell'
+import ProjectPageShell, { FeatureHighlights, ProjectHero } from '@/components/ProjectPageShell'
 import { createPageMetadata, pages } from '@/lib/seo'
 import { content } from '@/lib/content'
+import { projects } from '@/data/projects'
 
 export const metadata: Metadata = createPageMetadata(pages.glanceTv)
 
 const GLANCE_TV_GITHUB = 'https://github.com/pradhul/glance-tv'
 const GLANCE_TV_RELEASE = 'https://github.com/pradhul/glance-tv/releases/tag/v43'
+const glance = projects.find((project) => project.id === 'glanceTv')
 
 const FEATURES = [
   'Three launcher styles: Floating icons (halo + reflection), Glass tiles, and Tall posters (tilt + glare), with an optional daily auto-switch',
@@ -26,10 +28,12 @@ export default function GlanceTvPortfolio() {
         category={content.portfolio.glanceTv.category}
         title={content.portfolio.glanceTv.title}
         description={content.portfolio.glanceTv.description}
+        icon={glance?.icon}
+        badge={<span className="tag text-lime">v43 release</span>}
         actions={
           <>
             <a href={GLANCE_TV_RELEASE} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-              Download APK (v43)
+              v43 release
             </a>
             <a href={GLANCE_TV_GITHUB} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
               View on GitHub
@@ -47,6 +51,29 @@ export default function GlanceTvPortfolio() {
           />
         }
       />
+
+      <FeatureHighlights
+        items={[
+          'Android TV launcher',
+          'Daily Bing wallpaper',
+          'Clock, weather, orders',
+          'Plain Java, no runtime deps',
+        ]}
+      />
+
+      <section className="mt-12">
+        <h2 className="mb-4 font-display text-2xl font-semibold text-cream">About Glance TV</h2>
+        <p className="mb-4 max-w-3xl text-lg leading-relaxed text-cream-muted">
+          Glance TV is a lean Android TV home screen: daily Bing wallpaper, clock and weather,
+          your apps, and a single status line for what&apos;s coming up. Download the APK from
+          GitHub Releases, install it over ADB, and set Glance TV as the default Home app.
+        </p>
+        <p className="max-w-3xl text-lg leading-relaxed text-cream-muted">
+          The launcher is written in plain Java against the Android SDK (minSdk 26, JDK 17)
+          with no runtime dependencies, so it stays small and starts quickly on slow TVs. Latest
+          release is v43.
+        </p>
+      </section>
 
       <section className="mt-12">
         <h2 className="mb-4 font-display text-2xl font-semibold text-cream">Home screen</h2>

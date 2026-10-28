@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { content } from '@/lib/content'
+import { useFestivalTheme } from '@/components/FestivalTheme'
 import { useLanguage } from '@/components/LanguageProvider'
 
 const GitHubActivity = dynamic(() => import('@/components/GitHubActivity'), {
@@ -23,6 +24,7 @@ function asStringList(value: unknown): string[] {
 }
 
 export default function AboutContent({ variant = 'compact' }: { variant?: 'compact' | 'full' }) {
+  const { activeFestival } = useFestivalTheme()
   const { t, tString, translatedContent } = useLanguage()
   const about = {
     ...content.about,
@@ -43,7 +45,10 @@ export default function AboutContent({ variant = 'compact' }: { variant?: 'compa
     <>
       <div className="frame grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <div className="border-b border-line bg-ink-raised p-[26px] md:col-span-2 lg:col-span-1 lg:border-b-0 lg:border-r">
-          <span className="font-mono text-[13px] tracking-[0.04em] text-lime">
+          <span
+            className="font-mono text-[13px] tracking-[0.04em] text-lime"
+            style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+          >
             {tString('about.fighterLabel')}
           </span>
           <h3 className="mt-1.5 font-display text-xl font-semibold text-cream">
@@ -66,32 +71,40 @@ export default function AboutContent({ variant = 'compact' }: { variant?: 'compa
       </div>
 
       {variant === 'full' && (
-        <>
-          <div className="mt-16 max-w-prose">
-            {paragraphs.map((para) => (
-              <p key={para} className="mb-5 text-base leading-relaxed text-cream-muted last:mb-0 md:text-lg">
-                {para}
-              </p>
-            ))}
+        <div className="mt-16 max-w-prose">
+          {paragraphs.map((para) => (
+            <p key={para} className="mb-5 text-base leading-relaxed text-cream-muted last:mb-0 md:text-lg">
+              {para}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {skills.length > 0 && (
+        <div className="mt-12">
+          <div
+            className="mb-4 font-mono text-[13px] tracking-[0.04em] text-lime"
+            style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+          >
+            {tString('about.skillsLabel')}
           </div>
+          <ul className="flex flex-wrap gap-2">
+            {skills.map((skill) => (
+              <li key={skill} className="tag">
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-          {skills.length > 0 && (
-            <div className="mt-12">
-              <div className="mb-4 font-mono text-[13px] tracking-[0.04em] text-lime">
-                {tString('about.skillsLabel')}
-              </div>
-              <ul className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <li key={skill} className="tag">
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
+      {variant === 'full' && (
+        <>
           <div className="mt-16">
-            <div className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime">
+            <div
+              className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime"
+              style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+            >
               {tString('about.experienceLabel')}
             </div>
             <ol className="grid gap-4">
@@ -109,7 +122,10 @@ export default function AboutContent({ variant = 'compact' }: { variant?: 'compa
           </div>
 
           <div className="mt-16">
-            <div className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime">
+            <div
+              className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime"
+              style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+            >
               {tString('about.educationLabel')}
             </div>
             <ul className="grid gap-4">
@@ -127,16 +143,17 @@ export default function AboutContent({ variant = 'compact' }: { variant?: 'compa
         </>
       )}
 
-      {variant === 'full' && (
-        <div className="mt-16">
-          <div className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime">
-            {tString('about.githubActivity')}
-          </div>
-          <div className="frame overflow-hidden p-6 md:p-8">
-            <GitHubActivity username="pradhul" />
-          </div>
+      <div className="mt-16">
+        <div
+          className="mb-6 font-mono text-[13px] tracking-[0.04em] text-lime"
+          style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+        >
+          {tString('about.githubActivity')}
         </div>
-      )}
+        <div className="frame overflow-hidden p-6 md:p-8">
+          <GitHubActivity username="pradhul" />
+        </div>
+      </div>
     </>
   )
 }

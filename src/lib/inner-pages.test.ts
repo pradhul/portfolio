@@ -83,6 +83,72 @@ check('homepage About section reuses AboutContent instead of duplicating copy', 
   assert.match(source, /<AboutContent/)
 })
 
+check('homepage work uses real project cards, not the Glance TV mock', () => {
+  const source = read('src/components/HomePage.tsx')
+  assert.match(source, /from ['"]@\/components\/PortfolioSection['"]/)
+  assert.match(source, /<PortfolioSection/)
+  assert.doesNotMatch(source, /GlanceTvMock/)
+  assert.doesNotMatch(source, /HOME_CARD_IDS/)
+})
+
+check('homepage compact About still shows skills and GitHub activity', () => {
+  const source = read('src/components/AboutContent.tsx')
+  assert.match(source, /about\.skillsLabel/)
+  assert.match(source, /GitHubActivity/)
+  assert.doesNotMatch(source, /variant === 'full' && \(\s*<GitHubActivity/)
+})
+
+check('hire CTAs keep Hire me and Upwork', () => {
+  const source = read('src/components/HireCtas.tsx')
+  assert.match(source, /upwork_click/)
+  assert.match(source, /hire_me_click/)
+  assert.match(source, /FaSquareUpwork/)
+})
+
+check('contact page uses translated copy, socials, and Back to home', () => {
+  const page = read('src/app/contact/page.tsx')
+  const source = read('src/components/ContactPage.tsx')
+  assert.match(page, /from ['"]@\/components\/ContactPage['"]/)
+  assert.match(source, /tString\('contact\.backToHome'\)/)
+  assert.match(source, /tString\('contact\.title'\)/)
+  assert.doesNotMatch(source, /content\.contact\.title/)
+  const channels = read('src/components/ContactChannels.tsx')
+  assert.match(channels, /Stack Overflow/)
+  assert.match(channels, /upwork_click/)
+})
+
+check('project pages restore About copy, icons, Live Demo, and the v43 release label', () => {
+  const glance = read('src/app/portfolio/glance-tv/page.tsx')
+  const chart = read('src/app/portfolio/chartstudio/page.tsx')
+  const shelf = read('src/app/portfolio/linkshelf/page.tsx')
+  assert.match(glance, /About Glance TV/)
+  assert.match(glance, /v43 release/)
+  assert.match(glance, /icon=\{glance\?\.icon\}/)
+  assert.match(chart, /About Chart Studio/)
+  assert.match(chart, /Live Demo/)
+  assert.match(shelf, /About Link Shelf/)
+  assert.match(shelf, /Live Demo/)
+})
+
+check('festival theme is wired into schematic chrome', () => {
+  const heading = read('src/components/SectionHeading.tsx')
+  const header = read('src/components/SiteHeader.tsx')
+  const card = read('src/components/ProjectCard.tsx')
+  const home = read('src/components/HomePage.tsx')
+  const about = read('src/components/AboutPage.tsx')
+  const site = read('src/components/SitePage.tsx')
+  const css = read('src/app/globals.css')
+  assert.match(heading, /useFestivalTheme/)
+  assert.match(heading, /FestivalTextDecoration/)
+  assert.match(header, /useFestivalTheme/)
+  assert.match(card, /useFestivalTheme/)
+  assert.match(home, /FestivalThemeProvider/)
+  assert.match(about, /useFestivalTheme/)
+  assert.match(site, /FestivalThemeProvider/)
+  assert.match(css, /\.festival-theme \.btn-primary/)
+  assert.match(css, /\.festival-theme \.frame::before/)
+})
+
 console.log('portfolio page wiring')
 
 check('portfolio route keeps per-page metadata and does not use the old summaries', () => {
@@ -154,6 +220,21 @@ check('SitePage uses the CSS schematic grid instead of a 3D background', () => {
   assert.match(shell, /SiteBackground/)
   assert.match(background, /schematic-grid/)
   assert.doesNotMatch(background, /ThreeBackground/)
+})
+
+check('homepage filters keep All / Android TV / Extensions / In progress / Archive', () => {
+  assert.deepEqual(Object.keys(content.portfolio.filters), [
+    'all',
+    'androidTv',
+    'extensions',
+    'inProgress',
+    'archive',
+  ])
+  assert.equal(content.portfolio.filters.androidTv, 'Android TV')
+  assert.equal(content.portfolio.archiveTitle, 'More projects')
+  assert.equal(content.hero.hireMe, 'Hire me')
+  assert.equal(content.hero.startProject, 'Start a project')
+  assert.equal(content.contact.backToHome, 'Back to home')
 })
 
 check('keeps invented Stitch stats out of the shipped UI', () => {

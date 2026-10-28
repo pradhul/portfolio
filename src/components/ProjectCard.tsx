@@ -11,6 +11,7 @@ import {
   Package,
   UtensilsCrossed,
 } from 'lucide-react'
+import { useFestivalTheme } from '@/components/FestivalTheme'
 import { useLanguage } from '@/components/LanguageProvider'
 import {
   ICON_BLUR_DATA_URL,
@@ -61,7 +62,7 @@ function FeatureList({ heading, items }: { heading: string; items: string[] }) {
 
   return (
     <div className="mb-6">
-      <div className="mb-2 font-mono text-[13px] tracking-[0.04em] text-lime">{heading}</div>
+      <div className="mb-2 font-mono text-[13px] tracking-[0.04em] text-lime festival-accent">{heading}</div>
       <ul className="ml-[18px] list-disc text-cream-muted">
         {items.map((item) => (
           <li key={item} className="my-1">
@@ -216,7 +217,9 @@ function ProjectButton({ link, label }: { link: ProjectLink; label: string }) {
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const { activeFestival } = useFestivalTheme()
   const { t, tString } = useLanguage()
+  const accent = activeFestival?.colors.primary
 
   const base = `portfolio.${project.id}`
   const asList = (key: string): string[] => {
@@ -228,7 +231,7 @@ export default function ProjectCard({ project }: { project: Project }) {
   const media = (
     <div className="overflow-hidden border border-line bg-ink-raised">
       <div className="flex items-center justify-between border-b border-line px-5 py-3">
-        <span className="font-mono text-[13px] tracking-[0.04em] text-lime">{project.figure}</span>
+        <span className="font-mono text-[13px] tracking-[0.04em] text-lime" style={accent ? { color: accent } : undefined}>{project.figure}</span>
         <span className="font-mono text-[13px] text-cream-muted">{tString(`${base}.demoLabel`)}</span>
       </div>
       <div className="p-4">
@@ -266,7 +269,10 @@ export default function ProjectCard({ project }: { project: Project }) {
           <ProjectIconBlock project={project} />
           <div>
             <div className="mb-1 flex flex-wrap items-center gap-2.5">
-              <span className="font-mono text-[13px] tracking-[0.04em] text-lime">
+              <span
+                className="font-mono text-[13px] tracking-[0.04em] text-lime"
+                style={accent ? { color: accent } : undefined}
+              >
                 {tString(`${base}.category`)}
               </span>
               <StatusBadge

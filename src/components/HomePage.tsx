@@ -1,14 +1,16 @@
 'use client'
 
 import { Suspense } from 'react'
-import Link from 'next/link'
 import { track } from '@vercel/analytics'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { FaSquareUpwork } from 'react-icons/fa6'
+import { IoMail } from 'react-icons/io5'
 import AboutContent from '@/components/AboutContent'
 import ContactChannels from '@/components/ContactChannels'
 import ContactForm from '@/components/ContactForm'
-import GlanceTvMock from '@/components/GlanceTvMock'
+import HireCtas from '@/components/HireCtas'
 import LazyChatWidget from '@/components/LazyChatWidget'
+import PortfolioSection from '@/components/PortfolioSection'
 import SectionHeading from '@/components/SectionHeading'
 import SiteBackground from '@/components/SiteBackground'
 import SiteFooter from '@/components/SiteFooter'
@@ -17,12 +19,13 @@ import { FestivalThemeProvider, useFestivalTheme } from '@/components/FestivalTh
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
 import { LanguageLayout } from '@/components/LanguageLayout'
 import { content } from '@/lib/content'
-import { projects } from '@/data/projects'
+import { CONTACT_MAILTO } from '@/lib/contactConstants'
 
-const HOME_CARD_IDS = ['ionicMeasure', 'linkShelf', 'squashPush', 'vsColorCode'] as const
+const UPWORK_URL = 'https://www.upwork.com/freelancers/~01a32f29fafd184f21'
 
 function TitleBlock() {
   const { tString } = useLanguage()
+  const { activeFestival } = useFestivalTheme()
   const rows = [
     [tString('hero.titleBlock.drawnBy'), tString('hero.titleBlock.name')],
     [tString('hero.titleBlock.role'), tString('hero.titleBlock.roleValue')],
@@ -36,7 +39,12 @@ function TitleBlock() {
     <div className="frame p-[22px]">
       <div className="mb-1 flex justify-between border-b border-cream-muted pb-2.5 font-mono text-[13px] tracking-[0.04em]">
         <span className="text-cream-muted">{tString('hero.titleBlock.heading')}</span>
-        <span className="text-lime">{tString('hero.titleBlock.drawing')}</span>
+        <span
+          className="text-lime"
+          style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+        >
+          {tString('hero.titleBlock.drawing')}
+        </span>
       </div>
       <table className="w-full border-collapse">
         <tbody>
@@ -53,100 +61,6 @@ function TitleBlock() {
         </tbody>
       </table>
     </div>
-  )
-}
-
-function HomeWork() {
-  const { tString, t } = useLanguage()
-  const glance = projects.find((project) => project.id === 'glanceTv')
-  const cards = HOME_CARD_IDS.map((id) => projects.find((project) => project.id === id)).filter(
-    (project): project is NonNullable<typeof project> => Boolean(project)
-  )
-
-  const asList = (key: string): string[] => {
-    const value = t(key)
-    return Array.isArray(value) ? value : []
-  }
-
-  const glanceFeatures = asList('portfolio.glanceTv.features').slice(0, 2)
-  const glanceTags = ['Plain Java', 'No runtime dependencies', 'minSdk 26', glance?.release?.tag ?? 'v43']
-  const glanceRelease = glance?.release?.url ?? 'https://github.com/pradhul/glance-tv/releases/tag/v43'
-  const glanceGithub = glance?.links.find((link) => link.type === 'github')?.href ?? 'https://github.com/pradhul/glance-tv'
-
-  return (
-    <section id="work" className="py-[60px] md:py-[88px]">
-      <SectionHeading
-        kicker={tString('portfolio.sectionLabel')}
-        title={tString('portfolio.title')}
-      />
-
-      <div className="frame grid grid-cols-1 gap-9 p-8 md:grid-cols-2 md:p-8">
-        <div>
-          <span className="font-mono text-[13px] tracking-[0.04em] text-lime">
-            {glance?.figure ?? 'Fig. 18'} · {tString('portfolio.glanceTv.category')}
-          </span>
-          <h3 className="mt-2.5 font-display text-[30px] font-semibold text-cream">
-            {tString('portfolio.glanceTv.title')}
-          </h3>
-          <p className="mt-3 text-cream-muted">{tString('portfolio.glanceTv.description')}</p>
-          <div className="mt-4 font-mono">
-            {glanceTags.map((tag) => (
-              <span key={tag} className="tag">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <ul className="my-4 ml-[18px] list-disc text-cream-muted">
-            {glanceFeatures.map((item) => (
-              <li key={item} className="my-1">
-                {item}
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-wrap gap-3">
-            <a href={glanceRelease} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-              Download APK ({glance?.release?.tag ?? 'v43'})
-            </a>
-            <a href={glanceGithub} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-              GitHub
-            </a>
-          </div>
-        </div>
-        <GlanceTvMock />
-      </div>
-
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-        {cards.map((project) => (
-          <article key={project.id} className="frame p-[26px]">
-            <span className="font-mono text-[13px] tracking-[0.04em] text-lime">
-              {project.figure} · {tString(`portfolio.${project.id}.category`)}
-            </span>
-            <h3 className="mt-2 font-display text-[22px] font-semibold text-cream">
-              {tString(`portfolio.${project.id}.title`)}
-            </h3>
-            <p className="mt-2 text-cream-muted">{tString(`portfolio.${project.id}.description`)}</p>
-            <div className="mt-4 flex flex-wrap gap-3 font-mono text-sm">
-              {project.links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  {...(link.internal ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
-                  className="text-lime no-underline hover:underline"
-                >
-                  {tString(`portfolio.${project.id}.${link.labelKey}`)} ↗
-                </a>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-
-      <div className="mt-8">
-        <Link href="/portfolio" className="btn btn-outline">
-          {tString('hero.viewPortfolio')}
-        </Link>
-      </div>
-    </section>
   )
 }
 
@@ -173,39 +87,63 @@ function HomeContent() {
         <SiteHeader
           links={navItems}
           ctaHref="#contact"
-          ctaLabel={tString('hero.hireMe')}
+          ctaLabel={tString('hero.startProject')}
         />
 
         <main className="schematic-wrap">
           <section id="hero" className="grid grid-cols-1 items-start gap-12 pb-8 pt-[72px] lg:grid-cols-[1.45fr_.85fr]">
             <div>
-              <div className="font-mono text-[13px] tracking-[0.04em] text-lime">{tString('hero.subtitle')}</div>
+              <div
+                className="font-mono text-[13px] tracking-[0.04em] text-lime"
+                style={activeFestival ? { color: activeFestival.colors.primary } : undefined}
+              >
+                {tString('hero.subtitle')}
+              </div>
               <h1 className="my-4 font-display text-[clamp(34px,4.6vw,52px)] font-semibold tracking-tight text-cream">
                 {tString('hero.title')}
               </h1>
               <p className="max-w-[600px] text-lg text-cream-muted">{tString('hero.lead')}</p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <a
-                  href="#contact"
+                  href={CONTACT_MAILTO}
                   className="btn btn-primary"
                   onClick={() => track('hire_me_click')}
                 >
-                  {tString('hero.hireMe')} →
+                  <IoMail size={18} />
+                  {tString('hero.hireMe')}
+                </a>
+                <a
+                  href={UPWORK_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline"
+                  onClick={() => track('upwork_click')}
+                >
+                  <FaSquareUpwork size={18} />
+                  {tString('hero.upwork')}
                 </a>
                 <a href="#work" className="btn btn-outline">
-                  {tString('hero.viewPortfolio')}
+                  {tString('hero.seeWork')}
                 </a>
               </div>
             </div>
             <TitleBlock />
           </section>
 
-          <HomeWork />
+          <section id="work" className="py-[60px] md:py-[88px]">
+            <SectionHeading
+              kicker={tString('portfolio.sectionLabel')}
+              title={tString('portfolio.title')}
+              activeFestival={activeFestival}
+            />
+            <PortfolioSection />
+          </section>
 
           <section id="about" className="py-[60px] md:py-[88px]">
             <SectionHeading
               kicker={tString('about.sectionLabel')}
               title={tString('about.title')}
+              activeFestival={activeFestival}
             />
             <AboutContent />
           </section>
@@ -214,6 +152,7 @@ function HomeContent() {
             <SectionHeading
               kicker={tString('about.experienceSectionLabel')}
               title={tString('about.experienceTitle')}
+              activeFestival={activeFestival}
             />
             <div className="grid gap-4">
               {experience.map((item) => (
@@ -238,8 +177,12 @@ function HomeContent() {
             <SectionHeading
               kicker={tString('contact.sectionLabel')}
               title={tString('contact.title')}
+              activeFestival={activeFestival}
             />
             <p className="mb-9 text-cream-muted">{tString('contact.subtitle')}</p>
+            <div className="mb-8">
+              <HireCtas hireLabel={tString('hero.hireMe')} upworkLabel={tString('hero.upwork')} />
+            </div>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_.8fr]">
               <ContactForm
                 copy={{

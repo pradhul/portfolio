@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import ProjectPageShell, { ProjectHero } from '@/components/ProjectPageShell'
+import ProjectPageShell, { FeatureHighlights, ProjectHero } from '@/components/ProjectPageShell'
 import { createPageMetadata, pages } from '@/lib/seo'
 import { content } from '@/lib/content'
+import { projects } from '@/data/projects'
 
 export const metadata: Metadata = createPageMetadata(pages.chartStudio)
 
 const CHART_STUDIO_URL = 'https://soft-dieffenbachia-ba97b4.netlify.app/'
+const chartStudio = projects.find((project) => project.id === 'chartStudio')
 
 const FEATURES = [
   'Upload Excel (.xlsx, .xls) or CSV files, or paste from Excel',
@@ -24,9 +26,10 @@ export default function ChartStudioPortfolio() {
         category={content.portfolio.chartStudio.category}
         title={content.portfolio.chartStudio.title}
         description={content.portfolio.chartStudio.description}
+        icon={chartStudio?.icon}
         actions={
           <a href={CHART_STUDIO_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-            Open live demo
+            Live Demo
           </a>
         }
         media={
@@ -40,6 +43,18 @@ export default function ChartStudioPortfolio() {
           />
         }
       />
+
+      <FeatureHighlights items={['Bar & Pie Charts', 'Excel & CSV', 'Customizable', 'PNG / PDF Export']} />
+
+      <section className="mt-12">
+        <h2 className="mb-4 font-display text-2xl font-semibold text-cream">About Chart Studio</h2>
+        <p className="max-w-3xl text-lg leading-relaxed text-cream-muted">
+          Chart Studio is a web app that lets you create bar and pie charts from your data in minutes.
+          Upload Excel (.xlsx, .xls) or CSV files, or paste values directly from a spreadsheet. Edit
+          cells in the data preview and see your chart update in real time. Customize the chart title,
+          axis labels, colors, legend, and grid, then export as PNG or PDF.
+        </p>
+      </section>
 
       <section className="mt-12">
         <h2 className="mb-6 font-display text-2xl font-semibold text-cream">Screenshots</h2>

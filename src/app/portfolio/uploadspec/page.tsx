@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import ProjectPageShell, { ProjectHero } from '@/components/ProjectPageShell'
+import ProjectPageShell, { FeatureHighlights, ProjectHero } from '@/components/ProjectPageShell'
 import { createPageMetadata, pages } from '@/lib/seo'
 import { content } from '@/lib/content'
+import { projects } from '@/data/projects'
 
 export const metadata: Metadata = createPageMetadata(pages.uploadSpec)
 
 const UPLOAD_SPEC_URL = 'https://uploadspec.web.app/'
+const uploadSpec = projects.find((project) => project.id === 'uploadSpec')
 
 const FEATURES = [
   'Dedicated pages per exam or portal under /tools/ (UPSC, IBPS, RRB, Kerala PSC, passport, driving licence, and more)',
@@ -25,9 +27,10 @@ export default function UploadSpecPortfolio() {
         category={content.portfolio.uploadSpec.category}
         title={content.portfolio.uploadSpec.title}
         description={content.portfolio.uploadSpec.description}
+        icon={uploadSpec?.icon}
         actions={
           <a href={UPLOAD_SPEC_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-            Open live site
+            Live Demo
           </a>
         }
         media={
@@ -36,6 +39,21 @@ export default function UploadSpecPortfolio() {
           </div>
         }
       />
+
+      <FeatureHighlights
+        items={['Exam photo specs', 'KB compression', 'Browser-only privacy', 'UPSC / SSC / Bank tools']}
+      />
+
+      <section className="mt-12">
+        <h2 className="mb-4 font-display text-2xl font-semibold text-cream">About UploadSpec</h2>
+        <p className="max-w-3xl text-lg leading-relaxed text-cream-muted">
+          UploadSpec is a static Astro site with a React tool island that helps users prepare photos
+          and signatures for Indian government and exam portals. Each tool page targets a specific
+          upload specification—exact pixel dimensions, JPEG size ranges, and filenames—verified
+          against official portal rules. All image processing runs in the browser using Canvas;
+          nothing is uploaded to a server.
+        </p>
+      </section>
 
       <section className="mt-12">
         <h2 className="mb-4 font-display text-2xl font-semibold text-cream">Features</h2>

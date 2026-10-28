@@ -57,9 +57,9 @@ export default function PortfolioSection() {
   const [archiveOpen, setArchiveOpen] = useState(false)
 
   const { featured, archive } = useMemo(() => partitionProjects(projects), [])
-  const visibleFeatured = featured.filter((project) => matchesFilter(project, filter))
-  const visibleArchive = archive.filter((project) => matchesFilter(project, filter))
-  const archiveExpanded = archiveOpen || visibleFeatured.length === 0
+  const visibleFeatured = featured.filter((project) => matchesFilter(project, filter, 'featured'))
+  const visibleArchive = archive.filter((project) => matchesFilter(project, filter, 'archive'))
+  const archiveExpanded = archiveOpen || filter === 'archive' || visibleFeatured.length === 0
 
   return (
     <div>

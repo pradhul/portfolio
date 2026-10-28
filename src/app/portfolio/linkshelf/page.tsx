@@ -1,13 +1,15 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import ProjectPageShell, { ProjectHero } from '@/components/ProjectPageShell'
+import ProjectPageShell, { FeatureHighlights, ProjectHero } from '@/components/ProjectPageShell'
 import { createPageMetadata, pages } from '@/lib/seo'
 import { content } from '@/lib/content'
+import { projects } from '@/data/projects'
 
 export const metadata: Metadata = createPageMetadata(pages.linkShelf)
 
 const LINK_SHELF_URL = 'https://link-shelf-puce.vercel.app/'
 const LINK_SHELF_GITHUB = 'https://github.com/pradhul/link-shelf'
+const linkShelf = projects.find((project) => project.id === 'linkShelf')
 
 const FEATURES = [
   'Telegram bot for instant saves with interactive tag and subtag prompts',
@@ -26,10 +28,11 @@ export default function LinkShelfPortfolio() {
         category={content.portfolio.linkShelf.category}
         title={content.portfolio.linkShelf.title}
         description={content.portfolio.linkShelf.description}
+        icon={linkShelf?.icon}
         actions={
           <>
             <a href={LINK_SHELF_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-              Live demo
+              Live Demo
             </a>
             <a href={LINK_SHELF_GITHUB} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
               View on GitHub
@@ -47,6 +50,22 @@ export default function LinkShelfPortfolio() {
           />
         }
       />
+
+      <FeatureHighlights items={['Telegram bot', 'Hierarchical tags', 'Gemini auto-tag', 'Installable PWA']} />
+
+      <section className="mt-12">
+        <h2 className="mb-4 font-display text-2xl font-semibold text-cream">About Link Shelf</h2>
+        <p className="mb-4 max-w-3xl text-lg leading-relaxed text-cream-muted">
+          Link Shelf is a household link library for the links you share and forget—Instagram reels,
+          YouTube videos, recipes, tools, and more. Save from a Telegram bot in the moment, or manage
+          everything later in the installable web app.
+        </p>
+        <p className="max-w-3xl text-lg leading-relaxed text-cream-muted">
+          Drop one URL or a handful at once. The bot extracts titles and metadata, prompts for tags
+          and subtags (or skips), and can auto-categorize multi-link drops with Gemini. Daily digests
+          pull related saves into readable summaries—like “Today&apos;s eats” for cooking links.
+        </p>
+      </section>
 
       <section className="mt-12">
         <h2 className="mb-2 font-display text-2xl font-semibold text-cream">Telegram bot in action</h2>

@@ -53,7 +53,7 @@ function SitePageInner({
           links={links}
           current={current}
           ctaHref="/contact"
-          ctaLabel={tString('hero.hireMe')}
+          ctaLabel={tString('hero.startProject')}
         />
 
         <main id="main-content" className="relative z-10 py-16 md:py-20">

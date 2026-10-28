@@ -16,8 +16,10 @@ export const content = {
     lead:
       '8+ years shipping Android, React Native, React and Angular products. Software Engineering Master at HashedIn by Deloitte (2015–2023) on Kaiser Permanente, Buzztime, GroupNexus, Hiway and Sotera. Now independent, building apps and publishing VS Code and Chrome extensions.',
     downloadResume: 'Resume',
-    viewPortfolio: 'See the work',
-    hireMe: 'Start a project',
+    viewPortfolio: 'View Portfolio',
+    seeWork: 'See the work',
+    hireMe: 'Hire me',
+    startProject: 'Start a project',
     upwork: 'Upwork',
     titleBlock: {
       heading: 'Title block',
@@ -139,10 +141,10 @@ export const content = {
     filtersLabel: 'Filter projects',
     filters: {
       all: 'All',
+      androidTv: 'Android TV',
       extensions: 'Extensions',
-      web: 'Web',
-      mobile: 'Mobile',
-      tools: 'Tools',
+      inProgress: 'In progress',
+      archive: 'Archive',
     },
     archiveEyebrow: 'Archive',
     archiveTitle: 'More projects',
@@ -421,6 +423,7 @@ export const content = {
     subtitle: "A few lines is enough. I'll reply with next steps.",
     sectionLabel: 'Section 04 — Contact',
     connectLabel: 'Prefer another channel?',
+    backToHome: 'Back to home',
     locationNote: 'Bangalore · IST (UTC+5:30)',
     form: {
       nameLabel: 'Name',
@@ -474,4 +477,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '12'
+export const CONTENT_VERSION = '13'

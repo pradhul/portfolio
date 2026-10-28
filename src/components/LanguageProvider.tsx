@@ -154,23 +154,30 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Translation function - gets value from nested keys like 'hero.title'
-  const t = (key: string): string | string[] | Record<string, unknown> => {
-    const currentContent = translatedContent || content
-    const keys = key.split('.')
-    let value: unknown = currentContent
-
+  const lookup = (source: unknown, keys: string[]): unknown => {
+    let value: unknown = source
     for (const k of keys) {
       if (value && typeof value === 'object' && value !== null && k in value) {
         value = (value as Record<string, unknown>)[k]
       } else {
-        // Key not found, return the key itself as fallback
-        console.warn(`Translation key not found: ${key}`)
-        return key
+        return undefined
       }
     }
+    return value
+  }
 
-    // Return the value as-is (could be string, array, or object)
+  // Translation function - gets value from nested keys like 'hero.title'.
+  // Missing translated keys fall back to English so locale stays consistent
+  // instead of leaking raw keys or mixing untranslated server copy.
+  const t = (key: string): string | string[] | Record<string, unknown> => {
+    const keys = key.split('.')
+    const value = (translatedContent ? lookup(translatedContent, keys) : undefined) ?? lookup(content, keys)
+
+    if (value === undefined) {
+      console.warn(`Translation key not found: ${key}`)
+      return key
+    }
+
     if (typeof value === 'string') {
       return value
     }

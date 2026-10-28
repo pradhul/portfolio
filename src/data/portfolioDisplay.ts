@@ -14,9 +14,16 @@ export const FEATURED_PROJECT_IDS = [
   'uploadSpec',
 ] as const
 
-export type ProjectFilter = 'all' | 'extensions' | 'web' | 'mobile' | 'tools'
+export type CategoryGroup = 'extensions' | 'web' | 'mobile' | 'tools'
+export type ProjectFilter = 'all' | 'androidTv' | 'extensions' | 'inProgress' | 'archive'
 
-export const PROJECT_FILTERS: ProjectFilter[] = ['all', 'extensions', 'web', 'mobile', 'tools']
+export const PROJECT_FILTERS: ProjectFilter[] = [
+  'all',
+  'androidTv',
+  'extensions',
+  'inProgress',
+  'archive',
+]
 
 type PortfolioEntry = { category?: string }
 
@@ -30,7 +37,7 @@ export function getProjectCategory(projectId: string): string {
   return portfolioEntry(projectId)?.category ?? ''
 }
 
-export function filterGroupFromCategory(category: string): Exclude<ProjectFilter, 'all'> {
+export function filterGroupFromCategory(category: string): CategoryGroup {
   const normalized = category.toUpperCase()
   if (normalized.includes('EXTENSION')) return 'extensions'
   if (normalized.includes('MOBILE') || normalized.includes('ANDROID TV') || normalized.endsWith(' TV')) {
@@ -40,9 +47,22 @@ export function filterGroupFromCategory(category: string): Exclude<ProjectFilter
   return 'tools'
 }
 
-export function matchesFilter(project: Project, filter: ProjectFilter): boolean {
+export function matchesFilter(
+  project: Project,
+  filter: ProjectFilter,
+  scope: 'featured' | 'archive' = 'featured'
+): boolean {
   if (filter === 'all') return true
-  return filterGroupFromCategory(getProjectCategory(project.id)) === filter
+  if (filter === 'archive') return scope === 'archive'
+  if (filter === 'inProgress') return project.status === 'in_progress'
+  if (filter === 'androidTv') {
+    const category = getProjectCategory(project.id).toUpperCase()
+    return category.includes('ANDROID TV') || category.endsWith(' TV')
+  }
+  if (filter === 'extensions') {
+    return filterGroupFromCategory(getProjectCategory(project.id)) === 'extensions'
+  }
+  return false
 }
 
 export function partitionProjects(all: Project[]): { featured: Project[]; archive: Project[] } {
