@@ -308,9 +308,9 @@ export const projects: Project[] = [
     githubRepo: 'pradhul/SMSpend',
     status: 'released',
     release: {
-      tag: 'v1.0.6',
-      url: null,
-      publishedAt: '2026-08-29',
+      tag: 'v1.3.1',
+      url: 'https://github.com/pradhul/SMSpend/releases/tag/v1.3.1',
+      publishedAt: '2026-11-10',
     },
     lastSyncedAt: '2026-09-02T14:45:24.187Z',
     readmeHash: '43deee01dfd42194',

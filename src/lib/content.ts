@@ -386,6 +386,15 @@ export const content = {
         'SMSpend trends screen with a stacked month-by-month bar chart and top spends by category',
         'SMSpend report screen listing recorded spends by day with a Save CSV button',
       ],
+      installHeading: 'Install',
+      downloadApk: 'Download APK',
+      allReleases: 'All releases',
+      unknownSourcesNote:
+        'The first time you open the APK, Android may ask you to allow installing apps from unknown sources for your browser or file manager.',
+      unknownSourcesLink: 'Google’s help on installing apps from other sources',
+      restrictedSettingsNote:
+        'SMSpend needs SMS access. On Android 13 and later, sideloaded apps cannot get that permission until you turn on Allow restricted settings: Settings → Apps → SMSpend → ⋮ → Allow restricted settings, then grant SMS.',
+      restrictedSettingsLink: 'Learn about restricted settings',
     },
     prism: {
       category: 'WEB APP',
@@ -628,4 +637,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '16'
+export const CONTENT_VERSION = '17'
