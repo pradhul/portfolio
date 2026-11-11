@@ -317,17 +317,26 @@ export const projects: Project[] = [
     figure: 'Fig. 08',
     icon: { type: 'lucide', name: 'Bookmark' },
     media: {
-      src: '',
-      alt: 'SMSpend',
-      width: 800,
-      height: 600,
+      src: '/smspend/smspend-home.png',
+      alt: 'SMSpend home screen with this month\'s spend, category breakdown, and spending tiles (sample data)',
+      width: 456,
+      height: 1024,
+      contain: true,
+      maxWidthClass: 'max-w-[280px]',
     },
     links: [
+      {
+        type: 'viewProject',
+        href: '/portfolio/smspend',
+        labelKey: 'viewProject',
+        internal: true,
+        primary: true,
+        hideIcon: true,
+      },
       {
         type: 'github',
         href: 'https://github.com/pradhul/SMSpend',
         labelKey: 'viewGitHub',
-        primary: true,
       },
     ],
   },  {

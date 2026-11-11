@@ -65,6 +65,13 @@ export const pages = {
       'Household PWA for saving Instagram, YouTube, and other links via Telegram bot or the web UI. Tag and favorite items, search your shelf, and let Gemini auto-categorize multi-link drops.',
     eyebrow: 'PWA',
   },
+  smspend: {
+    path: '/portfolio/smspend',
+    title: 'SMSpend',
+    description:
+      'Private Android app that turns bank and UPI debit SMS into a spend-by-category view, with monthly trends and CSV reports—built with Kotlin and Jetpack Compose.',
+    eyebrow: 'MOBILE APP',
+  },
   uploadSpec: {
     path: '/portfolio/uploadspec',
     title: 'UploadSpec',

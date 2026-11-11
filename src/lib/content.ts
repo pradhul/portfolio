@@ -368,7 +368,24 @@ export const content = {
       ],
       upcomingFeatures: [],
       viewGitHub: 'View on GitHub',
+      viewProject: 'View Project',
       demoLabel: 'SMSpend App',
+      about: [
+        'SMSpend is a private Android app that reads the bank and UPI debit SMS already on your phone and turns them into a spend-by-category view. There is no account linking—it scans your SMS incrementally on app launch and when you pull to refresh.',
+        'Switch between today, this week, and month views to see what you spent, how it splits across categories, and how this month compares with the last. A report screen lists every recorded spend and saves it as a CSV you can open in Google Sheets or Excel. Unknown merchants can optionally be categorized with Gemini.',
+      ],
+      highlights: ['Bank & UPI SMS', 'Spend by category', 'Monthly trends', 'CSV export'],
+      screenshotsIntro: 'Screens from the app, shown with sample data.',
+      screenshotCaptions: [
+        'Home: this month\'s spend, category split, and top merchants per category',
+        'Trends: month-by-month spend chart and changes versus last month',
+        'Report: every recorded spend for the period, with CSV export',
+      ],
+      screenshotAlts: [
+        'SMSpend home screen showing this month\'s total spend, a category donut chart, and spending tiles',
+        'SMSpend trends screen with a stacked month-by-month bar chart and top spends by category',
+        'SMSpend report screen listing recorded spends by day with a Save CSV button',
+      ],
     },
     prism: {
       category: 'WEB APP',
@@ -611,4 +628,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '15'
+export const CONTENT_VERSION = '16'

@@ -308,6 +308,21 @@ check('archive cards do not point at missing public images', () => {
   assert.deepEqual(missingFiles, [])
 })
 
+check('SMSpend card and project page show the sanitized screenshots', () => {
+  const smspend = projects.find((project) => project.id === 'smspend')
+  assert.equal(smspend?.media.src, '/smspend/smspend-home.png')
+  assert.equal(smspend?.media.contain, true)
+  assert.ok(smspend?.links.some((link) => link.internal && link.href === '/portfolio/smspend'))
+  assert.equal(pages.smspend.path, '/portfolio/smspend')
+  const source = read('src/app/portfolio/smspend/SmspendContent.tsx')
+  for (const file of ['smspend-home.png', 'smspend-trends.png', 'smspend-report.png']) {
+    assert.match(source, new RegExp(file.replace('.', '\\.')))
+    assert.ok(existsSync(join(process.cwd(), 'public/smspend', file)), `missing public/smspend/${file}`)
+  }
+  assert.match(source, /copy\.aboutLabel/)
+  assert.equal(content.portfolio.smspend.screenshotCaptions.length, 3)
+})
+
 check('keeps invented Stitch stats out of the shipped UI', () => {
   const sources = [
     'src/lib/content.ts',

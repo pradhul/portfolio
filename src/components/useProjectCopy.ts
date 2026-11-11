@@ -74,5 +74,8 @@ export function useProjectCopy(id: string) {
     homeScreenTitle: optionalString(`${base}.homeScreenTitle`),
     homeScreenIntro: optionalString(`${base}.homeScreenIntro`),
     ordersCaption: optionalString(`${base}.ordersCaption`),
+    screenshotsIntro: optionalString(`${base}.screenshotsIntro`),
+    screenshotCaptions: asList(`${base}.screenshotCaptions`),
+    screenshotAlts: asList(`${base}.screenshotAlts`),
   }
 }
