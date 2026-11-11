@@ -7,7 +7,7 @@ import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-import { content } from './content'
+import { content, CONTENT_VERSION } from './content'
 import { pages } from './seo'
 import { projects } from '../data/projects'
 import { FEATURED_PROJECT_IDS } from '../data/portfolioDisplay'
@@ -321,6 +321,19 @@ check('SMSpend card and project page show the sanitized screenshots', () => {
   }
   assert.match(source, /copy\.aboutLabel/)
   assert.equal(content.portfolio.smspend.screenshotCaptions.length, 3)
+  assert.equal(content.portfolio.smspend.downloadApk, 'Download APK')
+  assert.equal(content.portfolio.smspend.installHeading, 'Install')
+  assert.match(content.portfolio.smspend.restrictedSettingsNote, /Allow restricted settings/)
+  assert.match(source, /copy\.downloadApk/)
+  assert.match(source, /copy\.installHeading/)
+  assert.match(source, /SMSPEND_RESTRICTED_SETTINGS_HELP/)
+  assert.match(source, /SMSPEND_UNKNOWN_SOURCES_HELP/)
+  const page = read('src/app/portfolio/smspend/page.tsx')
+  assert.match(page, /export const revalidate = 3600/)
+  assert.match(page, /getLatestSmspendRelease/)
+  assert.equal(smspend?.release?.tag, 'v1.3.1')
+  assert.equal(smspend?.release?.url, 'https://github.com/pradhul/SMSpend/releases/tag/v1.3.1')
+  assert.equal(CONTENT_VERSION, '17')
 })
 
 check('keeps invented Stitch stats out of the shipped UI', () => {

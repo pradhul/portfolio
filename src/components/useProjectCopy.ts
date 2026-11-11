@@ -77,5 +77,12 @@ export function useProjectCopy(id: string) {
     screenshotsIntro: optionalString(`${base}.screenshotsIntro`),
     screenshotCaptions: asList(`${base}.screenshotCaptions`),
     screenshotAlts: asList(`${base}.screenshotAlts`),
+    installHeading: optionalString(`${base}.installHeading`),
+    downloadApk: optionalString(`${base}.downloadApk`),
+    allReleases: optionalString(`${base}.allReleases`),
+    unknownSourcesNote: optionalString(`${base}.unknownSourcesNote`),
+    unknownSourcesLink: optionalString(`${base}.unknownSourcesLink`),
+    restrictedSettingsNote: optionalString(`${base}.restrictedSettingsNote`),
+    restrictedSettingsLink: optionalString(`${base}.restrictedSettingsLink`),
   }
 }
