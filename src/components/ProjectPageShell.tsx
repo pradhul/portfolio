@@ -2,13 +2,15 @@
 
 import type { ReactNode } from 'react'
 import Image from 'next/image'
-import { BarChart3, Bookmark, UtensilsCrossed } from 'lucide-react'
+import { BarChart3, Bookmark, FolderOpen, Trophy, UtensilsCrossed } from 'lucide-react'
 import SitePage from '@/components/SitePage'
 import { ICON_BLUR_DATA_URL, type ProjectIcon } from '@/data/projects'
 
 const LUCIDE_ICONS = {
   BarChart3,
   Bookmark,
+  FolderOpen,
+  Trophy,
   UtensilsCrossed,
 } as const
 

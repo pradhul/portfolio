@@ -84,5 +84,10 @@ export function useProjectCopy(id: string) {
     unknownSourcesLink: optionalString(`${base}.unknownSourcesLink`),
     restrictedSettingsNote: optionalString(`${base}.restrictedSettingsNote`),
     restrictedSettingsLink: optionalString(`${base}.restrictedSettingsLink`),
+    downloadDmg: optionalString(`${base}.downloadDmg`),
+    requirementsNote: optionalString(`${base}.requirementsNote`),
+    gatekeeperNote: optionalString(`${base}.gatekeeperNote`),
+    quarantineNote: optionalString(`${base}.quarantineNote`),
+    quarantineCommand: optionalString(`${base}.quarantineCommand`),
   }
 }
