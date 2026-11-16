@@ -333,7 +333,7 @@ check('SMSpend card and project page show the sanitized screenshots', () => {
   assert.match(page, /getLatestSmspendRelease/)
   assert.equal(smspend?.release?.tag, 'v1.3.1')
   assert.equal(smspend?.release?.url, 'https://github.com/pradhul/SMSpend/releases/tag/v1.3.1')
-  assert.equal(CONTENT_VERSION, '18')
+  assert.equal(CONTENT_VERSION, '19')
 })
 
 check('keeps invented Stitch stats out of the shipped UI', () => {
@@ -373,19 +373,34 @@ check('adds Kadalas, FightCard HQ, Sundry, and Forge to the portfolio', () => {
     assert.ok(existsSync(join(process.cwd(), 'public/fightcardHq', file)), `missing public/fightcardHq/${file}`)
   }
 
-  assert.equal(sundry?.media.src, '/sundry/icon.png')
+  assert.equal(sundry?.media.src, '/sundry/sundry-packing-list.png')
   assert.equal(sundry?.release?.tag, 'v0.2.1')
   assert.equal(sundry?.release?.url, 'https://github.com/pradhul/sundry/releases/tag/v0.2.1')
   assert.ok(sundry?.links.some((link) => link.internal && link.href === '/portfolio/sundry'))
   assert.equal(pages.sundry.path, '/portfolio/sundry')
   assert.ok(existsSync(join(process.cwd(), 'public/sundry/icon.png')))
+  for (const file of ['sundry-packing-list.png', 'sundry-packed.png']) {
+    assert.ok(existsSync(join(process.cwd(), 'public/sundry', file)), `missing public/sundry/${file}`)
+  }
+  const sundrySource = read('src/app/portfolio/sundry/SundryContent.tsx')
+  assert.match(sundrySource, /sundry-packing-list\.png/)
+  assert.match(sundrySource, /sundry-packed\.png/)
   const sundryPage = read('src/app/portfolio/sundry/page.tsx')
   assert.match(sundryPage, /export const revalidate = 3600/)
   assert.match(sundryPage, /getLatestSundryRelease/)
   assert.equal(content.portfolio.sundry.downloadDmg, 'Download DMG')
   assert.match(content.portfolio.sundry.gatekeeperNote, /right-click/)
 
-  assert.equal(forge?.media.src, '/forgeLauncher/icon.png')
+  assert.equal(forge?.media.src, '/forgeLauncher/forge-home.png')
+  assert.equal(forge?.media.contain, true)
+  for (const file of ['forge-home.png', 'forge-widgets.png', 'forge-app-drawer.png']) {
+    assert.ok(existsSync(join(process.cwd(), 'public/forgeLauncher', file)), `missing public/forgeLauncher/${file}`)
+  }
+  const forgeSource = read('src/app/portfolio/forge-launcher/ForgeLauncherContent.tsx')
+  for (const file of ['forge-home.png', 'forge-widgets.png', 'forge-app-drawer.png']) {
+    assert.match(forgeSource, new RegExp(file.replace('.', '\\.')))
+  }
+  assert.match(content.portfolio.forgeLauncher.features.join(' '), /NIFTY 50/)
   assert.ok(
     forge?.links.some(
       (link) => link.href === 'https://github.com/pradhul/forge-launcher/tree/cursor/forge-launcher-mvp-8cde'

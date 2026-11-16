@@ -44,18 +44,14 @@ function SundryInner({ release }: { release: SundryRelease }) {
           </>
         }
         media={
-          <div className="flex justify-center">
-            <div className="frame w-full max-w-[280px] overflow-hidden">
-              <Image
-                src="/sundry/icon.png"
-                alt="Sundry app icon"
-                width={512}
-                height={512}
-                className="h-auto w-full"
-                priority
-              />
-            </div>
-          </div>
+          <Image
+            src="/sundry/sundry-packing-list.png"
+            alt={copy.screenshotAlts[0] ?? 'Sundry packing list'}
+            width={2940}
+            height={1848}
+            className="h-auto w-full border border-line"
+            priority
+          />
         }
       />
 
@@ -94,6 +90,45 @@ function SundryInner({ release }: { release: SundryRelease }) {
             {para}
           </p>
         ))}
+      </section>
+
+      <section className="mt-12">
+        <h2 className="mb-2 font-display text-2xl font-semibold text-cream">{copy.screenshotsLabel}</h2>
+        {copy.screenshotsIntro ? <p className="mb-8 max-w-2xl text-cream-muted">{copy.screenshotsIntro}</p> : null}
+        <figure>
+          <div className="frame overflow-hidden">
+            <Image
+              src="/sundry/sundry-packing-list.png"
+              alt={copy.screenshotAlts[0] ?? 'Sundry packing list'}
+              width={2940}
+              height={1848}
+              className="h-auto w-full"
+              loading="lazy"
+            />
+          </div>
+          {copy.screenshotCaptions[0] ? (
+            <figcaption className="mt-3 text-sm text-cream-muted">
+              {copy.screenshotCaptions[0]}
+            </figcaption>
+          ) : null}
+        </figure>
+        <figure className="mt-8">
+          <div className="frame overflow-hidden">
+            <Image
+              src="/sundry/sundry-packed.png"
+              alt={copy.screenshotAlts[1] ?? 'Sundry packed items'}
+              width={2940}
+              height={730}
+              className="h-auto w-full"
+              loading="lazy"
+            />
+          </div>
+          {copy.screenshotCaptions[1] ? (
+            <figcaption className="mt-3 text-sm text-cream-muted">
+              {copy.screenshotCaptions[1]}
+            </figcaption>
+          ) : null}
+        </figure>
       </section>
 
       <section className="mt-12">

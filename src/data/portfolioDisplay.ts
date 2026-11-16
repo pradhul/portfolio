@@ -9,6 +9,7 @@ export const FEATURED_PROJECT_IDS = [
   'kadalas',
   'fightcardHq',
   'sundry',
+  'forgeLauncher',
   'glanceTv',
   'ionicMeasure',
   'squashPush',

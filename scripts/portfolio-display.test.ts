@@ -54,7 +54,7 @@ check('archive holds every other project — nothing is dropped', () => {
 check('weak / thin entries stay in the archive', () => {
   const { archive } = partitionProjects(projects)
   const archiveIds = archive.map((project) => project.id)
-  for (const id of ['splitit', 'geminiTutorial', 'pradhul', 'smspend', 'forgeLauncher']) {
+  for (const id of ['splitit', 'geminiTutorial', 'pradhul', 'smspend']) {
     assert.ok(archiveIds.includes(id), `${id} should be archived`)
   }
 })
@@ -93,7 +93,7 @@ check('filters return the expected featured ids', () => {
   )
   assert.deepEqual(
     featured.filter((project) => matchesFilter(project, 'inProgress')).map((p) => p.id),
-    ['kadalas', 'fightcardHq', 'squashPush', 'vsColorCode']
+    ['kadalas', 'fightcardHq', 'forgeLauncher', 'squashPush', 'vsColorCode']
   )
   assert.deepEqual(
     featured.filter((project) => matchesFilter(project, 'archive')).map((p) => p.id),

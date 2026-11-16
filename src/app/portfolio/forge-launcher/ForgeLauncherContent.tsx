@@ -8,6 +8,12 @@ import { projects } from '@/data/projects'
 const FORGE_GITHUB = 'https://github.com/pradhul/forge-launcher/tree/cursor/forge-launcher-mvp-8cde'
 const forgeLauncher = projects.find((project) => project.id === 'forgeLauncher')
 
+const SCREENSHOTS = [
+  { src: '/forgeLauncher/forge-home.png', fallbackAlt: 'Forge home screen' },
+  { src: '/forgeLauncher/forge-widgets.png', fallbackAlt: 'Forge widgets page' },
+  { src: '/forgeLauncher/forge-app-drawer.png', fallbackAlt: 'Forge All apps drawer' },
+] as const
+
 export default function ForgeLauncherContent() {
   return (
     <ProjectPageShell>
@@ -34,12 +40,12 @@ function ForgeLauncherInner() {
         }
         media={
           <div className="flex justify-center">
-            <div className="frame w-full max-w-[200px] overflow-hidden">
+            <div className="frame w-full max-w-[280px] overflow-hidden">
               <Image
-                src="/forgeLauncher/icon.png"
-                alt="Forge launcher icon"
-                width={512}
-                height={512}
+                src="/forgeLauncher/forge-home.png"
+                alt={copy.screenshotAlts[0] ?? SCREENSHOTS[0].fallbackAlt}
+                width={1080}
+                height={2424}
                 className="h-auto w-full"
                 priority
               />
@@ -57,6 +63,32 @@ function ForgeLauncherInner() {
             {para}
           </p>
         ))}
+      </section>
+
+      <section className="mt-12">
+        <h2 className="mb-2 font-display text-2xl font-semibold text-cream">{copy.screenshotsLabel}</h2>
+        {copy.screenshotsIntro ? <p className="mb-8 max-w-2xl text-cream-muted">{copy.screenshotsIntro}</p> : null}
+        <div className="grid justify-items-center gap-8 sm:grid-cols-3">
+          {SCREENSHOTS.map((shot, index) => (
+            <figure key={shot.src} className="w-full max-w-[280px]">
+              <div className="frame overflow-hidden">
+                <Image
+                  src={shot.src}
+                  alt={copy.screenshotAlts[index] ?? shot.fallbackAlt}
+                  width={1080}
+                  height={2424}
+                  className="h-auto w-full"
+                  loading="lazy"
+                />
+              </div>
+              {copy.screenshotCaptions[index] ? (
+                <figcaption className="mt-3 text-center text-sm text-cream-muted">
+                  {copy.screenshotCaptions[index]}
+                </figcaption>
+              ) : null}
+            </figure>
+          ))}
+        </div>
       </section>
 
       <section className="mt-12">

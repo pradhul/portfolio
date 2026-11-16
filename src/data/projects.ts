@@ -672,12 +672,10 @@ export const projects: Project[] = [
     figure: 'Fig. 21',
     icon: { type: 'image', src: '/sundry/icon.png', alt: 'Sundry Icon' },
     media: {
-      src: '/sundry/icon.png',
-      alt: 'Sundry app icon',
-      width: 512,
-      height: 512,
-      contain: true,
-      maxWidthClass: 'max-w-[220px]',
+      src: '/sundry/sundry-packing-list.png',
+      alt: 'Sundry packing list for a Kyoto trip, with To pack and Packed for me / Packed for you columns',
+      width: 2940,
+      height: 1848,
     },
     links: [
       {
@@ -705,12 +703,12 @@ export const projects: Project[] = [
     figure: 'Fig. 22',
     icon: { type: 'image', src: '/forgeLauncher/icon.png', alt: 'Forge Launcher Icon' },
     media: {
-      src: '/forgeLauncher/icon.png',
-      alt: 'Forge launcher icon',
-      width: 512,
-      height: 512,
+      src: '/forgeLauncher/forge-home.png',
+      alt: 'Forge home screen with clock, date, and a four-app dock over a geometric wallpaper',
+      width: 1080,
+      height: 2424,
       contain: true,
-      maxWidthClass: 'max-w-[160px]',
+      maxWidthClass: 'max-w-[280px]',
     },
     links: [
       {

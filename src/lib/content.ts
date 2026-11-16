@@ -643,6 +643,15 @@ export const content = {
         'Each trip has its own travellers, and personal items scale with the group while shared items stay on one line. You can share a trip with another Sundry user over AirDrop. The app is ad-hoc signed and not notarized, so the first launch needs a right-click → Open.',
       ],
       highlights: ['On-device Apple Intelligence', 'Season-aware lists', 'Native macOS', 'AirDrop sharing'],
+      screenshotsIntro: 'Screens from a sample Kyoto trip, with travellers named me and you.',
+      screenshotCaptions: [
+        'Packing list: To pack, plus Packed for me and Packed for you columns',
+        'Items packed per traveller, with a Not needed item struck out',
+      ],
+      screenshotAlts: [
+        'Sundry window for a Kyoto trip, showing the To pack list and empty Packed for me and Packed for you columns',
+        'Sundry packing columns with items packed for me and for you, and a plug adapter marked Not needed',
+      ],
       installHeading: 'Install',
       downloadDmg: 'Download DMG',
       allReleases: 'All releases',
@@ -662,7 +671,7 @@ export const content = {
       features: [
         'A short home screen and a real All apps drawer, with search and a pin-able dock',
         'On-device icon stylisation with a bundled neural model, plus optional Gemini packs if you have a paid key',
-        'Wallpaper-aware theming, a widgets page, and a habits module',
+        'A widgets page for home-screen widgets such as weather, gold price, and NIFTY 50',
       ],
       upcomingFeatures: [],
       viewGitHub: 'View on GitHub',
@@ -670,9 +679,20 @@ export const content = {
       demoLabel: 'Forge launcher',
       about: [
         'Forge starts from Slim Launcher (MIT), the “all you need is less” Android home screen, and keeps that restraint. It is a separate app (com.pradhul.forge) and does not reuse Slim’s name or logo.',
-        'The addition is icon packs, generated on the device by default with a bundled Magenta style-transfer model and a few presets. You can also feed it a photo, or optionally a paid Google AI Studio key for Gemini packs. Swipe up for a real app drawer, long-press for icon packs and settings, and theme icons from the wallpaper. The work lives on a development branch; there is no public APK release yet.',
+        'The addition is icon packs, generated on the device by default with a bundled Magenta style-transfer model and a few presets. You can also feed it a photo, or optionally a paid Google AI Studio key for Gemini packs. Swipe up for a real app drawer, long-press for icon packs and settings, and theme icons from the wallpaper. A widgets page can hold home-screen widgets such as weather, gold price, and NIFTY 50. The work lives on a development branch; there is no public APK release yet.',
       ],
-      highlights: ['Minimal home', 'On-device icon packs', 'App drawer', 'Fork of Slim Launcher'],
+      highlights: ['Minimal home', 'On-device icon packs', 'App drawer', 'Home-screen widgets'],
+      screenshotsIntro: 'Screens from the launcher, with a yellow themed icon pack applied.',
+      screenshotCaptions: [
+        'Home: clock, date, and a four-app dock over a geometric wallpaper',
+        'Widgets: weather, gold price, and NIFTY 50',
+        'All apps drawer with the themed icon pack',
+      ],
+      screenshotAlts: [
+        'Forge home screen with a large clock, the date, and a four-app dock over a geometric wallpaper',
+        'Forge widgets page showing weather, gold price, and NIFTY 50 cards',
+        'Forge All apps drawer with yellow themed icons and a search bar',
+      ],
     },
 
   },
@@ -752,4 +772,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '18'
+export const CONTENT_VERSION = '19'
