@@ -30,7 +30,7 @@ function check(name: string, fn: () => void) {
 
 console.log('portfolio display')
 
-check('features the six curated projects in declared order', () => {
+check('features the curated projects in declared order', () => {
   const { featured } = partitionProjects(projects)
   assert.deepEqual(
     featured.map((project) => project.id),
@@ -54,7 +54,7 @@ check('archive holds every other project — nothing is dropped', () => {
 check('weak / thin entries stay in the archive', () => {
   const { archive } = partitionProjects(projects)
   const archiveIds = archive.map((project) => project.id)
-  for (const id of ['splitit', 'geminiTutorial', 'pradhul', 'smspend']) {
+  for (const id of ['splitit', 'geminiTutorial', 'pradhul', 'smspend', 'forgeLauncher']) {
     assert.ok(archiveIds.includes(id), `${id} should be archived`)
   }
 })
@@ -69,6 +69,7 @@ check('maps English categories onto the four filter groups', () => {
   assert.equal(filterGroupFromCategory('TELEGRAM BOT'), 'tools')
   assert.equal(filterGroupFromCategory('CLI TOOL'), 'tools')
   assert.equal(filterGroupFromCategory('LIBRARY'), 'tools')
+  assert.equal(filterGroupFromCategory('MACOS APP'), 'tools')
 })
 
 check('every live card has a category and a known filter group', () => {
@@ -92,7 +93,7 @@ check('filters return the expected featured ids', () => {
   )
   assert.deepEqual(
     featured.filter((project) => matchesFilter(project, 'inProgress')).map((p) => p.id),
-    ['squashPush', 'vsColorCode']
+    ['kadalas', 'fightcardHq', 'squashPush', 'vsColorCode']
   )
   assert.deepEqual(
     featured.filter((project) => matchesFilter(project, 'archive')).map((p) => p.id),

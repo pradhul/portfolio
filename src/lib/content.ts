@@ -560,6 +560,121 @@ export const content = {
         'Screenshots from the Glance TV repository: the home screen, glass-tile layout, and the orders status line.',
       ordersCaption: 'Status line with the next holiday and upcoming orders',
     },
+    kadalas: {
+      category: 'WEB APP',
+      title: 'Kadalas',
+      description:
+        'A personal document vault that keeps your papers in your own Google Drive and pulls newer versions from Gmail. There is no app-owned backend — AI uses a key you paste in Settings. Built with Expo, so the same app runs on web, iOS, and Android.',
+      features: [
+        'Files live in a Kadalas folder in your Google Drive; the app never hosts them',
+        'Per-document Gmail sync, plus a resumable full-mailbox scan that pauses on AI quota',
+        'Groups related policies by subject — for example a vehicle — and tracks own-damage and third-party cover separately',
+      ],
+      upcomingFeatures: [],
+      liveDemo: 'Live Demo',
+      viewGitHub: 'View on GitHub',
+      viewProject: 'View Project',
+      demoLabel: 'Kadalas vault',
+      about: [
+        'Kadalas (Malayalam for papers) is a document vault with no server of its own. Sign in with Google and it stores files in a Drive folder the app creates, using only the drive.file and gmail.readonly scopes. Classification uses a bring-your-own key (Gemini by default); keys stay on the device.',
+        'You can add a PDF or image, or run a full mailbox scan that searches, filters, classifies, and groups documents, then review what to keep. Renewals of the same subject stay together, and vehicle insurance can keep separate own-damage and third-party policies current at once. The public demo at kadalas.netlify.app lets you try the UI with mock data. Connecting a real Gmail account is limited until Google verifies the restricted Gmail scope.',
+      ],
+      highlights: ['Your Google Drive', 'Gmail sync', 'No app backend', 'Expo · web, iOS, Android'],
+      screenshotsIntro: 'Screens from the demo vault, shown with mock data.',
+      screenshotCaptions: [
+        'Vault home: folders, recent documents, and vehicles with cover dates',
+        'Scan review: versions of the same policy grouped, ready to approve or skip',
+        'Vehicle cover: own-damage and third-party slots, with version history',
+      ],
+      screenshotAlts: [
+        'Kadalas vault home showing vehicles, recent documents, and folder cards in a demo vault',
+        'Kadalas scan review grouping four versions of a vehicle policy, with Approve and Skip',
+        'Kadalas vehicle cover screen with own-damage and third-party slots and version history',
+      ],
+    },
+    fightcardHq: {
+      category: 'WEB APP',
+      title: 'FightCard HQ',
+      description:
+        'A tournament manager for MMA and BJJ events — single-elimination brackets, a mobile-friendly match desk, and a big-screen scoreboard with a dark fight-night look.',
+      features: [
+        'Single-elimination brackets per division, with automatic byes and a champion card',
+        'Match control for BJJ and MMA scoring, plus a live big-screen scoreboard and bracket',
+        'A demo seed so you can load a sample event and walk through the flow',
+      ],
+      upcomingFeatures: [],
+      liveDemo: 'Live Demo',
+      viewGitHub: 'View on GitHub',
+      viewProject: 'View Project',
+      demoLabel: 'FightCard HQ',
+      about: [
+        'FightCard HQ is a Next.js app for running MMA and Brazilian Jiu-Jitsu tournaments. You set up an event, add fighters to divisions, and it builds a single-elimination bracket, giving byes to top seeds when the field is not a power of two. Winners advance automatically.',
+        'The match desk is built for a phone at cage-side: start, pause, and reset the clock, score BJJ points or MMA judge points, and declare a winner by points, submission, KO/TKO, decision, or DQ. A big-screen scoreboard and a live bracket poll about once a second so the room stays in sync. The public demo at fightcard-hq.vercel.app is fine for trying the UI; because it stores data in an ephemeral file on Vercel, events can reset after a cold start.',
+      ],
+      highlights: ['MMA & BJJ', 'Live brackets', 'Match control', 'Big-screen scoreboard'],
+      screenshotsIntro: 'Screens from a demo BJJ event.',
+      screenshotCaptions: [
+        'Bracket: a finished adult black-belt division with a champion card',
+        'Match control: timer, BJJ scoring, and declare-winner actions',
+        'Big-screen scoreboard for the same bout, built for a display at the mats',
+      ],
+      screenshotAlts: [
+        'FightCard HQ tournament page showing an adult black-belt bracket and champion card',
+        'FightCard HQ match control with a running timer, red and blue scores, and BJJ point buttons',
+        'FightCard HQ big-screen scoreboard with two fighters, scores, and a round timer',
+      ],
+    },
+    sundry: {
+      category: 'MACOS APP',
+      title: 'Sundry',
+      description:
+        'A native macOS packing-list app. You enter a destination and month; it builds a season-aware checklist on-device with Apple Intelligence, then lets you tick items off as you pack.',
+      features: [
+        'Season-aware lists generated on-device — no API keys, and nothing leaves the Mac except a one-time climate lookup',
+        'Per-trip travellers, quantities that scale with the group, and AirDrop sharing between Macs',
+        'Requires macOS 26 or later, Apple Silicon, and Apple Intelligence turned on',
+      ],
+      upcomingFeatures: [],
+      viewGitHub: 'View on GitHub',
+      viewProject: 'View Project',
+      demoLabel: 'Sundry',
+      about: [
+        'Sundry is a native Mac app for packing. Create a trip with a place, a month, nights, purposes, and who is coming. It looks up typical climate for that month, then builds the checklist on-device, one category at a time, using Apple Intelligence. There are no API keys to paste.',
+        'Each trip has its own travellers, and personal items scale with the group while shared items stay on one line. You can share a trip with another Sundry user over AirDrop. The app is ad-hoc signed and not notarized, so the first launch needs a right-click → Open.',
+      ],
+      highlights: ['On-device Apple Intelligence', 'Season-aware lists', 'Native macOS', 'AirDrop sharing'],
+      installHeading: 'Install',
+      downloadDmg: 'Download DMG',
+      allReleases: 'All releases',
+      requirementsNote:
+        'Needs macOS 26 or later, Apple Silicon, and Apple Intelligence turned on (System Settings → Apple Intelligence & Siri).',
+      gatekeeperNote:
+        'The build is ad-hoc signed and not notarized. After you drag Sundry to Applications, right-click the app and choose Open the first time.',
+      quarantineNote:
+        'If macOS still says the app is damaged, run this in Terminal, then open it again:',
+      quarantineCommand: 'xattr -dr com.apple.quarantine /Applications/Sundry.app',
+    },
+    forgeLauncher: {
+      category: 'MOBILE APP',
+      title: 'Forge',
+      description:
+        'A minimal Android launcher, built as a fork of Slim Launcher, with on-device icon packs so app icons can follow the wallpaper — or a style you generate on the phone.',
+      features: [
+        'A short home screen and a real All apps drawer, with search and a pin-able dock',
+        'On-device icon stylisation with a bundled neural model, plus optional Gemini packs if you have a paid key',
+        'Wallpaper-aware theming, a widgets page, and a habits module',
+      ],
+      upcomingFeatures: [],
+      viewGitHub: 'View on GitHub',
+      viewProject: 'View Project',
+      demoLabel: 'Forge launcher',
+      about: [
+        'Forge starts from Slim Launcher (MIT), the “all you need is less” Android home screen, and keeps that restraint. It is a separate app (com.pradhul.forge) and does not reuse Slim’s name or logo.',
+        'The addition is icon packs, generated on the device by default with a bundled Magenta style-transfer model and a few presets. You can also feed it a photo, or optionally a paid Google AI Studio key for Gemini packs. Swipe up for a real app drawer, long-press for icon packs and settings, and theme icons from the wallpaper. The work lives on a development branch; there is no public APK release yet.',
+      ],
+      highlights: ['Minimal home', 'On-device icon packs', 'App drawer', 'Fork of Slim Launcher'],
+    },
+
   },
   contact: {
     title: 'Tell me about your project',
@@ -637,4 +752,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '17'
+export const CONTENT_VERSION = '18'

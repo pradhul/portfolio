@@ -7,8 +7,10 @@ import {
   BarChart3,
   Bookmark,
   ExternalLink,
+  FolderOpen,
   Github,
   Package,
+  Trophy,
   UtensilsCrossed,
 } from 'lucide-react'
 import { useFestivalTheme } from '@/components/FestivalTheme'
@@ -23,6 +25,8 @@ import {
 const LUCIDE_ICONS = {
   BarChart3,
   Bookmark,
+  FolderOpen,
+  Trophy,
   UtensilsCrossed,
 } as const
 

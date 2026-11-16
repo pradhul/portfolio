@@ -6,6 +6,9 @@ import { content } from '../lib/content'
 import type { Project } from './projects'
 
 export const FEATURED_PROJECT_IDS = [
+  'kadalas',
+  'fightcardHq',
+  'sundry',
   'glanceTv',
   'ionicMeasure',
   'squashPush',

@@ -93,6 +93,34 @@ export const pages = {
       'A lean Android TV home screen: daily Bing wallpaper, clock and weather, your apps, and a status line for the next holiday and upcoming orders—built in plain Java with no runtime dependencies.',
     eyebrow: 'ANDROID TV',
   },
+  kadalas: {
+    path: '/portfolio/kadalas',
+    title: 'Kadalas',
+    description:
+      'A personal document vault that keeps your papers in your own Google Drive and syncs newer versions from Gmail — Expo for web, iOS, and Android, with no app-owned backend.',
+    eyebrow: 'WEB APP',
+  },
+  fightcardHq: {
+    path: '/portfolio/fightcard-hq',
+    title: 'FightCard HQ',
+    description:
+      'A tournament manager for MMA and BJJ events — single-elimination brackets, match control, and a big-screen scoreboard with a dark fight-night look.',
+    eyebrow: 'WEB APP',
+  },
+  sundry: {
+    path: '/portfolio/sundry',
+    title: 'Sundry',
+    description:
+      'A native macOS packing-list app: season-aware checklists generated on-device with Apple Intelligence. Free to run, with no API keys.',
+    eyebrow: 'MACOS APP',
+  },
+  forgeLauncher: {
+    path: '/portfolio/forge-launcher',
+    title: 'Forge',
+    description:
+      'A minimal Android launcher, forked from Slim Launcher, with on-device icon packs so app icons can follow the wallpaper or a style you generate on the phone.',
+    eyebrow: 'MOBILE APP',
+  },
 } as const satisfies Record<string, PageSeo>
 
 export const publicPages: PageSeo[] = Object.values(pages)

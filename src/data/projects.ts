@@ -36,7 +36,7 @@ export type ProjectLink = {
 
 export type ProjectIcon =
   | { type: 'image'; src: string; alt: string }
-  | { type: 'lucide'; name: 'BarChart3' | 'Bookmark' | 'UtensilsCrossed' }
+  | { type: 'lucide'; name: 'BarChart3' | 'Bookmark' | 'FolderOpen' | 'Trophy' | 'UtensilsCrossed' }
 
 export type ProjectMedia = {
   src: string
@@ -584,6 +584,150 @@ export const projects: Project[] = [
         internal: true,
       },
     ],
+  },
+  {
+    id: 'kadalas',
+    githubRepo: 'pradhul/kadalas',
+    status: 'in_progress',
+    release: null,
+    lastSyncedAt: null,
+    readmeHash: null,
+    figure: 'Fig. 19',
+    icon: { type: 'lucide', name: 'FolderOpen' },
+    media: {
+      src: '/kadalas/screenshot-vault.png',
+      alt: 'Kadalas vault home with folders, recent documents, and vehicles (demo data)',
+      width: 1280,
+      height: 900,
+    },
+    links: [
+      {
+        type: 'liveDemo',
+        href: 'https://kadalas.netlify.app',
+        labelKey: 'liveDemo',
+        primary: true,
+      },
+      {
+        type: 'viewProject',
+        href: '/portfolio/kadalas',
+        labelKey: 'viewProject',
+        internal: true,
+        hideIcon: true,
+      },
+      {
+        type: 'github',
+        href: 'https://github.com/pradhul/kadalas',
+        labelKey: 'viewGitHub',
+      },
+    ],
+  },
+  {
+    id: 'fightcardHq',
+    githubRepo: 'pradhul/fightcard-hq',
+    status: 'in_progress',
+    release: null,
+    lastSyncedAt: null,
+    readmeHash: null,
+    figure: 'Fig. 20',
+    icon: { type: 'lucide', name: 'Trophy' },
+    media: {
+      src: '/fightcardHq/bracket-champion.png',
+      alt: 'FightCard HQ bracket with a completed BJJ division and champion card (demo event)',
+      width: 1440,
+      height: 1465,
+    },
+    links: [
+      {
+        type: 'liveDemo',
+        href: 'https://fightcard-hq.vercel.app',
+        labelKey: 'liveDemo',
+        primary: true,
+      },
+      {
+        type: 'viewProject',
+        href: '/portfolio/fightcard-hq',
+        labelKey: 'viewProject',
+        internal: true,
+        hideIcon: true,
+      },
+      {
+        type: 'github',
+        href: 'https://github.com/pradhul/fightcard-hq',
+        labelKey: 'viewGitHub',
+      },
+    ],
+    reverseLayout: true,
+  },
+  {
+    id: 'sundry',
+    githubRepo: 'pradhul/sundry',
+    status: 'released',
+    release: {
+      tag: 'v0.2.1',
+      url: 'https://github.com/pradhul/sundry/releases/tag/v0.2.1',
+      publishedAt: '2026-10-30',
+    },
+    lastSyncedAt: null,
+    readmeHash: null,
+    figure: 'Fig. 21',
+    icon: { type: 'image', src: '/sundry/icon.png', alt: 'Sundry Icon' },
+    media: {
+      src: '/sundry/icon.png',
+      alt: 'Sundry app icon',
+      width: 512,
+      height: 512,
+      contain: true,
+      maxWidthClass: 'max-w-[220px]',
+    },
+    links: [
+      {
+        type: 'viewProject',
+        href: '/portfolio/sundry',
+        labelKey: 'viewProject',
+        internal: true,
+        primary: true,
+        hideIcon: true,
+      },
+      {
+        type: 'github',
+        href: 'https://github.com/pradhul/sundry',
+        labelKey: 'viewGitHub',
+      },
+    ],
+  },
+  {
+    id: 'forgeLauncher',
+    githubRepo: 'pradhul/forge-launcher',
+    status: 'in_progress',
+    release: null,
+    lastSyncedAt: null,
+    readmeHash: null,
+    figure: 'Fig. 22',
+    icon: { type: 'image', src: '/forgeLauncher/icon.png', alt: 'Forge Launcher Icon' },
+    media: {
+      src: '/forgeLauncher/icon.png',
+      alt: 'Forge launcher icon',
+      width: 512,
+      height: 512,
+      contain: true,
+      maxWidthClass: 'max-w-[160px]',
+    },
+    links: [
+      {
+        type: 'viewProject',
+        href: '/portfolio/forge-launcher',
+        labelKey: 'viewProject',
+        internal: true,
+        primary: true,
+        hideIcon: true,
+      },
+      {
+        type: 'github',
+        href: 'https://github.com/pradhul/forge-launcher/tree/cursor/forge-launcher-mvp-8cde',
+        labelKey: 'viewGitHub',
+      },
+    ],
+    reverseLayout: true,
   },
 ]
 
