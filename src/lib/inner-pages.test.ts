@@ -36,6 +36,7 @@ console.log('about content')
 check('keeps the rewritten résumé bio, skills, and no phone number', () => {
   const { paragraphs, skills } = content.about
   const bio = paragraphs.join(' ')
+  assert.match(bio, /Perficient/)
   assert.match(bio, /HashedIn/)
   assert.match(bio, /Brainistic/)
   assert.match(bio, /VS Code/)
@@ -49,6 +50,10 @@ check('keeps the rewritten résumé bio, skills, and no phone number', () => {
 check('expands About with structured experience and education from the résumé', () => {
   const { experience, education } = content.about
   assert.ok(Array.isArray(experience) && experience.length >= 2)
+  const perficient = experience.find((item) => /Perficient/i.test(item.company))
+  assert.ok(perficient && /2025/.test(perficient.dates))
+  assert.equal('url' in perficient ? perficient.url : undefined, 'https://www.perficient.com/')
+  assert.ok(experience.some((item) => /Hobby projects/i.test(item.role)))
   assert.ok(experience.some((item) => /HashedIn/i.test(item.company) && /2015/.test(item.dates)))
   assert.ok(experience.some((item) => /Brainistic/i.test(item.company) && /2014/.test(item.dates)))
   assert.ok(Array.isArray(education) && education.length >= 2)
@@ -69,11 +74,12 @@ check('about route keeps per-page metadata and renders the redesigned About page
   assert.doesNotMatch(source, PHONE)
 })
 
-check('AboutPage reuses homepage About copy, hire CTAs, and site chrome', () => {
+check('AboutPage reuses homepage About copy and site chrome, without hire CTAs', () => {
   const source = read('src/components/AboutPage.tsx')
   assert.match(source, /from ['"]@\/components\/SitePage['"]/)
   assert.match(source, /from ['"]@\/components\/AboutContent['"]/)
-  assert.match(source, /HireCtas/)
+  assert.doesNotMatch(source, /HireCtas/)
+  assert.doesNotMatch(source, /Upwork|hireMe|hire_me_click/)
   assert.doesNotMatch(source, PHONE)
 })
 
@@ -98,11 +104,28 @@ check('homepage compact About still shows skills and GitHub activity', () => {
   assert.doesNotMatch(source, /variant === 'full' && \(\s*<GitHubActivity/)
 })
 
-check('hire CTAs keep Hire me and Upwork', () => {
-  const source = read('src/components/HireCtas.tsx')
-  assert.match(source, /upwork_click/)
-  assert.match(source, /hire_me_click/)
-  assert.match(source, /FaSquareUpwork/)
+check('hire-me, Upwork, and freelance CTAs are gone from the site', () => {
+  assert.ok(!existsSync(join(process.cwd(), 'src/components/HireCtas.tsx')))
+  const files = [
+    'src/components/HomePage.tsx',
+    'src/components/AboutPage.tsx',
+    'src/components/ContactPage.tsx',
+    'src/components/ContactChannels.tsx',
+    'src/components/SiteHeader.tsx',
+    'src/components/SitePage.tsx',
+    'src/lib/content.ts',
+    'src/lib/seo.ts',
+  ]
+  const sources = files.map(read).join('\n')
+  assert.doesNotMatch(sources, /HireCtas/)
+  assert.doesNotMatch(sources, /FaSquareUpwork/)
+  assert.doesNotMatch(sources, /upwork_click|hire_me_click/)
+  assert.doesNotMatch(sources, /upwork\.com/i)
+  assert.doesNotMatch(sources, /Hire me|Start a project|available for hire|Open for freelance/i)
+  assert.equal(content.hero.sayHello, 'Say hello')
+  assert.equal(content.contact.title, 'Say hello')
+  assert.equal(content.hero.titleBlock.statusValue, 'Lead Technical Consultant at Perficient')
+  assert.doesNotMatch(JSON.stringify(content), /Hire me|Start a project|Upwork|freelance/i)
 })
 
 check('contact page uses translated copy, socials, and Back to home', () => {
@@ -114,7 +137,7 @@ check('contact page uses translated copy, socials, and Back to home', () => {
   assert.doesNotMatch(source, /content\.contact\.title/)
   const channels = read('src/components/ContactChannels.tsx')
   assert.match(channels, /stackOverflow/)
-  assert.match(channels, /upwork_click/)
+  assert.doesNotMatch(channels, /upwork_click|Upwork|upwork\.com/)
 })
 
 check('project pages restore About copy, icons, Live Demo, and the v43 release label', () => {
@@ -232,8 +255,7 @@ check('homepage filters keep All / Android TV / Extensions / In progress / Archi
   ])
   assert.equal(content.portfolio.filters.androidTv, 'Android TV')
   assert.equal(content.portfolio.archiveTitle, 'More projects')
-  assert.equal(content.hero.hireMe, 'Hire me')
-  assert.equal(content.hero.startProject, 'Start a project')
+  assert.equal(content.hero.sayHello, 'Say hello')
   assert.equal(content.contact.backToHome, 'Back to home')
 })
 
@@ -333,7 +355,7 @@ check('SMSpend card and project page show the sanitized screenshots', () => {
   assert.match(page, /getLatestSmspendRelease/)
   assert.equal(smspend?.release?.tag, 'v1.3.1')
   assert.equal(smspend?.release?.url, 'https://github.com/pradhul/SMSpend/releases/tag/v1.3.1')
-  assert.equal(CONTENT_VERSION, '19')
+  assert.equal(CONTENT_VERSION, '20')
 })
 
 check('keeps invented Stitch stats out of the shipped UI', () => {

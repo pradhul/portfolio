@@ -23,6 +23,27 @@ function asStringList(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
 }
 
+export function ExperienceCompany({
+  company,
+  url,
+}: {
+  company: string
+  url?: string
+}) {
+  if (!url) return <>{company}</>
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-inherit no-underline underline-offset-2 hover:text-lime hover:underline"
+    >
+      {company}
+    </a>
+  )
+}
+
+
 export default function AboutContent({ variant = 'compact' }: { variant?: 'compact' | 'full' }) {
   const { activeFestival } = useFestivalTheme()
   const { t, tString, translatedContent } = useLanguage()
@@ -113,7 +134,9 @@ export default function AboutContent({ variant = 'compact' }: { variant?: 'compa
                   <div className="font-mono text-[13px] tracking-[0.04em] text-brass">{item.dates}</div>
                   <div>
                     <h3 className="font-display text-xl font-semibold text-cream">{item.role}</h3>
-                    <div className="mt-1 text-cream-muted">{item.company}</div>
+                    <div className="mt-1 text-cream-muted">
+                      <ExperienceCompany company={item.company} url={'url' in item ? item.url : undefined} />
+                    </div>
                     <p className="mt-1.5 text-cream-muted">{item.summary}</p>
                   </div>
                 </li>

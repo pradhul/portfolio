@@ -19,7 +19,7 @@ export const pages = {
     title: SITE_NAME,
     ogTitle: 'Pradhul Dev — Web & Mobile Developer',
     description:
-      'Pradhul Dev is a web and mobile developer with 8+ years of experience — VS Code extension author, former Software Engineering Master at HashedIn by Deloitte, available for hire.',
+      'Pradhul Dev is a Lead Technical Consultant at Perficient and a web and mobile developer with 8+ years of experience — VS Code extension author, formerly Software Engineering Master at HashedIn by Deloitte.',
     eyebrow: 'WEB & MOBILE DEVELOPER',
     absoluteTitle: true,
   },
@@ -27,14 +27,14 @@ export const pages = {
     path: '/about',
     title: 'About',
     description:
-      'Web and mobile developer with 8+ years of experience. VS Code extension author; former Software Engineering Master at HashedIn by Deloitte. Available for hire.',
+      'Lead Technical Consultant at Perficient and web and mobile developer with 8+ years of experience. VS Code extension author; formerly Software Engineering Master at HashedIn by Deloitte.',
     eyebrow: 'ABOUT',
   },
   contact: {
     path: '/contact',
     title: 'Contact',
     description:
-      'Get in touch with Pradhul Dev — send a message, or reach out by email, LinkedIn, GitHub, Stack Overflow, and Upwork.',
+      'Get in touch with Pradhul Dev — send a message, or reach out by email, LinkedIn, GitHub, or Stack Overflow.',
     eyebrow: 'CONTACT',
   },
   guestbook: {
@@ -169,12 +169,11 @@ export const personJsonLd = {
   '@type': 'Person',
   name: 'Pradhul Dev',
   url: SITE_URL,
-  jobTitle: 'Web & Mobile Developer',
+  jobTitle: 'Lead Technical Consultant',
   email: 'mailto:pradhuldev.1990@gmail.com',
   sameAs: [
     'https://www.linkedin.com/in/pradhul-dev-30708814b/',
     'https://github.com/pradhul',
     'https://stackoverflow.com/users/3309470/p-rad',
-    'https://www.upwork.com/freelancers/~01a32f29fafd184f21',
   ],
 }
