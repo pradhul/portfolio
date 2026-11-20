@@ -14,13 +14,11 @@ export const content = {
     title: 'I build fast, dependable apps — and the tools developers use every day.',
     subtitle: 'Fig. 00 — Web, mobile & Android TV engineer · Bangalore',
     lead:
-      '8+ years shipping Android, React Native, React and Angular products. Software Engineering Master at HashedIn by Deloitte (2015–2023) on Kaiser Permanente, Buzztime, GroupNexus, Hiway and Sotera. Now independent, building apps and publishing VS Code and Chrome extensions.',
+      '8+ years shipping Android, React Native, React and Angular products. Software Engineering Master at HashedIn by Deloitte (2015–2023) on Kaiser Permanente, Buzztime, GroupNexus, Hiway and Sotera. Now a Lead Technical Consultant at Perficient, building apps and VS Code and Chrome extensions on the side.',
     downloadResume: 'Resume',
     viewPortfolio: 'View Portfolio',
     seeWork: 'See the work',
-    hireMe: 'Hire me',
-    startProject: 'Start a project',
-    upwork: 'Upwork',
+    sayHello: 'Say hello',
     titleBlock: {
       heading: 'Title block',
       drawing: 'DWG. PD-2026',
@@ -34,7 +32,7 @@ export const content = {
       roleValue: 'Senior web & mobile engineer',
       basedValue: 'Bangalore · IST (UTC+5:30)',
       experienceValue: '2014 – present',
-      statusValue: 'Open for freelance & contracts',
+      statusValue: 'Lead Technical Consultant at Perficient',
       stackValue: 'React · Next.js · Android/Kotlin · React Native · Node.js',
     },
   },
@@ -71,17 +69,25 @@ export const content = {
     experienceTitle: "Where I've worked",
     paragraphs: [
       "Hi, I'm Pradhul, a web and mobile developer with 8+ years of experience, and the author of VS Code extensions on the Marketplace.",
-      'I was a Software Engineering Master at HashedIn Technologies (HashedIn by Deloitte) from May 2015 to June 2023, leading teams of up to four on Android, React Native, React, and Angular projects — including Hiway, Sotera, GroupNexus, Buzztime, and Kaiser Permanente. Before that I was a software developer at Brainistic Technologies (July 2014 – May 2015), where I built HealEz as a Joomla component and QuizByte as a native Android app.',
-      'I also ship my own tools: Ionic Measure on the Chrome Web Store, Squash-Push and vsColorCode on the VS Code Marketplace, plus apps such as Link Shelf, UploadSpec, and SMSpend.',
+      'I’m a Lead Technical Consultant at Perficient (since May 2025), working on mobile architecture for enterprise clients. Before that I was a Software Engineering Master at HashedIn Technologies (HashedIn by Deloitte) from May 2015 to June 2023, leading teams of up to four on Android, React Native, React, and Angular projects — including Hiway, Sotera, GroupNexus, Buzztime, and Kaiser Permanente. Earlier I was a software developer at Brainistic Technologies (July 2014 – May 2015), where I built HealEz as a Joomla component and QuizByte as a native Android app.',
+      'As hobby work I also ship my own tools: Ionic Measure on the Chrome Web Store, Squash-Push and vsColorCode on the VS Code Marketplace, plus apps such as Link Shelf, UploadSpec, and SMSpend.',
       "Off the clock I beatbox, train MMA, and tinker with a Raspberry Pi.",
     ],
     experience: [
       {
-        role: 'Independent engineer',
-        company: 'Freelance and own products',
+        role: 'Lead Technical Consultant',
+        company: 'Perficient',
+        url: 'https://www.perficient.com/',
+        dates: '2025 – now',
+        summary:
+          'Mobile application development and architecture for enterprise clients: guiding iOS and Android solutions, overseeing scalable mobile platforms, and mentoring technical teams.',
+      },
+      {
+        role: 'Hobby projects',
+        company: 'Side work',
         dates: '2023 – now',
         summary:
-          'Building Glance TV, Link Shelf and UploadSpec; publishing Ionic Measure, Squash-Push and vsColorCode. Taking freelance and contract work.',
+          'Building Glance TV, Link Shelf, SMSpend, Kadalas, FightCard HQ and Sundry; publishing Ionic Measure, Squash-Push and vsColorCode.',
       },
       {
         role: 'Software Engineering Master',
@@ -697,15 +703,14 @@ export const content = {
 
   },
   contact: {
-    title: 'Tell me about your project',
-    subtitle: "A few lines is enough. I'll reply with next steps.",
+    title: 'Say hello',
+    subtitle: "A few lines is enough. I'll get back to you.",
     sectionLabel: 'Section 04 — Contact',
     connectLabel: 'Prefer another channel?',
     backToHome: 'Back to home',
     locationNote: 'Bangalore · IST (UTC+5:30)',
     channels: {
       email: 'Email',
-      upwork: 'Upwork',
       resume: 'Resume',
       linkedin: 'LinkedIn',
       github: 'GitHub',
@@ -714,30 +719,14 @@ export const content = {
     form: {
       nameLabel: 'Name',
       emailLabel: 'Email',
-      projectTypeLabel: 'Project type',
-      budgetLabel: 'Budget',
-      messageLabel: 'What are you building?',
-      messagePlaceholder: 'Goal, current state, timeline…',
-      submit: 'Send project brief →',
+      messageLabel: 'Message',
+      messagePlaceholder: 'What would you like to say?',
+      submit: 'Send message →',
       sending: 'Sending...',
       success: 'Thanks — your message is on its way.',
       error: 'Could not send your message. Please try again or email me directly.',
       unavailable: 'The contact form is not configured yet. Please email me instead.',
       honeypotLabel: 'Leave this field empty',
-      projectTypes: [
-        'Web app',
-        'Mobile app',
-        'Android TV',
-        'VS Code / Chrome extension',
-        'Other',
-      ],
-      budgets: [
-        'Not sure yet',
-        'Under $2k',
-        '$2k – $5k',
-        '$5k – $15k',
-        '$15k+',
-      ],
     },
   },
   guestbook: {
@@ -772,4 +761,4 @@ export const content = {
 }
 
 // Bump when content structure or copy changes to invalidate cached translations.
-export const CONTENT_VERSION = '19'
+export const CONTENT_VERSION = '20'

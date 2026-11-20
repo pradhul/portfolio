@@ -4,14 +4,12 @@ import { FormEvent, useId, useState } from 'react'
 import { track } from '@vercel/analytics'
 import { content } from '@/lib/content'
 import {
-  BUDGET_RANGES,
   CONTACT_EMAIL,
   CONTACT_MAILTO,
   HONEYPOT_FIELD,
   MAX_EMAIL_LENGTH,
   MAX_MESSAGE_LENGTH,
   MAX_NAME_LENGTH,
-  PROJECT_TYPES,
 } from '@/lib/contactConstants'
 
 type ContactFormCopy = typeof content.contact.form
@@ -26,8 +24,6 @@ export default function ContactForm({
   const id = useId()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [projectType, setProjectType] = useState<string>(PROJECT_TYPES[0])
-  const [budget, setBudget] = useState<string>(BUDGET_RANGES[0])
   const [message, setMessage] = useState('')
   const [website, setWebsite] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -54,8 +50,6 @@ export default function ContactForm({
           name,
           email,
           message,
-          projectType,
-          budget,
           [HONEYPOT_FIELD]: website,
         }),
       })
@@ -81,8 +75,6 @@ export default function ContactForm({
 
       setName('')
       setEmail('')
-      setProjectType(PROJECT_TYPES[0])
-      setBudget(BUDGET_RANGES[0])
       setMessage('')
       setWebsite('')
       setSuccess(copy.success)
@@ -94,9 +86,6 @@ export default function ContactForm({
       setSubmitting(false)
     }
   }
-
-  const projectTypes = copy.projectTypes?.length ? copy.projectTypes : [...PROJECT_TYPES]
-  const budgets = copy.budgets?.length ? copy.budgets : [...BUDGET_RANGES]
 
   return (
     <form onSubmit={handleSubmit} className="frame grid grid-cols-1 gap-[18px] p-[30px] sm:grid-cols-2" noValidate>
@@ -145,44 +134,6 @@ export default function ContactForm({
           onChange={(event) => setEmail(event.target.value)}
           className="schematic-field"
         />
-      </div>
-
-      <div>
-        <label htmlFor={`${id}-type`} className="schematic-label">
-          {copy.projectTypeLabel}
-        </label>
-        <select
-          id={`${id}-type`}
-          name="projectType"
-          value={projectType}
-          onChange={(event) => setProjectType(event.target.value)}
-          className="schematic-select"
-        >
-          {projectTypes.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor={`${id}-budget`} className="schematic-label">
-          {copy.budgetLabel}
-        </label>
-        <select
-          id={`${id}-budget`}
-          name="budget"
-          value={budget}
-          onChange={(event) => setBudget(event.target.value)}
-          className="schematic-select"
-        >
-          {budgets.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
       </div>
 
       <div className="sm:col-span-2">

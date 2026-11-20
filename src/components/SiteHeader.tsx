@@ -18,7 +18,7 @@ export default function SiteHeader({
   links,
   current,
   ctaHref,
-  ctaLabel = content.hero.hireMe,
+  ctaLabel = content.hero.sayHello,
   onCtaClick,
 }: {
   links: HeaderLink[]
@@ -30,7 +30,7 @@ export default function SiteHeader({
   const { activeFestival } = useFestivalTheme()
 
   const handleCta = () => {
-    track('hire_me_click')
+    track('contact_click')
     onCtaClick?.()
   }
 

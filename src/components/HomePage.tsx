@@ -3,12 +3,9 @@
 import { Suspense } from 'react'
 import { track } from '@vercel/analytics'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { FaSquareUpwork } from 'react-icons/fa6'
-import { IoMail } from 'react-icons/io5'
-import AboutContent from '@/components/AboutContent'
+import AboutContent, { ExperienceCompany } from '@/components/AboutContent'
 import ContactChannels from '@/components/ContactChannels'
 import ContactForm from '@/components/ContactForm'
-import HireCtas from '@/components/HireCtas'
 import LazyChatWidget from '@/components/LazyChatWidget'
 import PortfolioSection from '@/components/PortfolioSection'
 import SectionHeading from '@/components/SectionHeading'
@@ -19,9 +16,6 @@ import { FestivalThemeProvider, useFestivalTheme } from '@/components/FestivalTh
 import { LanguageProvider, useLanguage } from '@/components/LanguageProvider'
 import { LanguageLayout } from '@/components/LanguageLayout'
 import { content } from '@/lib/content'
-import { CONTACT_MAILTO } from '@/lib/contactConstants'
-
-const UPWORK_URL = 'https://www.upwork.com/freelancers/~01a32f29fafd184f21'
 
 function TitleBlock() {
   const { tString } = useLanguage()
@@ -66,11 +60,7 @@ function TitleBlock() {
 
 function HomeContent() {
   const { activeFestival } = useFestivalTheme()
-  const { t, tString } = useLanguage()
-  const asList = (key: string): string[] => {
-    const value = t(key)
-    return Array.isArray(value) ? value : []
-  }
+  const { tString } = useLanguage()
 
   const navItems: HeaderLink[] = [
     { href: '#work', label: tString('nav.work') },
@@ -91,7 +81,7 @@ function HomeContent() {
         <SiteHeader
           links={navItems}
           ctaHref="#contact"
-          ctaLabel={tString('hero.startProject')}
+          ctaLabel={tString('hero.sayHello')}
         />
 
         <main className="schematic-wrap">
@@ -109,22 +99,11 @@ function HomeContent() {
               <p className="max-w-[600px] text-lg text-cream-muted">{tString('hero.lead')}</p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <a
-                  href={CONTACT_MAILTO}
+                  href="#contact"
                   className="btn btn-primary"
-                  onClick={() => track('hire_me_click')}
+                  onClick={() => track('contact_click')}
                 >
-                  <IoMail size={18} />
-                  {tString('hero.hireMe')}
-                </a>
-                <a
-                  href={UPWORK_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-outline"
-                  onClick={() => track('upwork_click')}
-                >
-                  <FaSquareUpwork size={18} />
-                  {tString('hero.upwork')}
+                  {tString('hero.sayHello')}
                 </a>
                 <a href="#work" className="btn btn-outline">
                   {tString('hero.seeWork')}
@@ -168,7 +147,12 @@ function HomeContent() {
                   <div>
                     <h3 className="font-display text-xl font-semibold text-cream">
                       {item.role}
-                      {item.company ? ` · ${item.company}` : ''}
+                      {item.company ? (
+                        <>
+                          {' · '}
+                          <ExperienceCompany company={item.company} url={'url' in item ? item.url : undefined} />
+                        </>
+                      ) : null}
                     </h3>
                     <p className="mt-1.5 text-cream-muted">{item.summary}</p>
                   </div>
@@ -184,16 +168,11 @@ function HomeContent() {
               activeFestival={activeFestival}
             />
             <p className="mb-9 text-cream-muted">{tString('contact.subtitle')}</p>
-            <div className="mb-8">
-              <HireCtas hireLabel={tString('hero.hireMe')} upworkLabel={tString('hero.upwork')} />
-            </div>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_.8fr]">
               <ContactForm
                 copy={{
                   nameLabel: tString('contact.form.nameLabel'),
                   emailLabel: tString('contact.form.emailLabel'),
-                  projectTypeLabel: tString('contact.form.projectTypeLabel'),
-                  budgetLabel: tString('contact.form.budgetLabel'),
                   messageLabel: tString('contact.form.messageLabel'),
                   messagePlaceholder: tString('contact.form.messagePlaceholder'),
                   submit: tString('contact.form.submit'),
@@ -202,8 +181,6 @@ function HomeContent() {
                   error: tString('contact.form.error'),
                   unavailable: tString('contact.form.unavailable'),
                   honeypotLabel: tString('contact.form.honeypotLabel'),
-                  projectTypes: asList('contact.form.projectTypes'),
-                  budgets: asList('contact.form.budgets'),
                 }}
                 locationNote={tString('contact.locationNote')}
               />

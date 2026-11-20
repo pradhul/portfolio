@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { track } from '@vercel/analytics'
 import { IoMail } from 'react-icons/io5'
 import AboutContent from '@/components/AboutContent'
-import HireCtas from '@/components/HireCtas'
 import SectionHeading from '@/components/SectionHeading'
 import SitePage from '@/components/SitePage'
 import { useFestivalTheme } from '@/components/FestivalTheme'
@@ -25,11 +24,10 @@ function AboutInner() {
       />
       <p className="mb-8 max-w-prose text-lg text-cream-muted">{tString('about.pageSubtitle')}</p>
       <div className="mb-12 flex flex-wrap items-center gap-3">
-        <HireCtas hireLabel={tString('hero.hireMe')} upworkLabel={tString('hero.upwork')} />
         <a
           href={CONTACT_MAILTO}
           className="btn btn-outline"
-          onClick={() => track('hire_me_click')}
+          onClick={() => track('email_click')}
         >
           <IoMail size={18} />
           {CONTACT_EMAIL}
